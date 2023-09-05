@@ -20,3 +20,16 @@ server:
     encoding:
       charset: UTF-8
       enabled: true
+
+cloud:
+  aws:
+    s3:
+      bucket: dangun-bucket
+    credentials:
+      access-key: AKIAURW3G6NSUHKHQC5X
+      secret-key: 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
+    region:
+      static: ap-northeast-2
+      auto: false
+    stack:
+      auto: false
