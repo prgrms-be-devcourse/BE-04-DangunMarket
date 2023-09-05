@@ -3,11 +3,12 @@ package com.daangn.dangunmarket.domain.chat.chatMessage.domain;
 import com.daangn.dangunmarket.domain.chat.chatRoomInfo.domain.ChatRoomInfo;
 import com.daangn.dangunmarket.domain.member.member.domain.Member;
 import jakarta.persistence.*;
+import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "chat_messages")
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class ChatMessage {
 
     @Id

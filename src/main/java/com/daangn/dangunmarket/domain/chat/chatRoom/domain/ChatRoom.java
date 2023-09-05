@@ -1,11 +1,12 @@
 package com.daangn.dangunmarket.domain.chat.chatRoom.domain;
 
 import jakarta.persistence.*;
+import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "chat_rooms")
-@NoArgsConstructor// 누락된거 붙이기
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class ChatRoom {
 
     @Id
