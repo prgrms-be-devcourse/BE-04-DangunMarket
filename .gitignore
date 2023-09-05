@@ -1,5 +1,6 @@
 ## yml 파일
 application.yml
+*.yml
 
 HELP.md
 .gradle
