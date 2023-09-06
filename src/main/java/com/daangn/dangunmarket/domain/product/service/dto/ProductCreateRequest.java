@@ -1,6 +1,7 @@
 package com.daangn.dangunmarket.domain.product.service.dto;
 
-import com.daangn.dangunmarket.domain.category.domain.Category;
+
+import com.daangn.dangunmarket.domain.product.model.Category;
 import com.daangn.dangunmarket.domain.product.model.LocationPreference;
 import com.daangn.dangunmarket.domain.product.model.ProductImage;
 

@@ -1,6 +1,5 @@
 package com.daangn.dangunmarket.domain.product.model;
 
-import com.daangn.dangunmarket.domain.category.domain.Category;
 import com.daangn.dangunmarket.global.entity.BaseEntity;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -29,13 +28,13 @@ public class Product extends BaseEntity {
     @Column(nullable = false)
     private Long areaId;
 
-    @OneToOne(fetch=FetchType.LAZY, cascade = CascadeType.PERSIST, orphanRemoval = true)
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST, orphanRemoval = true)
     private LocationPreference localPreference;
 
     @OneToMany(mappedBy = "product", cascade = CascadeType.PERSIST, orphanRemoval = true)
     private List<ProductImage> productImageList = new ArrayList<>();
 
-    @OneToOne(fetch=FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY)
     private Category category;
 
     @Enumerated(EnumType.STRING)

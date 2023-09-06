@@ -1,6 +1,5 @@
 package com.daangn.dangunmarket.domain.product.model;
 
-import com.daangn.dangunmarket.domain.product.model.Product;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;

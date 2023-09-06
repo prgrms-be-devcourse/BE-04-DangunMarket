@@ -1,14 +1,14 @@
 package com.daangn.dangunmarket.domain.product.facade;
 
-import com.daangn.dangunmarket.domain.category.domain.Category;
-import com.daangn.dangunmarket.domain.category.domain.CategoryRepository;
-import com.daangn.dangunmarket.domain.category.service.CategoryService;
+import com.daangn.dangunmarket.domain.product.model.Category;
+import com.daangn.dangunmarket.domain.product.repository.CategoryRepository;
+import com.daangn.dangunmarket.domain.product.service.CategoryService;
 import com.daangn.dangunmarket.domain.product.model.Product;
-import com.daangn.dangunmarket.domain.product.repository.JpaProductRepository;
+import com.daangn.dangunmarket.domain.product.repository.ProductJpaRepository;
 import com.daangn.dangunmarket.domain.product.facade.dto.ProductCreateRequestParam;
 import com.daangn.dangunmarket.domain.product.facade.mpper.ProductParamMapper;
 import com.daangn.dangunmarket.domain.product.service.ProductService;
-import com.daangn.dangunmarket.global.aws.s3.S3UploaderInterface;
+import com.daangn.dangunmarket.global.aws.s3.S3Uploader;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -38,12 +38,12 @@ class ProductFacadeTest {
     @Autowired
     private CategoryService categoryService;
     @MockBean
-    private S3UploaderInterface s3UploaderInterface;
+    private S3Uploader s3Uploader;
     @Autowired
     private ProductParamMapper mapper;
 
     @Autowired
-    private JpaProductRepository jpaProductRepository;
+    private ProductJpaRepository productJpaRepository;
     @Autowired
     private CategoryRepository categoryRepository;
 
@@ -53,7 +53,7 @@ class ProductFacadeTest {
     void setup(){
         productFacade = new ProductFacade(productService,
                 categoryService,
-                s3UploaderInterface,
+                s3Uploader,
                 mapper);
 
         setupCategory = categoryRepository.save(new Category("전자기기", null, 1L, null));
@@ -63,7 +63,7 @@ class ProductFacadeTest {
     @DisplayName("product를 저장 후 저장된 product불러와 필드값들을 확인한다.")
     void createProduct_correctRequest_ProductCreateResponse() {
         //given
-        given(s3UploaderInterface.saveImages(any())).willReturn(List.of("a", "b", "c"));
+        given(s3Uploader.saveImages(any())).willReturn(List.of("a", "b", "c"));
         List<MultipartFile> mockMultipartFiles = List.of(new MockMultipartFile("first", (byte[]) null), new MockMultipartFile("second", (byte[]) null));
         ProductCreateRequestParam requestParam = new ProductCreateRequestParam(1L, 2L,37.5297,126.8876,  "seoul", mockMultipartFiles, setupCategory.getId(), "firstTile", "firstContent", 100L, true, LocalDateTime.now());
 
@@ -71,7 +71,7 @@ class ProductFacadeTest {
         Long productId = productFacade.createProduct(requestParam);
 
         //when
-        Product product = jpaProductRepository.findById(productId).orElseThrow();
+        Product product = productJpaRepository.findById(productId).orElseThrow();
         assertThat(product.getMemberId()).isEqualTo(1L);
         assertThat(product.getAreaId()).isEqualTo(2l);
         assertThat(product.getLocalPreference().getAlias()).isEqualTo("seoul");
