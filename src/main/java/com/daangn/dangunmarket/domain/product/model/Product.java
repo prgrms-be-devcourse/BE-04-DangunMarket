@@ -1,9 +1,6 @@
-package com.daangn.dangunmarket.domain.product.product.domain;
+package com.daangn.dangunmarket.domain.product.model;
 
-import com.daangn.dangunmarket.domain.category.domain.Category;
-import com.daangn.dangunmarket.domain.member.member.domain.Member;
-import com.daangn.dangunmarket.domain.product.locationPreference.domain.LocationPreference;
-import com.daangn.dangunmarket.domain.product.productImage.domain.ProductImage;
+import com.daangn.dangunmarket.domain.member.model.Member;
 import com.daangn.dangunmarket.global.entity.BaseEntity;
 import jakarta.persistence.*;
 import lombok.AccessLevel;

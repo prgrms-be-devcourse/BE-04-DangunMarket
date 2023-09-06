@@ -1,18 +1,21 @@
-package com.daangn.dangunmarket.domain.product.wishList.domain;
+package com.daangn.dangunmarket.domain.product.model;
 
-import com.daangn.dangunmarket.domain.product.product.domain.Product;
+import com.daangn.dangunmarket.domain.product.model.Product;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "wish_lists")
+@Table(name = "product_images")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class WishList {
+public class ProductImage {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @Column(nullable = false)
+    private String url;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "products_id", referencedColumnName = "id", nullable = false)

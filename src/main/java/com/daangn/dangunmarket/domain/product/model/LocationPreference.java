@@ -1,4 +1,4 @@
-package com.daangn.dangunmarket.domain.product.locationPreference.domain;
+package com.daangn.dangunmarket.domain.product.model;
 
 import jakarta.persistence.*;
 import lombok.AccessLevel;

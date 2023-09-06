@@ -1,4 +1,4 @@
-package com.daangn.dangunmarket.domain.product.product.domain;
+package com.daangn.dangunmarket.domain.product.model;
 
 
 public enum TradeStatus {

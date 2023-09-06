@@ -1,5 +1,6 @@
-package com.daangn.dangunmarket.domain.member.review.domain;
+package com.daangn.dangunmarket.domain.member.model;
 
+import com.daangn.dangunmarket.domain.member.model.EvaluationItem;
 import jakarta.persistence.AttributeConverter;
 
 import java.util.Arrays;

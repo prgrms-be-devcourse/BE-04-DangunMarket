@@ -1,4 +1,4 @@
-package com.daangn.dangunmarket.domain.member.review.domain;
+package com.daangn.dangunmarket.domain.member.model;
 
 import java.util.Arrays;
 

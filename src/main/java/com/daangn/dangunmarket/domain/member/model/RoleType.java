@@ -1,4 +1,4 @@
-package com.daangn.dangunmarket.domain.member.member.domain;
+package com.daangn.dangunmarket.domain.member.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

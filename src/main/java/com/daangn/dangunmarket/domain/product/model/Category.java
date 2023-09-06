@@ -1,4 +1,4 @@
-package com.daangn.dangunmarket.domain.category.domain;
+package com.daangn.dangunmarket.domain.product.model;
 
 import jakarta.persistence.*;
 import lombok.*;

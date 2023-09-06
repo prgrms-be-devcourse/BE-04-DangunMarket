@@ -1,5 +1,8 @@
-package com.daangn.dangunmarket.domain.member.member.domain;
+package com.daangn.dangunmarket.domain.member.model;
 
+import com.daangn.dangunmarket.domain.member.model.MemberProvider;
+import com.daangn.dangunmarket.domain.member.model.NickName;
+import com.daangn.dangunmarket.domain.member.model.RoleType;
 import jakarta.persistence.*;
 import lombok.*;
 

@@ -1,4 +1,4 @@
-package com.daangn.dangunmarket.domain.chat.chatRoom.domain;
+package com.daangn.dangunmarket.domain.chat.model;
 
 import jakarta.persistence.*;
 import lombok.NoArgsConstructor;

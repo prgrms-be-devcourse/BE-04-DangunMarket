@@ -1,4 +1,4 @@
-package com.daangn.dangunmarket.domain.member.activityArea.domain;
+package com.daangn.dangunmarket.domain.member.model;
 
 import jakarta.persistence.*;
 import lombok.*;
