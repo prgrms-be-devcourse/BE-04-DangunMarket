@@ -1,6 +1,7 @@
 package com.daangn.dangunmarket.domain.product.service;
 
 import com.daangn.dangunmarket.domain.product.model.Product;
+import com.daangn.dangunmarket.domain.product.repository.JpaProductRepository;
 import com.daangn.dangunmarket.domain.product.repository.ProductRepository;
 import com.daangn.dangunmarket.domain.product.service.dto.ProductCreateRequest;
 import com.daangn.dangunmarket.domain.product.service.mapper.ProductMapper;

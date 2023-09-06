@@ -8,6 +8,7 @@ import java.util.List;
 
 public record ProductCreateRequest(
         Long memberId,
+        Long areaId,
         LocationPreference locationPreference,
         List<ProductImage> productImages,
         Category category,

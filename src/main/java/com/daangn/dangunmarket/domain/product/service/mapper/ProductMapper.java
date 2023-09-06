@@ -13,6 +13,7 @@ public class ProductMapper {
     public Product toEntity(ProductCreateRequest reqest){
         return Product.builder()
                 .memberId(reqest.memberId())
+                .areaId(reqest.areaId())
                 .localPreference(reqest.locationPreference())
                 .productImageList(reqest.productImages())
                 .category(reqest.category())

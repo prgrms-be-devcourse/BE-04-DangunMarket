@@ -19,6 +19,7 @@ public class ProductParamMapper {
             Category category) {
         return new ProductCreateRequest(
                 requestParam.memberId(),
+                requestParam.areaId(),
                 locationPreference,
                 productImages,
                 category,

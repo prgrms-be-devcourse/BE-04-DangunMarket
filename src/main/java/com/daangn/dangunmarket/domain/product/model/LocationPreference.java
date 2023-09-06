@@ -2,6 +2,7 @@ package com.daangn.dangunmarket.domain.product.model;
 
 import jakarta.persistence.*;
 import lombok.AccessLevel;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.locationtech.jts.geom.Point;
 
@@ -9,6 +10,7 @@ import org.springframework.util.Assert;
 
 @Entity
 @Table(name = "location_preferences")
+@Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class LocationPreference {
     @Id

@@ -10,6 +10,7 @@ public class ProductApiMapper {
     public ProductCreateRequestParam toProductCreateRequest(ProductCreateApiRequest request) {
         return new ProductCreateRequestParam(
                 request.memberId(),
+                request.areaId(),
                 request.latitude(),
                 request.longitude(),
                 request.alias(),

@@ -8,8 +8,10 @@ import com.daangn.dangunmarket.domain.product.service.ProductService;
 import com.daangn.dangunmarket.domain.product.facade.dto.ProductCreateRequestParam;
 import com.daangn.dangunmarket.domain.product.model.ProductImage;
 import com.daangn.dangunmarket.global.aws.s3.S3UploaderInterface;
-import org.locationtech.jts.geom.*;
-import org.locationtech.jts.io.WKTReader;
+
+import org.locationtech.jts.geom.Coordinate;
+import org.locationtech.jts.geom.GeometryFactory;
+import org.locationtech.jts.geom.Point;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -40,8 +42,8 @@ public class ProductFacade {
 
         List<String> url = s3UploaderInterface.saveImages(reqest.files());
         List<ProductImage> productImages = url.stream()
-                                                .map(ProductImage::new)
-                                                .collect(Collectors.toList());
+                .map(ProductImage::new)
+                .collect(Collectors.toList());
 
         Category findCategory = categoryService.findById(reqest.categoryId());
 

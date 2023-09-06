@@ -26,6 +26,9 @@ public class Product extends BaseEntity {
     @Column(nullable = false)
     private Long memberId;
 
+    @Column(nullable = false)
+    private Long areaId;
+
     @OneToOne(fetch=FetchType.LAZY, cascade = CascadeType.PERSIST, orphanRemoval = true)
     private LocationPreference localPreference;
 
@@ -54,8 +57,9 @@ public class Product extends BaseEntity {
     private LocalDateTime refreshedAt;
 
     @Builder
-    public Product(Long memberId, LocationPreference localPreference, List<ProductImage> productImageList, Category category, TradeStatus tradeStatus, String title, String content, Long price, boolean isOfferAllowed, LocalDateTime refreshedAt) {
-        Assert.notNull(memberId, "member는 null값이 들어올 수 없습니다.");
+    public Product(Long memberId, Long areaId, LocationPreference localPreference, List<ProductImage> productImageList, Category category, TradeStatus tradeStatus, String title, String content, Long price, boolean isOfferAllowed, LocalDateTime refreshedAt) {
+        Assert.notNull(memberId, "memberId는 null값이 들어올 수 없습니다.");
+        Assert.notNull(areaId, "areaId는 null값이 들어올 수 없습니다.");
         Assert.notNull(tradeStatus, "tradeStatus는 null값이 들어올 수 없습니다.");
         Assert.notNull(title, "title는 null값이 들어올 수 없습니다.");
         Assert.notNull(content, "content는 null값이 들어올 수 없습니다.");
@@ -63,6 +67,7 @@ public class Product extends BaseEntity {
         Assert.notNull(isOfferAllowed, "isOfferAllowed는 null값이 들어올 수 없습니다.");
 
         this.memberId = memberId;
+        this.areaId = areaId;
         this.localPreference = localPreference;
         this.productImageList = productImageList;
         this.category = category;

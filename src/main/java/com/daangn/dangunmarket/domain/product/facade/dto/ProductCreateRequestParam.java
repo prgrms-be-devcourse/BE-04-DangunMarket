@@ -7,6 +7,7 @@ import java.util.List;
 
 public record ProductCreateRequestParam(
         Long memberId,
+        Long areaId,
         Double latitude,
         Double longitude,
         String alias,
