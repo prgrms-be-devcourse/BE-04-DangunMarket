@@ -37,7 +37,7 @@ public class Member {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private RoleType role;
+    private RoleType roleType;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
