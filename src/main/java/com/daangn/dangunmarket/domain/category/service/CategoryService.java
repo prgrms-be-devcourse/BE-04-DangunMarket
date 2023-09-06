@@ -15,7 +15,7 @@ public class CategoryService {
 
     public Category findById(Long categoryId){
         return categoryRepository.findById(categoryId)
-                .orElseThrow(() -> new IllegalArgumentException("해당 ID를 가진 카테고리는 존재하지 않습니다.")) // illegalㅇㅣ 맞는가?
+                .orElseThrow(() -> new IllegalArgumentException("해당 ID를 가진 카테고리는 존재하지 않습니다.")); // illegalㅇㅣ 맞는가?
     }
 
 }
