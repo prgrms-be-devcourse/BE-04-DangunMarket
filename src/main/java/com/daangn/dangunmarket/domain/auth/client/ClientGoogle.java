@@ -36,7 +36,7 @@ public class ClientGoogle implements ClientProxy{
                 .socialToken(googleUserResponse.getSub())
                 .nickName(googleUserResponse.getName())
                 .memberProvider(MemberProvider.GOOGLE)
-                .roleType(RoleType.USER)
+                .role(RoleType.USER)
                 .build();
     }
 }

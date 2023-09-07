@@ -6,7 +6,7 @@ import com.daangn.dangunmarket.domain.auth.jwt.AuthToken;
 import com.daangn.dangunmarket.domain.auth.jwt.AuthTokenProvider;
 import com.daangn.dangunmarket.domain.auth.client.ClientStrategy;
 import com.daangn.dangunmarket.domain.member.model.Member;
-import com.daangn.dangunmarket.domain.member.repository.MemberRepository;
+import com.daangn.dangunmarket.domain.member.repository.MemberJpaRepository;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,12 +18,12 @@ public class ClientService {
 
     private final ClientStrategy clientStrategy;
     private final AuthTokenProvider authTokenProvider;
-    private final MemberRepository memberRepository;
+    private final MemberJpaRepository memberJpaRepository;
 
-    public ClientService(ClientStrategy clientStrategy, AuthTokenProvider authTokenProvider, MemberRepository memberRepository) {
+    public ClientService(ClientStrategy clientStrategy, AuthTokenProvider authTokenProvider, MemberJpaRepository memberJpaRepository) {
         this.clientStrategy = clientStrategy;
         this.authTokenProvider = authTokenProvider;
-        this.memberRepository = memberRepository;
+        this.memberJpaRepository = memberJpaRepository;
     }
 
     @Transactional
@@ -33,10 +33,10 @@ public class ClientService {
         Member clientMember = clientProxy.getUserData(accessToken);
         String socialId = clientMember.getSocialToken();
 
-        Optional<Member> memberOptional = memberRepository.findBySocialTokenOptional(socialId);
+        Optional<Member> memberOptional = memberJpaRepository.findBySocialTokenOptional(socialId);
         boolean isNewMember = !memberOptional.isPresent();
 
-        Member savedMember = memberOptional.orElseGet(() -> memberRepository.save(clientMember));
+        Member savedMember = memberOptional.orElseGet(() -> memberJpaRepository.save(clientMember));
 
         AuthToken appToken = authTokenProvider.createUserAppToken(socialId, savedMember.getId());
 

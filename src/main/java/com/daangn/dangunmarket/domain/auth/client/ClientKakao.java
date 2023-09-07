@@ -34,7 +34,7 @@ public class ClientKakao implements ClientProxy{
                 .socialToken(String.valueOf(kakaoUserResponse.getId()))
                 .nickName(kakaoUserResponse.getProperties().getNickname())
                 .memberProvider(MemberProvider.KAKAO)
-                .roleType(RoleType.USER)
+                .role(RoleType.USER)
                 .build();
     }
 }

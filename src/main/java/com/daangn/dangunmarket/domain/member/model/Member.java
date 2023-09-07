@@ -1,8 +1,5 @@
 package com.daangn.dangunmarket.domain.member.model;
 
-import com.daangn.dangunmarket.domain.member.model.MemberProvider;
-import com.daangn.dangunmarket.domain.member.model.NickName;
-import com.daangn.dangunmarket.domain.member.model.RoleType;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -19,32 +16,15 @@ public class Member {
     @Column(name = "id")
     private Long id;
 
-    @Column
-    private Long chatInformationId;
-
-    @Column
-    private Long messageId;
-
-    @Column
-    private Long productsId;
-
-    @Column
-    private Long wishListId;
-
-    // 직접참조
-    @Column
-    private Long activityAreasId;
-
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private RoleType roleType;
+    private RoleType role;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private MemberProvider memberProvider;
 
     @Column(nullable = false)
-
     private String socialToken;
 
     //@Valid

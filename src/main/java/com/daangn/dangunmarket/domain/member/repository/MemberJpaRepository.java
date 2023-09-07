@@ -6,7 +6,7 @@ import org.springframework.data.jpa.repository.Query;
 
 import java.util.Optional;
 
-public interface MemberRepository extends JpaRepository<Member, Long> {
+public interface MemberJpaRepository extends JpaRepository<Member, Long> {
     Member findBySocialToken(String socialToken);
     @Query("select m from Member m where m.socialToken= ?1")
     Optional<Member> findBySocialTokenOptional(String socialToken);

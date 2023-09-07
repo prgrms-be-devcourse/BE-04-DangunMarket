@@ -4,7 +4,7 @@ import com.daangn.dangunmarket.domain.auth.dto.AuthResponse;
 import com.daangn.dangunmarket.domain.auth.jwt.AuthToken;
 import com.daangn.dangunmarket.domain.auth.jwt.AuthTokenProvider;
 import com.daangn.dangunmarket.domain.member.model.Member;
-import com.daangn.dangunmarket.domain.member.repository.MemberRepository;
+import com.daangn.dangunmarket.domain.member.repository.MemberJpaRepository;
 
 import io.jsonwebtoken.Claims;
 import lombok.extern.slf4j.Slf4j;
@@ -18,11 +18,11 @@ import org.springframework.web.server.ResponseStatusException;
 public class AuthService {
 
     private final AuthTokenProvider authTokenProvider;
-    private final MemberRepository memberRepository;
+    private final MemberJpaRepository memberJpaRepository;
 
-    public AuthService(AuthTokenProvider authTokenProvider, MemberRepository memberRepository) {
+    public AuthService(AuthTokenProvider authTokenProvider, MemberJpaRepository memberJpaRepository) {
         this.authTokenProvider = authTokenProvider;
-        this.memberRepository = memberRepository;
+        this.memberJpaRepository = memberJpaRepository;
     }
 
     public AuthResponse updateToken(AuthToken authToken) {
@@ -32,7 +32,7 @@ public class AuthService {
         }
 
         String socialId = claims.getSubject();
-        Long memberId = memberRepository.findBySocialToken(socialId).getId();
+        Long memberId = memberJpaRepository.findBySocialToken(socialId).getId();
 
         AuthToken newAppToken = authTokenProvider.createUserAppToken(socialId, memberId);
 
@@ -50,7 +50,7 @@ public class AuthService {
         }
 
         try {
-            Member member = memberRepository.findBySocialToken(claims.getSubject());
+            Member member = memberJpaRepository.findBySocialToken(claims.getSubject());
             return member.getId();
 
         } catch (NullPointerException e) {

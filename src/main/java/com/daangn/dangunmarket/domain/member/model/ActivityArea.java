@@ -15,9 +15,9 @@ public class ActivityArea {
     @Column(name = "id")
     private Long id;
 
-    // 고치기
-    @Column(nullable = false)
-    private Long memberId;
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "member_id", nullable = false)
+    private Member member;
 
     @Column(nullable = false)
     private Long emdAreaId;
