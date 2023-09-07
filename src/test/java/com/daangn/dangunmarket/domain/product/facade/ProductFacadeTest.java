@@ -33,17 +33,22 @@ import static org.mockito.BDDMockito.given;
 class ProductFacadeTest {
 
     private ProductFacade productFacade;
+
     @Autowired
     private ProductService productService;
+
     @Autowired
     private CategoryService categoryService;
+
     @MockBean
     private S3Uploader s3Uploader;
+
     @Autowired
     private ProductParamMapper mapper;
 
     @Autowired
     private ProductJpaRepository productJpaRepository;
+
     @Autowired
     private CategoryRepository categoryRepository;
 
@@ -70,7 +75,7 @@ class ProductFacadeTest {
         //when
         Long productId = productFacade.createProduct(requestParam);
 
-        //when
+        //then
         Product product = productJpaRepository.findById(productId).orElseThrow();
         assertThat(product.getMemberId()).isEqualTo(1L);
         assertThat(product.getAreaId()).isEqualTo(2l);

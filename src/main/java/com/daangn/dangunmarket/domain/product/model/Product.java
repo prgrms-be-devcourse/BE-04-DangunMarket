@@ -32,7 +32,7 @@ public class Product extends BaseEntity {
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST, orphanRemoval = true)
     private LocationPreference localPreference;
 
-    @OneToMany(mappedBy = "product", cascade = CascadeType.PERSIST, orphanRemoval = true)
+    @OneToMany(mappedBy = "product", fetch = FetchType.LAZY, cascade = CascadeType.PERSIST, orphanRemoval = true)
     private List<ProductImage> productImageList = new ArrayList<>();
 
     @OneToOne(fetch = FetchType.LAZY)
