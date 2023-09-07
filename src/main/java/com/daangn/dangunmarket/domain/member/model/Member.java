@@ -16,22 +16,6 @@ public class Member {
     @Column(name = "id")
     private Long id;
 
-    @Column
-    private Long chatInformationId;
-
-    @Column
-    private Long messageId;
-
-    @Column
-    private Long productsId;
-
-    @Column
-    private Long wishListId;
-
-    // 직접참조
-    @Column
-    private Long activityAreasId;
-
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private RoleType role;
@@ -41,7 +25,6 @@ public class Member {
     private MemberProvider memberProvider;
 
     @Column(nullable = false)
-
     private String socialToken;
 
     //@Valid
