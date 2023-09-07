@@ -2,11 +2,16 @@ package com.daangn.dangunmarket.domain.product.controller;
 
 import com.daangn.dangunmarket.domain.product.controller.dto.ProductCreateApiRequest;
 import com.daangn.dangunmarket.domain.product.controller.dto.ProductCreateApiResponse;
+import com.daangn.dangunmarket.domain.product.controller.dto.ProductFindApiResponse;
 import com.daangn.dangunmarket.domain.product.controller.mapper.ProductApiMapper;
 import com.daangn.dangunmarket.domain.product.facade.ProductFacade;
+import com.daangn.dangunmarket.domain.product.facade.dto.ProductFindResponseParam;
+import com.daangn.dangunmarket.domain.product.service.dto.ProductFindResponse;
 import jakarta.validation.Valid;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -41,6 +46,14 @@ public class ProductController {
                 .toUri();
 
         return ResponseEntity.created(uri).body(response);
+    }
+
+    @GetMapping("/{productId}")
+    public ResponseEntity<ProductFindApiResponse> findById(@PathVariable Long productId){
+        ProductFindResponseParam responseParam = productFacade.findById(productId);
+        ProductFindApiResponse response = ProductFindApiResponse.from(responseParam);
+
+        return ResponseEntity.ok(response);
     }
 
 }

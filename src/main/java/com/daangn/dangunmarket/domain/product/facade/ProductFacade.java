@@ -1,5 +1,8 @@
 package com.daangn.dangunmarket.domain.product.facade;
 
+import com.daangn.dangunmarket.domain.area.service.AreaService;
+import com.daangn.dangunmarket.domain.member.service.MemberService;
+import com.daangn.dangunmarket.domain.product.facade.dto.ProductFindResponseParam;
 import com.daangn.dangunmarket.domain.product.service.CategoryService;
 import com.daangn.dangunmarket.domain.product.model.Category;
 import com.daangn.dangunmarket.domain.product.model.LocationPreference;
@@ -7,6 +10,7 @@ import com.daangn.dangunmarket.domain.product.facade.mpper.ProductParamMapper;
 import com.daangn.dangunmarket.domain.product.service.ProductService;
 import com.daangn.dangunmarket.domain.product.facade.dto.ProductCreateRequestParam;
 import com.daangn.dangunmarket.domain.product.model.ProductImage;
+import com.daangn.dangunmarket.domain.product.service.dto.ProductFindResponse;
 import com.daangn.dangunmarket.global.aws.s3.S3Uploader;
 
 import org.locationtech.jts.geom.Coordinate;
@@ -23,12 +27,16 @@ import java.util.stream.Collectors;
 public class ProductFacade {
 
     private ProductService productService;
+    private MemberService memberService;
+    private AreaService areaService;
     private CategoryService categoryService;
     private S3Uploader s3Uploader;
     private ProductParamMapper mapper;
 
-    public ProductFacade(ProductService productService, CategoryService categoryService, S3Uploader s3Uploader, ProductParamMapper mapper) {
+    public ProductFacade(ProductService productService, MemberService memberService, AreaService areaService, CategoryService categoryService, S3Uploader s3Uploader, ProductParamMapper mapper) {
         this.productService = productService;
+        this.memberService = memberService;
+        this.areaService = areaService;
         this.categoryService = categoryService;
         this.s3Uploader = s3Uploader;
         this.mapper = mapper;
@@ -54,4 +62,12 @@ public class ProductFacade {
                 findCategory));
     }
 
+    public ProductFindResponseParam findById(Long productId) {
+        ProductFindResponse response = productService.findById(productId);
+
+        String memberName = memberService.findById(response.memberId()).nickName();
+        String areaName = areaService.findById(response.areaId()).areaName();
+
+        return ProductFindResponseParam.of(response, memberName, areaName);
+    }
 }

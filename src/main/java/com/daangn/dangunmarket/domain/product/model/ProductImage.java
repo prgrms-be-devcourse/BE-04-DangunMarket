@@ -2,9 +2,11 @@ package com.daangn.dangunmarket.domain.product.model;
 
 import jakarta.persistence.*;
 import lombok.AccessLevel;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.util.Assert;
 
+@Getter
 @Entity
 @Table(name = "product_images")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)

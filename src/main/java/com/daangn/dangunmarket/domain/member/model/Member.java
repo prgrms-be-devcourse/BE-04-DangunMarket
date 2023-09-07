@@ -35,4 +35,7 @@ public class Member {
     @Column
     private Integer reviewScore;
 
+    public String getNickName() {
+        return nickName.getNickName();
+    }
 }

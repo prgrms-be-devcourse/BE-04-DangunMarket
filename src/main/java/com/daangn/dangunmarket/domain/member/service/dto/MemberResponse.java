@@ -1,13 +1,19 @@
 package com.daangn.dangunmarket.domain.member.service.dto;
 
-import com.daangn.dangunmarket.domain.member.model.NickName;
+import com.daangn.dangunmarket.domain.member.model.Member;
 import com.daangn.dangunmarket.domain.member.model.RoleType;
 
 public record MemberResponse(
-        Long chatInformationId,
-        Long messageId,
-        Long activityAreasId,
+        Long memberId,
         RoleType role,
-        NickName nickName,
+        String nickName,
         Integer reviewScore) {
+
+    public static MemberResponse from(Member member){
+        return new MemberResponse(member.getId(),
+                member.getRole(),
+                member.getNickName(),
+                member.getReviewScore());
+    }
+
 }
