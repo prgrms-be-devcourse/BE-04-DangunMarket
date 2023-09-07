@@ -32,7 +32,7 @@ public class ProductController {
     @PostMapping
     public ResponseEntity<ProductCreateApiResponse> createProduct(@RequestBody @Valid ProductCreateApiRequest request) {
         Long productId = productFacade.createProduct(mapper.toProductCreateRequest(request));
-        ProductCreateApiResponse response = ProductCreateApiResponse.of(productId);
+        ProductCreateApiResponse response = ProductCreateApiResponse.from(productId);
 
         URI uri = ServletUriComponentsBuilder
                 .fromCurrentRequest()

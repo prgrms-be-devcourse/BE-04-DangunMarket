@@ -1,5 +1,6 @@
 package com.daangn.dangunmarket.domain.product.controller.dto;
 
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import org.springframework.web.multipart.MultipartFile;
@@ -18,7 +19,7 @@ public record ProductCreateApiRequest(
         Long categoryId,
         @NotBlank(message = "title이 누락되었거나 비었습니다.") String title,
         @NotBlank(message = "content가 누락되었거나 비었습니다.") String content,
-        Long price,
+        @Min(value = 0, message = "price는 0원 이하가 될 수 없습니다.") long price,
         boolean isOfferAllowed,
         LocalDateTime refreshedAt) implements Serializable {
 }

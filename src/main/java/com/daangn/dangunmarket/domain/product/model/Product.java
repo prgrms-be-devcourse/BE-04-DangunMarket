@@ -1,5 +1,6 @@
 package com.daangn.dangunmarket.domain.product.model;
 
+import com.daangn.dangunmarket.domain.product.model.vo.Price;
 import com.daangn.dangunmarket.domain.product.model.vo.Title;
 import com.daangn.dangunmarket.global.entity.BaseEntity;
 import jakarta.persistence.*;
@@ -49,7 +50,7 @@ public class Product extends BaseEntity {
     private String content;
 
     @Column(nullable = false)
-    private Long price;
+    private Price price;
 
     @Column(nullable = false)
     private boolean isOfferAllowed;
@@ -58,14 +59,12 @@ public class Product extends BaseEntity {
     private LocalDateTime refreshedAt;
 
     @Builder
-    public Product(Long memberId, Long areaId, LocationPreference localPreference, List<ProductImage> productImageList, Category category, TradeStatus tradeStatus, Title title, String content, Long price, boolean isOfferAllowed, LocalDateTime refreshedAt) {
+    public Product(Long memberId, Long areaId, LocationPreference localPreference, List<ProductImage> productImageList, Category category, TradeStatus tradeStatus, Title title, String content, Price price, boolean isOfferAllowed, LocalDateTime refreshedAt) {
         Assert.notNull(memberId, "memberId는 null값이 들어올 수 없습니다.");
         Assert.notNull(areaId, "areaId는 null값이 들어올 수 없습니다.");
         Assert.notNull(tradeStatus, "tradeStatus는 null값이 들어올 수 없습니다.");
         Assert.notNull(title, "title은 null값이 들어올 수 없습니다.");
         Assert.notNull(content, "content는 null값이 들어올 수 없습니다.");
-        Assert.notNull(price, "price는 null값이 들어올 수 없습니다.");
-        Assert.notNull(isOfferAllowed, "isOfferAllowed는 null값이 들어올 수 없습니다.");
 
         this.memberId = memberId;
         this.areaId = areaId;
@@ -92,4 +91,9 @@ public class Product extends BaseEntity {
     public String getTitle() {
         return title.getTitle();
     }
+
+    public long getPrice() {
+        return price.getValue();
+    }
+
 }
