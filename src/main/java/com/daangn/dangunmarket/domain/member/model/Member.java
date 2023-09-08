@@ -44,4 +44,8 @@ public class Member{
         this.reviewScore = reviewScore;
     }
 
+    public String getNickName() {
+        return nickName.getNickName();
+    }
+
 }

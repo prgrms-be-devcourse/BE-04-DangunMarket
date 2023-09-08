@@ -45,7 +45,7 @@ public class ClientService {
                 .appToken(newAuthToken.getToken())
                 .isNewMember(!memberOptional.isPresent())
                 .userId(savedMember.getId())
-                .nickName(savedMember.getNickName().getNickName())
+                .nickName(savedMember.getNickName())
                 .build();
     }
 
