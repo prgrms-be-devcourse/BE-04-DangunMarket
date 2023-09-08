@@ -33,7 +33,7 @@ public class ClientGoogle implements ClientProxy{
         System.out.println("googleUserResponse:"+googleUserResponse);
 
         return Member.builder()
-                .socialToken(googleUserResponse.getSub())
+                .socialId(googleUserResponse.getSub())
                 .nickName(googleUserResponse.getName())
                 .memberProvider(MemberProvider.GOOGLE)
                 .roleType(RoleType.USER)

@@ -19,11 +19,13 @@ public class ClientService {
     private final ClientStrategy clientStrategy;
     private final AuthTokenProvider authTokenProvider;
     private final MemberRepository memberRepository;
+    private final RefreshTokenService refreshTokenService;
 
-    public ClientService(ClientStrategy clientStrategy, AuthTokenProvider authTokenProvider, MemberRepository memberRepository) {
+    public ClientService(ClientStrategy clientStrategy, AuthTokenProvider authTokenProvider, MemberRepository memberRepository, RefreshTokenService refreshTokenService) {
         this.clientStrategy = clientStrategy;
         this.authTokenProvider = authTokenProvider;
         this.memberRepository = memberRepository;
+        this.refreshTokenService = refreshTokenService;
     }
 
     @Transactional
@@ -31,18 +33,16 @@ public class ClientService {
         ClientProxy clientProxy = clientStrategy.getClient(client);
 
         Member clientMember = clientProxy.getUserData(accessToken);
-        String socialId = clientMember.getSocialToken();
+        String socialId = clientMember.getSocialId();
 
-        Optional<Member> memberOptional = memberRepository.findBySocialTokenOptional(socialId);
-        boolean isNewMember = !memberOptional.isPresent();
-
+        Optional<Member> memberOptional = memberRepository.findMemberIfExisted(socialId);
         Member savedMember = memberOptional.orElseGet(() -> memberRepository.save(clientMember));
 
-        AuthToken appToken = authTokenProvider.createUserAppToken(socialId, savedMember.getId());
+        AuthToken newAuthToken = refreshTokenService.saveAccessTokenCache(savedMember.getId(),socialId);
 
         return AuthResponse.builder()
-                .appToken(appToken.getToken())
-                .isNewMember(isNewMember)
+                .appToken(newAuthToken.getToken())
+                .isNewMember(!memberOptional.isPresent())
                 .userId(savedMember.getId())
                 .nickName(savedMember.getNickName().getNickName())
                 .build();

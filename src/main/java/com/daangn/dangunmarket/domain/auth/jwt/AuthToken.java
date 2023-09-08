@@ -1,5 +1,7 @@
 package com.daangn.dangunmarket.domain.auth.jwt;
 
+import com.daangn.dangunmarket.domain.auth.exception.TokenExpiredException;
+import com.daangn.dangunmarket.domain.auth.exception.TokenValidFailedException;
 import io.jsonwebtoken.*;
 import lombok.Builder;
 import lombok.Getter;
@@ -7,6 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.security.Key;
 import java.util.Date;
+import java.util.Optional;
 
 @Slf4j
 public class AuthToken {
@@ -25,51 +28,65 @@ public class AuthToken {
     @Builder
     AuthToken(String socialId, String role, Long memberId, Date expiry, Key key) {
         this.key = key;
-        this.token = createAuthToken(socialId, role, memberId, expiry);
+        this.token = createAccessToken(socialId, role, memberId, expiry);
     }
 
-    private String createAuthToken(String socialId, String role, Long id, Date expiry) {
-        return Jwts.builder()
-                .setSubject(socialId)
+    AuthToken(Date expiry, Key key) {
+        this.key = key;
+        this.token = createRefreshToken(expiry);
+    }
 
+    private String createAccessToken(String socialId, String role, Long id, Date expiry) {
+        return Jwts
+                .builder()
+                .setSubject(socialId)
                 .claim(AUTHORITIES_KEY, role)
                 .claim("memberId", id)
-
                 .signWith(key, SignatureAlgorithm.HS256)
                 .setExpiration(expiry)
                 .compact();
     }
 
-    public boolean isValid() {
-        return this.getTokenClaims() != null;
+    public String createRefreshToken(Date expiry) {
+        Claims claims = Jwts
+                .claims();
+
+        return Jwts
+                .builder()
+                .setClaims(claims)
+                .setIssuedAt(new Date(System.currentTimeMillis()))
+                .setExpiration(expiry)
+                .signWith(key, SignatureAlgorithm.HS256)
+                .compact();
     }
 
-    public Claims getTokenClaims() {
-        Claims claims = null;
-
-        JwtParser jwtParser = Jwts.parserBuilder()
-                .setSigningKey(key)
-                .build();
-
+    public boolean isValidTokenClaims() {
+        Optional<Object> claims = Optional.empty();
         try {
-            claims = jwtParser
-                    .parseClaimsJws(token)
-                    .getBody();
+            claims= Optional.ofNullable(getTokenClaims());
         } catch (SecurityException e) {
             log.info("Invalid JWT signature.");
         } catch (MalformedJwtException e) {
             log.info("Invalid JWT token.");
         } catch (ExpiredJwtException e) {
             log.info("Expired JWT token.");
+            throw new TokenValidFailedException("토큰이 만료되었습니다.");
         } catch (UnsupportedJwtException e) {
             log.info("Unsupported JWT token.");
         } catch (IllegalArgumentException e) {
             log.info("JWT token compact of handler are invalid.");
         } catch (Exception e) {
-            return null;
+            return false;
         }
+        return claims.isPresent();
+    }
 
-        return claims;
+    public Claims getTokenClaims() {
+        JwtParser jwtParser = Jwts.parserBuilder()
+                .setSigningKey(key)
+                .build();
+
+        return jwtParser.parseClaimsJws(token).getBody();
     }
 
 }

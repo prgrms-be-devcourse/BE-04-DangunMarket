@@ -31,10 +31,11 @@ public class ClientKakao implements ClientProxy{
                 .block();
 
         return Member.builder()
-                .socialToken(String.valueOf(kakaoUserResponse.getId()))
+                .socialId(String.valueOf(kakaoUserResponse.getId()))
                 .nickName(kakaoUserResponse.getProperties().getNickname())
                 .memberProvider(MemberProvider.KAKAO)
                 .roleType(RoleType.USER)
                 .build();
     }
+
 }

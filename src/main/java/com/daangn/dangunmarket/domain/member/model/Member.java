@@ -46,7 +46,7 @@ public class Member{
 
     @Column(nullable = false)
     private String socialId;
-    
+
     @Embedded
     @Column(nullable = false)
     private NickName nickName;
