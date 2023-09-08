@@ -1,14 +1,7 @@
 package com.daangn.dangunmarket.domain.member.model;
 
-import com.daangn.dangunmarket.domain.auth.jwt.CustomUser;
 import jakarta.persistence.*;
 import lombok.*;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
-
-import java.util.Collection;
 
 @Entity
 @Getter
@@ -20,21 +13,6 @@ public class Member{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Long id;
-
-    @Column
-    private Long chatInformationId;
-
-    @Column
-    private Long messageId;
-
-    @Column
-    private Long productsId;
-
-    @Column
-    private Long wishListId;
-
-    @Column
-    private Long activityAreasId;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
@@ -59,11 +37,6 @@ public class Member{
                   Long activityAreasId, RoleType roleType, MemberProvider memberProvider, String socialId,
                   NickName nickName, Integer reviewScore) {
         this.id = id;
-        this.chatInformationId = chatInformationId;
-        this.messageId = messageId;
-        this.productsId = productsId;
-        this.wishListId = wishListId;
-        this.activityAreasId = activityAreasId;
         this.roleType = roleType;
         this.memberProvider = memberProvider;
         this.socialId = socialId;

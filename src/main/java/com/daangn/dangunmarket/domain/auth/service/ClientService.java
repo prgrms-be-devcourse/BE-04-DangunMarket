@@ -6,7 +6,7 @@ import com.daangn.dangunmarket.domain.auth.jwt.AuthToken;
 import com.daangn.dangunmarket.domain.auth.jwt.AuthTokenProvider;
 import com.daangn.dangunmarket.domain.auth.client.ClientStrategy;
 import com.daangn.dangunmarket.domain.member.model.Member;
-import com.daangn.dangunmarket.domain.member.repository.MemberRepository;
+import com.daangn.dangunmarket.domain.member.repository.MemberJpaRepository;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,13 +18,13 @@ public class ClientService {
 
     private final ClientStrategy clientStrategy;
     private final AuthTokenProvider authTokenProvider;
-    private final MemberRepository memberRepository;
+    private final MemberJpaRepository memberJpaRepository;
     private final RefreshTokenService refreshTokenService;
 
-    public ClientService(ClientStrategy clientStrategy, AuthTokenProvider authTokenProvider, MemberRepository memberRepository, RefreshTokenService refreshTokenService) {
+    public ClientService(ClientStrategy clientStrategy, AuthTokenProvider authTokenProvider, MemberJpaRepository memberJpaRepository, RefreshTokenService refreshTokenService) {
         this.clientStrategy = clientStrategy;
         this.authTokenProvider = authTokenProvider;
-        this.memberRepository = memberRepository;
+        this.memberJpaRepository = memberJpaRepository;
         this.refreshTokenService = refreshTokenService;
     }
 
@@ -35,8 +35,9 @@ public class ClientService {
         Member clientMember = clientProxy.getUserData(accessToken);
         String socialId = clientMember.getSocialId();
 
-        Optional<Member> memberOptional = memberRepository.findMemberIfExisted(socialId);
-        Member savedMember = memberOptional.orElseGet(() -> memberRepository.save(clientMember));
+        Optional<Member> memberOptional = memberJpaRepository.findMemberIfExisted(socialId);
+        Member savedMember = memberOptional.orElseGet(() -> memberJpaRepository.save(clientMember));
+
 
         AuthToken newAuthToken = refreshTokenService.saveAccessTokenCache(savedMember.getId(),socialId);
 
