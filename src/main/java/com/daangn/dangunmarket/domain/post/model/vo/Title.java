@@ -15,7 +15,7 @@ public class Title {
 
     public Title(String title) {
         Assert.notNull(title, "title은 null이 될 수 없습니다.");
-        if (title.isBlank()){
+        if (title.isBlank()) {
             throw new IllegalArgumentException("title은 공백이 될 수 없습니다.");
         }
 

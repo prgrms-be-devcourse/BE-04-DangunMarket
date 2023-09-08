@@ -41,7 +41,7 @@ public class LocationPreference {
         return geography.getY();
     }
 
-    public double getLongitude(){
+    public double getLongitude() {
         return geography.getX();
     }
 

@@ -22,10 +22,11 @@ public record PostFindResponseParam(
         String content,
         long price,
         boolean isOfferAllowed,
-        LocalDateTime refreshedAt
+        LocalDateTime refreshedAt,
+        Integer likeCount
 ) {
 
-    public static PostFindResponseParam of(PostFindResponse response, String memberName, String areaName){
+    public static PostFindResponseParam of(PostFindResponse response, String memberName, String areaName) {
         List<String> urls = response.postImageList().stream()
                 .map(e -> e.getUrl())
                 .collect(Collectors.toList());
@@ -45,7 +46,8 @@ public record PostFindResponseParam(
                 response.content(),
                 response.price(),
                 response.isOfferAllowed(),
-                response.refreshedAt());
+                response.refreshedAt(),
+                response.likeCount());
     }
 
 }

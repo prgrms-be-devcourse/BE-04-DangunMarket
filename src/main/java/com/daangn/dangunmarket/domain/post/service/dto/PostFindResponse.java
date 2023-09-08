@@ -21,9 +21,10 @@ public record PostFindResponse(
         String content,
         long price,
         boolean isOfferAllowed,
-        LocalDateTime refreshedAt) {
+        LocalDateTime refreshedAt,
+        Integer likeCount) {
 
-    public static PostFindResponse from(Post post){
+    public static PostFindResponse from(Post post) {
         return new PostFindResponse(
                 post.getId(),
                 post.getMemberId(),
@@ -36,6 +37,7 @@ public record PostFindResponse(
                 post.getContent(),
                 post.getPrice(),
                 post.isOfferAllowed(),
-                post.getRefreshedAt());
+                post.getRefreshedAt(),
+                post.getLikeCount());
     }
 }

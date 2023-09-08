@@ -131,6 +131,7 @@ class PostFacadeTest {
         assertThat(responseParam.longitude()).isEqualTo(126.8876);
         assertThat(responseParam.memberName()).isEqualTo("james");
         assertThat(responseParam.urls().size()).isEqualTo(2);
+        assertThat(responseParam.likeCount()).isEqualTo(0);
     }
 
     /**

@@ -13,7 +13,7 @@ public class Price {
     private long value;
 
     public Price(long value) {
-        if (value < 0){
+        if (value < 0) {
             throw new IllegalArgumentException("가격은 음수가 될 수 없습니다.");
         }
 

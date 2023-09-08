@@ -48,7 +48,7 @@ public class PostController {
     }
 
     @GetMapping("/{postId}")
-    public ResponseEntity<PostFindApiResponse> findById(@PathVariable Long postId){
+    public ResponseEntity<PostFindApiResponse> findById(@PathVariable Long postId) {
         PostFindResponseParam responseParam = postFacade.findById(postId);
         PostFindApiResponse response = PostFindApiResponse.from(responseParam);
 

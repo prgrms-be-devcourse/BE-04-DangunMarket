@@ -25,6 +25,7 @@ public class PostMapper {
                 .price(new Price(reqest.price()))
                 .isOfferAllowed(reqest.isOfferAllowed())
                 .refreshedAt(LocalDateTime.now())
+                .likeCount(0)
                 .build();
     }
 

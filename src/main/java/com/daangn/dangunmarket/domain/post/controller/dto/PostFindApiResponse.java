@@ -21,10 +21,11 @@ public record PostFindApiResponse(
         String content,
         long price,
         boolean isOfferAllowed,
-        LocalDateTime refreshedAt
+        LocalDateTime refreshedAt,
+        Integer likeCount
 ) {
 
-    public static PostFindApiResponse from(PostFindResponseParam responseParam){
+    public static PostFindApiResponse from(PostFindResponseParam responseParam) {
         return new PostFindApiResponse(
                 responseParam.postId(),
                 responseParam.memberName(),
@@ -40,7 +41,8 @@ public record PostFindApiResponse(
                 responseParam.content(),
                 responseParam.price(),
                 responseParam.isOfferAllowed(),
-                responseParam.refreshedAt());
+                responseParam.refreshedAt(),
+                responseParam.likeCount());
     }
 
 }
