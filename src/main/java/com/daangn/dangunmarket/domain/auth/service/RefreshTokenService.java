@@ -41,6 +41,7 @@ public class RefreshTokenService {
         return findRefreshToken(accessToken).isValidTokenClaims();
     }
 
+    @Transactional(readOnly=true)
     public AuthToken findRefreshToken (String accessToken) {
         JwtTokenCache jwtTokenCache = refreshTokenRepository.findByAccessToken(accessToken)
                 .orElseThrow(() -> new RuntimeException()); // to do : 예외 고치기
