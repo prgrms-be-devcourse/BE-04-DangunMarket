@@ -2,6 +2,7 @@ package com.daangn.dangunmarket.domain.auth.jwt;
 
 import com.daangn.dangunmarket.domain.auth.exception.TokenExpiredException;
 import com.daangn.dangunmarket.domain.auth.exception.TokenValidFailedException;
+import com.daangn.dangunmarket.global.response.ErrorCode;
 import io.jsonwebtoken.*;
 import lombok.Builder;
 import lombok.Getter;
@@ -70,7 +71,7 @@ public class AuthToken {
             log.info("Invalid JWT token.");
         } catch (ExpiredJwtException e) {
             log.info("Expired JWT token.");
-            throw new TokenValidFailedException("토큰이 만료되었습니다.");
+            throw new TokenValidFailedException(ErrorCode.EXPIRED_TOKEN);
         } catch (UnsupportedJwtException e) {
             log.info("Unsupported JWT token.");
         } catch (IllegalArgumentException e) {
