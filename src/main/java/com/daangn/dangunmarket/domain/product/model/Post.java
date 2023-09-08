@@ -16,9 +16,9 @@ import java.util.List;
 
 @Entity
 @Getter
-@Table(name = "products")
+@Table(name = "posts")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Product extends BaseEntity {
+public class Post extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -33,8 +33,8 @@ public class Product extends BaseEntity {
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST, orphanRemoval = true)
     private LocationPreference localPreference;
 
-    @OneToMany(mappedBy = "product", fetch = FetchType.LAZY, cascade = CascadeType.PERSIST, orphanRemoval = true)
-    private List<ProductImage> productImageList = new ArrayList<>();
+    @OneToMany(mappedBy = "post", fetch = FetchType.LAZY, cascade = CascadeType.PERSIST, orphanRemoval = true)
+    private List<PostImage> postImageList = new ArrayList<>();
 
     @OneToOne(fetch = FetchType.LAZY)
     private Category category;
@@ -58,8 +58,11 @@ public class Product extends BaseEntity {
     @Column(updatable = false, name = "refreshed_at", columnDefinition = "TIMESTAMP")
     private LocalDateTime refreshedAt;
 
+    @Column(nullable = false)
+    private Integer likeCount;
+
     @Builder
-    public Product(Long memberId, Long areaId, LocationPreference localPreference, List<ProductImage> productImageList, Category category, TradeStatus tradeStatus, Title title, String content, Price price, boolean isOfferAllowed, LocalDateTime refreshedAt) {
+    public Post(Long memberId, Long areaId, LocationPreference localPreference, List<PostImage> postImageList, Category category, TradeStatus tradeStatus, Title title, String content, Price price, boolean isOfferAllowed, LocalDateTime refreshedAt) {
         Assert.notNull(memberId, "memberId는 null값이 들어올 수 없습니다.");
         Assert.notNull(areaId, "areaId는 null값이 들어올 수 없습니다.");
         Assert.notNull(tradeStatus, "tradeStatus는 null값이 들어올 수 없습니다.");
@@ -69,7 +72,7 @@ public class Product extends BaseEntity {
         this.memberId = memberId;
         this.areaId = areaId;
         this.localPreference = localPreference;
-        this.productImageList = productImageList;
+        this.postImageList = postImageList;
         this.category = category;
         this.tradeStatus = tradeStatus;
         this.title = title;
@@ -79,13 +82,13 @@ public class Product extends BaseEntity {
         this.refreshedAt = refreshedAt;
     }
 
-    public List<ProductImage> getProductImageList() {
-        return productImageList;
+    public List<PostImage> getPostImageList() {
+        return postImageList;
     }
 
-    public void addProductImage(ProductImage productImage) {
-        this.productImageList.add(productImage);
-        productImage.changeProduct(this);
+    public void addProductImage(PostImage postImage) {
+        this.postImageList.add(postImage);
+        postImage.changeProduct(this);
     }
 
     public String getTitle() {
@@ -96,4 +99,11 @@ public class Product extends BaseEntity {
         return price.getValue();
     }
 
+    public void like() {
+        this.likeCount += 1;
+    }
+
+    public void cancelLike() {
+        this.likeCount -= 1;
+    }
 }
