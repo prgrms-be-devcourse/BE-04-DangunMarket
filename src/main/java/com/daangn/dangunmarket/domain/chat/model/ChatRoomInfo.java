@@ -3,11 +3,12 @@ package com.daangn.dangunmarket.domain.chat.model;
 import com.daangn.dangunmarket.domain.member.model.Member;
 import com.daangn.dangunmarket.domain.product.model.Product;
 import jakarta.persistence.*;
+import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "chat_room_infos")
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class ChatRoomInfo {
 
     @Id
