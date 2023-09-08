@@ -1,18 +1,20 @@
 package com.daangn.dangunmarket.domain.member.model;
 
-import com.daangn.dangunmarket.domain.member.model.MemberProvider;
-import com.daangn.dangunmarket.domain.member.model.NickName;
-import com.daangn.dangunmarket.domain.member.model.RoleType;
+import com.daangn.dangunmarket.domain.auth.jwt.CustomUser;
 import jakarta.persistence.*;
 import lombok.*;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
+
+import java.util.Collection;
 
 @Entity
 @Getter
-@Builder
-@AllArgsConstructor
 @Table(name = "Members")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Member {
+public class Member{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -31,7 +33,6 @@ public class Member {
     @Column
     private Long wishListId;
 
-    // 직접참조
     @Column
     private Long activityAreasId;
 
@@ -44,15 +45,30 @@ public class Member {
     private MemberProvider memberProvider;
 
     @Column(nullable = false)
-
-    private String socialToken;
-
-    //@Valid
+    private String socialId;
+    
     @Embedded
     @Column(nullable = false)
     private NickName nickName;
 
     @Column
     private Integer reviewScore;
+
+    @Builder
+    public Member(Long id, Long chatInformationId, Long messageId, Long productsId, Long wishListId,
+                  Long activityAreasId, RoleType roleType, MemberProvider memberProvider, String socialId,
+                  NickName nickName, Integer reviewScore) {
+        this.id = id;
+        this.chatInformationId = chatInformationId;
+        this.messageId = messageId;
+        this.productsId = productsId;
+        this.wishListId = wishListId;
+        this.activityAreasId = activityAreasId;
+        this.roleType = roleType;
+        this.memberProvider = memberProvider;
+        this.socialId = socialId;
+        this.nickName = nickName;
+        this.reviewScore = reviewScore;
+    }
 
 }
