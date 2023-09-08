@@ -18,7 +18,7 @@ public enum ErrorCode {
     NOT_FOUND_AREA_ENTITY("A001", "Area를 찾을 수 없습니다."),
 
     //product
-    NOT_FOUND_PRODUCT_ENTITY("P001", "Product를 찾을 수 없습니다."),
+    NOT_FOUND_POST_ENTITY("P001", "Post를 찾을 수 없습니다."),
     NOT_FOUND_CATEGORY_ENTITY("C001", "Category를 찾을 수 없습니다.");
 
     private final String code;

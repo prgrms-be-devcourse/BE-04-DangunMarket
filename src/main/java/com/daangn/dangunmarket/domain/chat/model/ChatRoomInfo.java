@@ -1,7 +1,7 @@
 package com.daangn.dangunmarket.domain.chat.model;
 
 import com.daangn.dangunmarket.domain.member.model.Member;
-import com.daangn.dangunmarket.domain.product.model.Product;
+import com.daangn.dangunmarket.domain.post.model.Post;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
@@ -19,7 +19,7 @@ public class ChatRoomInfo {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "products_id", referencedColumnName = "id", nullable = false)
-    private Product product;
+    private Post post;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "chatrooms_id", referencedColumnName = "id", nullable = false)
@@ -29,9 +29,9 @@ public class ChatRoomInfo {
     @JoinColumn(name = "members_id", referencedColumnName = "id", nullable = false)
     private Member member;
 
-    public ChatRoomInfo(boolean isWriter, Product product, ChatRoom chatroom, Member member) {
+    public ChatRoomInfo(boolean isWriter, Post post, ChatRoom chatroom, Member member) {
         this.isWriter = isWriter;
-        this.product = product;
+        this.post = post;
         this.chatroom = chatroom;
         this.member = member;
     }
