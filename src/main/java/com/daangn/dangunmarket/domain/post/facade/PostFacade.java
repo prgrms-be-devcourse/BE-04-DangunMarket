@@ -55,7 +55,7 @@ public class PostFacade {
 
         Category findCategory = categoryService.findById(reqest.categoryId());
 
-        return postService.createProduct(mapper.toProductCreateRequest(
+        return postService.createProduct(mapper.toPostCreateRequest(
                 reqest,
                 locationPreference,
                 postImages,

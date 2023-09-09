@@ -5,28 +5,20 @@ import com.daangn.dangunmarket.domain.post.model.Category;
 import com.daangn.dangunmarket.domain.post.model.LocationPreference;
 import com.daangn.dangunmarket.domain.post.service.dto.PostCreateRequest;
 import com.daangn.dangunmarket.domain.post.model.PostImage;
-import org.springframework.stereotype.Component;
+import org.mapstruct.InjectionStrategy;
+import org.mapstruct.Mapper;
 
 import java.util.List;
 
-@Component
-public class PostParamMapper {
+@Mapper(componentModel = "spring",
+        injectionStrategy = InjectionStrategy.CONSTRUCTOR
+)
+public interface PostParamMapper {
 
-    public PostCreateRequest toProductCreateRequest(
+    PostCreateRequest toPostCreateRequest(
             PostCreateRequestParam requestParam,
             LocationPreference locationPreference,
             List<PostImage> postImages,
-            Category category) {
-        return new PostCreateRequest(
-                requestParam.memberId(),
-                requestParam.areaId(),
-                locationPreference,
-                postImages,
-                category,
-                requestParam.title(),
-                requestParam.content(),
-                requestParam.price(),
-                requestParam.isOfferAllowed());
-    }
+            Category category);
 
 }

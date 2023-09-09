@@ -5,9 +5,11 @@ import com.daangn.dangunmarket.domain.member.repository.MemberJpaRepository;
 import com.daangn.dangunmarket.domain.member.service.dto.MemberResponse;
 import com.daangn.dangunmarket.global.Exception.EntityNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import static com.daangn.dangunmarket.global.response.ErrorCode.NOT_FOUND_MEMBER_ENTITY;
 
+@Transactional(readOnly = true)
 @Service
 public class MemberServiceImpl implements MemberService{
 

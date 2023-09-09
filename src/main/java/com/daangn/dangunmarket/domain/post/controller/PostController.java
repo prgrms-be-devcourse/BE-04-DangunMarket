@@ -21,7 +21,6 @@ import java.net.URI;
 
 @RestController
 @RequestMapping(value = "/api/posts",
-        consumes = MediaType.APPLICATION_JSON_VALUE,
         produces = MediaType.APPLICATION_JSON_VALUE)
 public class PostController {
 
@@ -33,9 +32,10 @@ public class PostController {
         this.mapper = mapper;
     }
 
-    @PostMapping
+    @PostMapping(
+            consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<PostCreateApiResponse> createProduct(@RequestBody @Valid PostCreateApiRequest request) {
-        Long productId = postFacade.createProduct(mapper.toProductCreateRequest(request));
+        Long productId = postFacade.createProduct(mapper.toPostCreateRequestParam(request));
         PostCreateApiResponse response = PostCreateApiResponse.from(productId);
 
         URI uri = ServletUriComponentsBuilder
