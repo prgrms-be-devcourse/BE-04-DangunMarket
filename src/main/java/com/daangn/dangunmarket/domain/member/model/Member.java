@@ -5,11 +5,9 @@ import lombok.*;
 
 @Entity
 @Getter
-@Builder
-@AllArgsConstructor
 @Table(name = "Members")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Member {
+public class Member{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -18,21 +16,36 @@ public class Member {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private RoleType role;
+    private RoleType roleType;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private MemberProvider memberProvider;
 
     @Column(nullable = false)
-    private String socialToken;
+    private String socialId;
 
-    //@Valid
     @Embedded
     @Column(nullable = false)
     private NickName nickName;
 
     @Column
     private Integer reviewScore;
+
+    @Builder
+    public Member(Long id, Long chatInformationId, Long messageId, Long productsId, Long wishListId,
+                  Long activityAreasId, RoleType roleType, MemberProvider memberProvider, String socialId,
+                  NickName nickName, Integer reviewScore) {
+        this.id = id;
+        this.roleType = roleType;
+        this.memberProvider = memberProvider;
+        this.socialId = socialId;
+        this.nickName = nickName;
+        this.reviewScore = reviewScore;
+    }
+
+    public String getNickName() {
+        return nickName.getNickName();
+    }
 
 }

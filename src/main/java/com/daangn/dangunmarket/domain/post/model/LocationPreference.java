@@ -31,4 +31,12 @@ public class LocationPreference {
         this.alias = alias;
     }
 
+    public double getLatitude() {
+        return geography.getY();
+    }
+
+    public double getLongitude() {
+        return geography.getX();
+    }
+
 }

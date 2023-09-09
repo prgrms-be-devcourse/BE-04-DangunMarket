@@ -95,15 +95,41 @@ public class PostLikeServiceTest {
     }
 
     private void setUpData() {
-        Member member1 = Member.builder().id(1L).role(USER).memberProvider(GOOGLE).socialToken("member1 socialId").nickName(new NickName("nickname1")).reviewScore(34).build();
-        Member member2 = Member.builder().id(2L).role(USER).memberProvider(GOOGLE).socialToken("member2 socialId").nickName(new NickName("nickname2")).reviewScore(35).build();
+        Member member1 = Member.builder()
+                .id(1L)
+                .roleType(USER)
+                .memberProvider(GOOGLE)
+                .socialId("member1 socialId")
+                .nickName(new NickName("nickname1"))
+                .reviewScore(34)
+                .build();
+        Member member2 = Member.builder()
+                .id(2L)
+                .roleType(USER)
+                .memberProvider(GOOGLE)
+                .socialId("member2 socialId")
+                .nickName(new NickName("nickname2"))
+                .reviewScore(35)
+                .build();
         memberId1 = memberJpaRepository.save(member1).getId();
         memberId2 = memberJpaRepository.save(member2).getId();
 
         Category category1 = categoryRepository.save(new Category("중고서적", null, 1L, null));
 
         List<MultipartFile> multiPartFiles = new ArrayList<>();
-        PostCreateRequestParam requestParam = new PostCreateRequestParam(2L, 1L, 53.5297, 126.8876, "네이버 그린 팩토리", multiPartFiles, category1.getId(), "테스트 title", "테스트 Content", 200L, true, LocalDateTime.now());
+        PostCreateRequestParam requestParam = new PostCreateRequestParam(
+                2L,
+                1L,
+                53.5297,
+                126.8876,
+                "네이버 그린 팩토리",
+                multiPartFiles,
+                category1.getId(),
+                "테스트 title",
+                "테스트 Content",
+                200L,
+                true,
+                LocalDateTime.now());
         postId = postFacade.createPost(requestParam);
     }
 

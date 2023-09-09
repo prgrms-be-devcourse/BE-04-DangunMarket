@@ -2,15 +2,14 @@ package com.daangn.dangunmarket.domain.post.controller;
 
 import com.daangn.dangunmarket.domain.post.controller.dto.PostCreateApiRequest;
 import com.daangn.dangunmarket.domain.post.controller.dto.PostCreateApiResponse;
+import com.daangn.dangunmarket.domain.post.controller.dto.PostFindApiResponse;
 import com.daangn.dangunmarket.domain.post.controller.mapper.PostApiMapper;
 import com.daangn.dangunmarket.domain.post.facade.PostFacade;
+import com.daangn.dangunmarket.domain.post.facade.dto.PostFindResponseParam;
 import jakarta.validation.Valid;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
@@ -41,6 +40,15 @@ public class PostController {
                 .toUri();
 
         return ResponseEntity.created(uri).body(response);
+    }
+
+
+    @GetMapping("/{postId}")
+    public ResponseEntity<PostFindApiResponse> findById(@PathVariable Long postId) {
+        PostFindResponseParam responseParam = postFacade.findById(postId);
+        PostFindApiResponse response = PostFindApiResponse.from(responseParam);
+
+        return ResponseEntity.ok(response);
     }
 
 }
