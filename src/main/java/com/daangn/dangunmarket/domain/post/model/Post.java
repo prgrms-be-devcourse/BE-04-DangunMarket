@@ -62,12 +62,13 @@ public class Post extends BaseEntity {
     private Integer likeCount;
 
     @Builder
-    public Post(Long memberId, Long areaId, LocationPreference localPreference, List<PostImage> postImageList, Category category, TradeStatus tradeStatus, Title title, String content, Price price, boolean isOfferAllowed, LocalDateTime refreshedAt) {
+    public Post(Long memberId, Long areaId, LocationPreference localPreference, List<PostImage> postImageList, Category category, TradeStatus tradeStatus, Title title, String content, Price price, boolean isOfferAllowed, LocalDateTime refreshedAt, Integer likeCount) {
         Assert.notNull(memberId, "memberId는 null값이 들어올 수 없습니다.");
         Assert.notNull(areaId, "areaId는 null값이 들어올 수 없습니다.");
         Assert.notNull(tradeStatus, "tradeStatus는 null값이 들어올 수 없습니다.");
         Assert.notNull(title, "title은 null값이 들어올 수 없습니다.");
         Assert.notNull(content, "content는 null값이 들어올 수 없습니다.");
+        Assert.notNull(likeCount, "likeCount는 null값이 들어올 수 없습니다.");
 
         this.memberId = memberId;
         this.areaId = areaId;
@@ -80,6 +81,7 @@ public class Post extends BaseEntity {
         this.price = price;
         this.isOfferAllowed = isOfferAllowed;
         this.refreshedAt = refreshedAt;
+        this.likeCount = likeCount;
     }
 
     public List<PostImage> getPostImageList() {
@@ -106,4 +108,5 @@ public class Post extends BaseEntity {
     public void cancelLike() {
         this.likeCount -= 1;
     }
+
 }
