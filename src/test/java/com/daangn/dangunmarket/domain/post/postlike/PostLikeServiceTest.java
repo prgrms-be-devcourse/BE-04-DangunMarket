@@ -37,19 +37,19 @@ import static com.daangn.dangunmarket.domain.member.model.RoleType.USER;
 public class PostLikeServiceTest {
 
     @Autowired
-    PostLikeService postLikeService;
+    private PostLikeService postLikeService;
 
     @Autowired
-    CategoryRepository categoryRepository;
+    private CategoryRepository categoryRepository;
 
     @Autowired
-    PostFacade postFacade;
+    private PostFacade postFacade;
 
     @Autowired
-    MemberJpaRepository memberJpaRepository;
+    private MemberJpaRepository memberJpaRepository;
 
     @Autowired
-    PostRepository postRepository;
+    private PostRepository postRepository;
 
     private Long memberId1;
     private Long memberId2;
