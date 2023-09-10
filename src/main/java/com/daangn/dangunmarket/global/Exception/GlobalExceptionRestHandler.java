@@ -34,9 +34,6 @@ public class GlobalExceptionRestHandler {
 
     /**
      * [Exception] 클라이언트에서 request의 '파라미터로' 데이터가 넘어오지 않았을 경우
-     *
-     * @param ex MissingServletRequestParameterException
-     * @return ResponseEntity<ErrorResponse>
      */
     @ExceptionHandler(MissingServletRequestParameterException.class)
     protected ResponseEntity<ErrorResponse> handleMissingRequestHeaderExceptionException(
@@ -49,8 +46,10 @@ public class GlobalExceptionRestHandler {
     }
 
     /**
+     * <pre>
      * [Exception] enum type 일치하지 않아 binding 못할 경우
      * 주로 @RequestParam enum으로 binding 못했을 경우 발생
+     * </pre>
      */
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)
     protected ResponseEntity<ErrorResponse> handleMethodArgumentTypeMismatchException(MethodArgumentTypeMismatchException e) {
@@ -63,9 +62,6 @@ public class GlobalExceptionRestHandler {
 
     /**
      * [Exception] com.fasterxml.jackson.core 내에 Exception 발생하는 경우
-     *
-     * @param ex JsonProcessingException
-     * @return ResponseEntity<ErrorResponse>
      */
     @ExceptionHandler(JsonProcessingException.class)
     protected ResponseEntity<ErrorResponse> handleJsonProcessingException(JsonProcessingException ex) {
@@ -90,9 +86,6 @@ public class GlobalExceptionRestHandler {
 
     /**
      * [Exception] ContentType이 적절하지 않은 경우
-     *
-     * @param e
-     * @return ResponseEntity<ErrorResponse>
      */
     @ExceptionHandler(HttpMediaTypeNotSupportedException.class)
     protected ResponseEntity<ErrorResponse> handleHttpMediaTypeException(HttpMediaTypeNotSupportedException e) {
