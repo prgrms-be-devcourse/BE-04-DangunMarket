@@ -1,5 +1,6 @@
 package com.daangn.dangunmarket.domain.post.facade.dto;
 
+import com.daangn.dangunmarket.domain.post.model.PostImage;
 import com.daangn.dangunmarket.domain.post.model.TradeStatus;
 import com.daangn.dangunmarket.domain.post.service.dto.PostFindResponse;
 
@@ -28,8 +29,8 @@ public record PostFindResponseParam(
 
     public static PostFindResponseParam of(PostFindResponse response, String memberName, String areaName) {
         List<String> urls = response.postImageList().stream()
-                .map(e -> e.getUrl())
-                .collect(Collectors.toList());
+                .map(PostImage::getUrl)
+                .toList();
 
         return new PostFindResponseParam(
                 response.postId(),

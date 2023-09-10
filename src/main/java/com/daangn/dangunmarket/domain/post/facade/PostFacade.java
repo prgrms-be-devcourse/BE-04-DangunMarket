@@ -43,20 +43,20 @@ public class PostFacade {
     }
 
     @Transactional
-    public Long createProduct(PostCreateRequestParam reqest) {
+    public Long createProduct(PostCreateRequestParam request) {
         GeometryFactory factory = new GeometryFactory();
-        Point point = factory.createPoint(new Coordinate(reqest.longitude(), reqest.latitude()));
-        LocationPreference locationPreference = new LocationPreference(point, reqest.alias());
+        Point point = factory.createPoint(new Coordinate(request.longitude(), request.latitude()));
+        LocationPreference locationPreference = new LocationPreference(point, request.alias());
 
-        List<String> url = s3Uploader.saveImages(reqest.files());
+        List<String> url = s3Uploader.saveImages(request.files());
         List<PostImage> postImages = url.stream()
                 .map(PostImage::new)
-                .collect(Collectors.toList());
+                .toList();
 
-        Category findCategory = categoryService.findById(reqest.categoryId());
+        Category findCategory = categoryService.findById(request.categoryId());
 
         return postService.createProduct(mapper.toPostCreateRequest(
-                reqest,
+                request,
                 locationPreference,
                 postImages,
                 findCategory));

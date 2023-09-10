@@ -3,7 +3,7 @@ package com.daangn.dangunmarket.domain.member.service;
 import com.daangn.dangunmarket.domain.member.model.Member;
 import com.daangn.dangunmarket.domain.member.repository.MemberJpaRepository;
 import com.daangn.dangunmarket.domain.member.service.dto.MemberResponse;
-import com.daangn.dangunmarket.global.Exception.EntityNotFoundException;
+import com.daangn.dangunmarket.global.exception.EntityNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

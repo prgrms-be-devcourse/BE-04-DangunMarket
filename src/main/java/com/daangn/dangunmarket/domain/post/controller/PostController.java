@@ -24,8 +24,8 @@ import java.net.URI;
         produces = MediaType.APPLICATION_JSON_VALUE)
 public class PostController {
 
-    private PostFacade postFacade;
-    private PostApiMapper mapper;
+    private final PostFacade postFacade;
+    private final PostApiMapper mapper;
 
     public PostController(PostFacade postFacade, PostApiMapper mapper) {
         this.postFacade = postFacade;

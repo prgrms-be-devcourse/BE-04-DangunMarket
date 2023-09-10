@@ -3,7 +3,7 @@ package com.daangn.dangunmarket.domain.area.service;
 import com.daangn.dangunmarket.domain.area.model.Area;
 import com.daangn.dangunmarket.domain.area.repository.AreaReader;
 import com.daangn.dangunmarket.domain.area.service.dto.AreaResponse;
-import com.daangn.dangunmarket.global.Exception.EntityNotFoundException;
+import com.daangn.dangunmarket.global.exception.EntityNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
