@@ -20,7 +20,7 @@ public class Review {
     private Long id;
 
     @Column(nullable = false)
-    private Long productId;
+    private Long postId;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")

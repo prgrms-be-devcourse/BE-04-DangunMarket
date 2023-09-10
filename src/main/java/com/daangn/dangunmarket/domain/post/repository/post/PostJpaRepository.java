@@ -1,4 +1,4 @@
-package com.daangn.dangunmarket.domain.post.repository;
+package com.daangn.dangunmarket.domain.post.repository.post;
 
 import com.daangn.dangunmarket.domain.post.model.Post;
 import org.springframework.data.jpa.repository.JpaRepository;

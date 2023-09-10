@@ -9,8 +9,8 @@ public class NickName {
 
     private String nickName;
 
-
-    protected NickName() { }
+    protected NickName() {
+    }
 
     public NickName(String nickName) {
         validateName(nickName);

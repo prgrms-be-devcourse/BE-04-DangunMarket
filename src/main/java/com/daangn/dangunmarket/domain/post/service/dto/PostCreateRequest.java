@@ -1,5 +1,6 @@
 package com.daangn.dangunmarket.domain.post.service.dto;
 
+
 import com.daangn.dangunmarket.domain.post.model.Category;
 import com.daangn.dangunmarket.domain.post.model.LocationPreference;
 import com.daangn.dangunmarket.domain.post.model.PostImage;

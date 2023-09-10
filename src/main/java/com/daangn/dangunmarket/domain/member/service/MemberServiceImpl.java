@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 import static com.daangn.dangunmarket.global.response.ErrorCode.NOT_FOUND_MEMBER_ENTITY;
 
 @Service
-public class MemberServiceImpl implements MemberService{
+public class MemberServiceImpl implements MemberService {
 
     private MemberJpaRepository memberJpaRepository;
 
