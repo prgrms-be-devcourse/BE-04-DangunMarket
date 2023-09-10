@@ -11,6 +11,7 @@ import com.daangn.dangunmarket.domain.post.service.PostService;
 import com.daangn.dangunmarket.domain.post.facade.dto.PostCreateRequestParam;
 import com.daangn.dangunmarket.domain.post.model.PostImage;
 import com.daangn.dangunmarket.domain.post.service.dto.PostFindResponse;
+import com.daangn.dangunmarket.global.GeometryTypeFactory;
 import com.daangn.dangunmarket.global.aws.s3.S3Uploader;
 
 import org.locationtech.jts.geom.Coordinate;
@@ -20,7 +21,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Transactional(readOnly = true)
 @Service
@@ -44,8 +44,7 @@ public class PostFacade {
 
     @Transactional
     public Long createProduct(PostCreateRequestParam request) {
-        GeometryFactory factory = new GeometryFactory();
-        Point point = factory.createPoint(new Coordinate(request.longitude(), request.latitude()));
+        Point point = GeometryTypeFactory.createPoint(request.longitude(), request.latitude());
         LocationPreference locationPreference = new LocationPreference(point, request.alias());
 
         List<String> url = s3Uploader.saveImages(request.files());

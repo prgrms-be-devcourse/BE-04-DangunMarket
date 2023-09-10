@@ -6,7 +6,6 @@ import com.daangn.dangunmarket.domain.post.service.dto.PostFindResponse;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public record PostFindResponseParam(
         Long postId,
