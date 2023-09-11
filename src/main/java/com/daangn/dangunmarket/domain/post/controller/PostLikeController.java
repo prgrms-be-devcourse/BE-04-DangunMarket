@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping(value = "/post-likes",
+@RequestMapping(value = "/api/post-likes",
         produces = MediaType.APPLICATION_JSON_VALUE
 )
 public class PostLikeController {
