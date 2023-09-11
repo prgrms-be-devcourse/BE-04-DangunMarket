@@ -4,7 +4,6 @@ import com.daangn.dangunmarket.domain.auth.jwt.CustomUser;
 import com.daangn.dangunmarket.domain.post.controller.dto.LikedPostFindApiResponseList;
 import com.daangn.dangunmarket.domain.post.controller.dto.PostLikeApiResponse;
 import com.daangn.dangunmarket.domain.post.controller.mapper.PostApiMapper;
-import com.daangn.dangunmarket.domain.post.repository.postlike.dto.JoinedWithArea;
 import com.daangn.dangunmarket.domain.post.service.PostLikeService;
 import com.daangn.dangunmarket.domain.post.service.dto.LikedPostFindResponseList;
 import com.daangn.dangunmarket.domain.post.service.dto.PostLikeResponse;
@@ -15,10 +14,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 
 @RestController
-@RequestMapping(value = "/api/post-likes",
+@RequestMapping(value = "/post-likes",
         produces = MediaType.APPLICATION_JSON_VALUE
 )
 public class PostLikeController {

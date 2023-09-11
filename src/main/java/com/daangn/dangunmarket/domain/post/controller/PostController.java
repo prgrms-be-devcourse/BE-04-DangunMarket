@@ -23,7 +23,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import java.net.URI;
 
 @RestController
-@RequestMapping(value = "/api/posts",
+@RequestMapping(value = "/posts",
         produces = MediaType.APPLICATION_JSON_VALUE)
 public class PostController {
 
