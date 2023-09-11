@@ -43,13 +43,12 @@ public class Category {
     private List<Category> children = new ArrayList<>();
 
     @Builder
-    public Category(String name, Category parent, Long depth, List<Category> children) {
+    public Category(String name, Category parent, Long depth) {
         Assert.notNull(name, "name은 null값이 들어올 수 없습니다.");
 
         this.name = name;
         this.parent = parent;
         this.depth = depth;
-        this.children = children;
     }
 
 }

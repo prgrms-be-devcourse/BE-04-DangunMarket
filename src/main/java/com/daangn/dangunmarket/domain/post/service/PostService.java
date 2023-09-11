@@ -1,7 +1,7 @@
 package com.daangn.dangunmarket.domain.post.service;
 
 import com.daangn.dangunmarket.domain.post.model.Post;
-import com.daangn.dangunmarket.domain.post.repository.PostRepository;
+import com.daangn.dangunmarket.domain.post.repository.post.PostRepository;
 import com.daangn.dangunmarket.domain.post.service.dto.PostCreateRequest;
 import com.daangn.dangunmarket.domain.post.service.dto.PostFindResponse;
 import com.daangn.dangunmarket.domain.post.service.mapper.PostMapper;

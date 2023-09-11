@@ -1,14 +1,17 @@
 package com.daangn.dangunmarket.domain.post.controller;
 
+import com.daangn.dangunmarket.domain.auth.jwt.CustomUser;
 import com.daangn.dangunmarket.domain.post.controller.dto.PostCreateApiRequest;
 import com.daangn.dangunmarket.domain.post.controller.dto.PostCreateApiResponse;
 import com.daangn.dangunmarket.domain.post.controller.dto.PostFindApiResponse;
+import com.daangn.dangunmarket.domain.post.controller.dto.LikedPostFindApiResponseList;
 import com.daangn.dangunmarket.domain.post.controller.mapper.PostApiMapper;
 import com.daangn.dangunmarket.domain.post.facade.PostFacade;
 import com.daangn.dangunmarket.domain.post.facade.dto.PostFindResponseParam;
 import jakarta.validation.Valid;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -34,15 +37,15 @@ public class PostController {
 
     @PostMapping(
             consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<PostCreateApiResponse> createProduct(@RequestBody @Valid PostCreateApiRequest request) {
-        Long productId = postFacade.createProduct(mapper.toPostCreateRequestParam(request));
+    public ResponseEntity<PostCreateApiResponse> createProduct(
+            @RequestBody @Valid PostCreateApiRequest request,
+            Authentication authentication
+    ) {
+        CustomUser customUser = (CustomUser) authentication.getPrincipal();
+        Long productId = postFacade.createProduct(mapper.toPostCreateRequestParam(request, customUser.memberId()));
         PostCreateApiResponse response = PostCreateApiResponse.from(productId);
 
-        URI uri = ServletUriComponentsBuilder
-                .fromCurrentRequest()
-                .path("/{id}")
-                .buildAndExpand(productId)
-                .toUri();
+        URI uri = createURI(productId);
 
         return ResponseEntity.created(uri).body(response);
     }
@@ -53,6 +56,14 @@ public class PostController {
         PostFindApiResponse response = PostFindApiResponse.from(responseParam);
 
         return ResponseEntity.ok(response);
+    }
+
+    private static URI createURI(Long productId) {
+        return ServletUriComponentsBuilder
+                .fromCurrentRequest()
+                .path("/{id}")
+                .buildAndExpand(productId)
+                .toUri();
     }
 
 }

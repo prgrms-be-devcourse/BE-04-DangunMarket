@@ -10,7 +10,6 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 public record PostCreateApiRequest(
-        @NotNull(message = "memberId가 누락되었습니다.") Long memberId,
         @NotNull(message = "areaId가 누락되었습니다.") Long areaId,
         @NotNull(message = "위도가 누락되었습니다.") Double latitude,
         @NotNull(message = "경도가 누락되었습니다.") Double longitude,

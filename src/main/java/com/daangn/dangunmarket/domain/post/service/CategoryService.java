@@ -1,7 +1,7 @@
 package com.daangn.dangunmarket.domain.post.service;
 
 import com.daangn.dangunmarket.domain.post.model.Category;
-import com.daangn.dangunmarket.domain.post.repository.CategoryRepository;
+import com.daangn.dangunmarket.domain.post.repository.category.CategoryRepository;
 import com.daangn.dangunmarket.global.exception.EntityNotFoundException;
 import org.springframework.stereotype.Service;
 

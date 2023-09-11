@@ -14,8 +14,6 @@ import com.daangn.dangunmarket.domain.post.service.dto.PostFindResponse;
 import com.daangn.dangunmarket.global.GeometryTypeFactory;
 import com.daangn.dangunmarket.global.aws.s3.S3Uploader;
 
-import org.locationtech.jts.geom.Coordinate;
-import org.locationtech.jts.geom.GeometryFactory;
 import org.locationtech.jts.geom.Point;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

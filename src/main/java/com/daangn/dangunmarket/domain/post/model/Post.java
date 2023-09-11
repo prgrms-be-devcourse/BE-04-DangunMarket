@@ -114,4 +114,12 @@ public class Post extends BaseEntity {
         return price.getValue();
     }
 
+    public void like() {
+        likeCount += 1;
+    }
+
+    public void cancelLike() {
+        likeCount -= 1;
+    }
+
 }

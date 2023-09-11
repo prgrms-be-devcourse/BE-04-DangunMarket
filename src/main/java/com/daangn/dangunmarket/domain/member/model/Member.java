@@ -38,4 +38,5 @@ public class Member {
     public String getNickName() {
         return nickName.getNickName();
     }
+
 }
