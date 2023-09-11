@@ -11,7 +11,7 @@ public record MemberResponse(
 
     public static MemberResponse from(Member member){
         return new MemberResponse(member.getId(),
-                member.getRole(),
+                member.getRoleType(),
                 member.getNickName(),
                 member.getReviewScore());
     }

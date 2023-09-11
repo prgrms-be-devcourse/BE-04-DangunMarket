@@ -4,7 +4,6 @@ import com.daangn.dangunmarket.domain.auth.jwt.CustomUser;
 import com.daangn.dangunmarket.domain.post.controller.dto.PostCreateApiRequest;
 import com.daangn.dangunmarket.domain.post.controller.dto.PostCreateApiResponse;
 import com.daangn.dangunmarket.domain.post.controller.dto.PostFindApiResponse;
-import com.daangn.dangunmarket.domain.post.controller.dto.LikedPostFindApiResponseList;
 import com.daangn.dangunmarket.domain.post.controller.mapper.PostApiMapper;
 import com.daangn.dangunmarket.domain.post.facade.PostFacade;
 import com.daangn.dangunmarket.domain.post.facade.dto.PostFindResponseParam;
@@ -42,13 +41,14 @@ public class PostController {
             Authentication authentication
     ) {
         CustomUser customUser = (CustomUser) authentication.getPrincipal();
-        Long productId = postFacade.createProduct(mapper.toPostCreateRequestParam(request, customUser.memberId()));
+        Long productId = postFacade.createPost(mapper.toPostCreateRequestParam(request, customUser.memberId()));
         PostCreateApiResponse response = PostCreateApiResponse.from(productId);
 
         URI uri = createURI(productId);
 
         return ResponseEntity.created(uri).body(response);
     }
+
 
     @GetMapping("/{postId}")
     public ResponseEntity<PostFindApiResponse> findById(@PathVariable Long postId) {

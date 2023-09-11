@@ -2,14 +2,14 @@ package com.daangn.dangunmarket.domain.post.facade;
 
 import com.daangn.dangunmarket.domain.area.service.AreaService;
 import com.daangn.dangunmarket.domain.member.service.MemberService;
+import com.daangn.dangunmarket.domain.post.facade.dto.PostCreateRequestParam;
 import com.daangn.dangunmarket.domain.post.facade.dto.PostFindResponseParam;
-import com.daangn.dangunmarket.domain.post.service.CategoryService;
+import com.daangn.dangunmarket.domain.post.facade.mpper.PostParamMapper;
 import com.daangn.dangunmarket.domain.post.model.Category;
 import com.daangn.dangunmarket.domain.post.model.LocationPreference;
-import com.daangn.dangunmarket.domain.post.facade.mpper.PostParamMapper;
-import com.daangn.dangunmarket.domain.post.service.PostService;
-import com.daangn.dangunmarket.domain.post.facade.dto.PostCreateRequestParam;
 import com.daangn.dangunmarket.domain.post.model.PostImage;
+import com.daangn.dangunmarket.domain.post.service.CategoryService;
+import com.daangn.dangunmarket.domain.post.service.PostService;
 import com.daangn.dangunmarket.domain.post.service.dto.PostFindResponse;
 import com.daangn.dangunmarket.global.GeometryTypeFactory;
 import com.daangn.dangunmarket.global.aws.s3.S3Uploader;
@@ -31,6 +31,7 @@ public class PostFacade {
     private S3Uploader s3Uploader;
     private PostParamMapper mapper;
 
+
     public PostFacade(PostService postService, MemberService memberService, AreaService areaService, CategoryService categoryService, S3Uploader s3Uploader, PostParamMapper mapper) {
         this.postService = postService;
         this.memberService = memberService;
@@ -41,7 +42,7 @@ public class PostFacade {
     }
 
     @Transactional
-    public Long createProduct(PostCreateRequestParam request) {
+    public Long createPost(PostCreateRequestParam request) {
         Point point = GeometryTypeFactory.createPoint(request.longitude(), request.latitude());
         LocationPreference locationPreference = new LocationPreference(point, request.alias());
 
@@ -52,12 +53,13 @@ public class PostFacade {
 
         Category findCategory = categoryService.findById(request.categoryId());
 
-        return postService.createProduct(mapper.toPostCreateRequest(
+        return postService.createPost(mapper.toPostCreateRequest(
                 request,
                 locationPreference,
                 postImages,
                 findCategory));
     }
+
 
     public PostFindResponseParam findById(Long productId) {
         PostFindResponse response = postService.findById(productId);

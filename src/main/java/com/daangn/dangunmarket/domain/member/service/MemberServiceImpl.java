@@ -11,7 +11,7 @@ import static com.daangn.dangunmarket.global.response.ErrorCode.NOT_FOUND_MEMBER
 
 @Transactional(readOnly = true)
 @Service
-public class MemberServiceImpl implements MemberService{
+public class MemberServiceImpl implements MemberService {
 
     private MemberJpaRepository memberJpaRepository;
 

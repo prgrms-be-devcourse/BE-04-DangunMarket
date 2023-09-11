@@ -30,9 +30,9 @@ public class QMember extends EntityPathBase<Member> {
 
     public final NumberPath<Integer> reviewScore = createNumber("reviewScore", Integer.class);
 
-    public final EnumPath<RoleType> role = createEnum("role", RoleType.class);
+    public final EnumPath<RoleType> roleType = createEnum("roleType", RoleType.class);
 
-    public final StringPath socialToken = createString("socialToken");
+    public final StringPath socialId = createString("socialId");
 
     public QMember(String variable) {
         this(Member.class, forVariable(variable), INITS);

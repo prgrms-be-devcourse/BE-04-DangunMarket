@@ -24,10 +24,11 @@ public class PostService {
     }
 
     @Transactional
-    public Long createProduct(PostCreateRequest request) {
+    public Long createPost(PostCreateRequest request) {
         Post savePost = postRepository.save(mapper.toEntity(request));
         return savePost.getId();
     }
+
 
     public PostFindResponse findById(Long productId) {
         Post post = postRepository.findById(productId)
@@ -35,4 +36,5 @@ public class PostService {
 
         return PostFindResponse.from(post);
     }
+
 }

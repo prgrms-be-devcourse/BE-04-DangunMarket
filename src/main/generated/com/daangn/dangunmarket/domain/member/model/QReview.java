@@ -30,7 +30,7 @@ public class QReview extends EntityPathBase<Review> {
 
     public final StringPath message = createString("message");
 
-    public final NumberPath<Long> productId = createNumber("productId", Long.class);
+    public final NumberPath<Long> postId = createNumber("postId", Long.class);
 
     public QReview(String variable) {
         this(Review.class, forVariable(variable), INITS);
