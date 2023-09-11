@@ -51,4 +51,5 @@ public class ActivityAreaController {
         return ResponseEntity.created(uri).body(activityAreaCreateApiResponse);
     }
 
+
 }

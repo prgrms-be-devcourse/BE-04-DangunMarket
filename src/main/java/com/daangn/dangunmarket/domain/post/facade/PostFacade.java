@@ -2,17 +2,16 @@ package com.daangn.dangunmarket.domain.post.facade;
 
 import com.daangn.dangunmarket.domain.area.service.AreaService;
 import com.daangn.dangunmarket.domain.member.service.MemberService;
+import com.daangn.dangunmarket.domain.post.facade.dto.PostCreateRequestParam;
 import com.daangn.dangunmarket.domain.post.facade.dto.PostFindResponseParam;
-import com.daangn.dangunmarket.domain.post.service.CategoryService;
+import com.daangn.dangunmarket.domain.post.facade.mpper.PostParamMapper;
 import com.daangn.dangunmarket.domain.post.model.Category;
 import com.daangn.dangunmarket.domain.post.model.LocationPreference;
-import com.daangn.dangunmarket.domain.post.facade.mpper.PostParamMapper;
-import com.daangn.dangunmarket.domain.post.service.PostService;
-import com.daangn.dangunmarket.domain.post.facade.dto.PostCreateRequestParam;
 import com.daangn.dangunmarket.domain.post.model.PostImage;
+import com.daangn.dangunmarket.domain.post.service.CategoryService;
+import com.daangn.dangunmarket.domain.post.service.PostService;
 import com.daangn.dangunmarket.domain.post.service.dto.PostFindResponse;
 import com.daangn.dangunmarket.global.aws.s3.S3Uploader;
-
 import org.locationtech.jts.geom.Coordinate;
 import org.locationtech.jts.geom.GeometryFactory;
 import org.locationtech.jts.geom.Point;
@@ -33,6 +32,7 @@ public class PostFacade {
     private S3Uploader s3Uploader;
     private PostParamMapper mapper;
 
+
     public PostFacade(PostService postService, MemberService memberService, AreaService areaService, CategoryService categoryService, S3Uploader s3Uploader, PostParamMapper mapper) {
         this.postService = postService;
         this.memberService = memberService;
@@ -43,7 +43,7 @@ public class PostFacade {
     }
 
     @Transactional
-    public Long createProduct(PostCreateRequestParam reqest) {
+    public Long createPost(PostCreateRequestParam reqest) {
         GeometryFactory factory = new GeometryFactory();
         Point point = factory.createPoint(new Coordinate(reqest.longitude(), reqest.latitude()));
         LocationPreference locationPreference = new LocationPreference(point, reqest.alias());
@@ -55,12 +55,13 @@ public class PostFacade {
 
         Category findCategory = categoryService.findById(reqest.categoryId());
 
-        return postService.createProduct(mapper.toProductCreateRequest(
+        return postService.createPost(mapper.toPostCreateRequest(
                 reqest,
                 locationPreference,
                 postImages,
                 findCategory));
     }
+
 
     public PostFindResponseParam findById(Long productId) {
         PostFindResponse response = postService.findById(productId);

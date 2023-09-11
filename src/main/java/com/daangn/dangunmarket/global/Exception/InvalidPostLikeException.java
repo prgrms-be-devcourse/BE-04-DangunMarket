@@ -4,11 +4,10 @@ import com.daangn.dangunmarket.global.response.ErrorCode;
 import lombok.Getter;
 
 @Getter
-public class EntityNotFoundException extends RuntimeException {
+public class InvalidPostLikeException extends RuntimeException {
     private final ErrorCode errorCode;
 
-    public EntityNotFoundException(final ErrorCode errorCode) {
-        super(errorCode.getMessage());
+    public InvalidPostLikeException(ErrorCode errorCode) {
         this.errorCode = errorCode;
     }
 }

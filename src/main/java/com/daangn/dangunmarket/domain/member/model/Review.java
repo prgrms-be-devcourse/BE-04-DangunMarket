@@ -18,7 +18,7 @@ public class Review {
     private Long id;
 
     @Column(nullable = false)
-    private Long productId;
+    private Long postId;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
@@ -30,9 +30,9 @@ public class Review {
     @Convert(converter = StringArrayConverter.class)
     private List<EvaluationItem> evaluation_items = new ArrayList<>();
 
-    public Review(Long id, Long productId, Member member, String message, List<EvaluationItem> evaluation_items) {
+    public Review(Long id, Long postId, Member member, String message, List<EvaluationItem> evaluation_items) {
         this.id = id;
-        this.productId = productId;
+        this.postId = postId;
         this.member = member;
         this.message = message;
         this.evaluation_items = evaluation_items;

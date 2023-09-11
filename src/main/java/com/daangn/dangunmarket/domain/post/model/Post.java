@@ -3,20 +3,7 @@ package com.daangn.dangunmarket.domain.post.model;
 import com.daangn.dangunmarket.domain.post.model.vo.Price;
 import com.daangn.dangunmarket.domain.post.model.vo.Title;
 import com.daangn.dangunmarket.global.entity.BaseEntity;
-
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Column;
-import jakarta.persistence.Embedded;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.OneToOne;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -101,9 +88,9 @@ public class Post extends BaseEntity {
         return postImageList;
     }
 
-    public void addProductImage(PostImage postImage) {
+    public void addPostImage(PostImage postImage) {
         this.postImageList.add(postImage);
-        postImage.changeProduct(this);
+        postImage.changePost(this);
     }
 
     public String getTitle() {
@@ -112,6 +99,14 @@ public class Post extends BaseEntity {
 
     public long getPrice() {
         return price.getValue();
+    }
+
+    public void like() {
+        this.likeCount += 1;
+    }
+
+    public void cancelLike() {
+        this.likeCount -= 1;
     }
 
 }

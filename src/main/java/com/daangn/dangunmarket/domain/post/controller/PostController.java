@@ -9,12 +9,7 @@ import com.daangn.dangunmarket.domain.post.facade.dto.PostFindResponseParam;
 import jakarta.validation.Valid;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
@@ -35,7 +30,7 @@ public class PostController {
 
     @PostMapping
     public ResponseEntity<PostCreateApiResponse> createProduct(@RequestBody @Valid PostCreateApiRequest request) {
-        Long productId = postFacade.createProduct(mapper.toProductCreateRequest(request));
+        Long productId = postFacade.createPost(mapper.toPostCreateRequest(request));
         PostCreateApiResponse response = PostCreateApiResponse.from(productId);
 
         URI uri = ServletUriComponentsBuilder
@@ -46,6 +41,7 @@ public class PostController {
 
         return ResponseEntity.created(uri).body(response);
     }
+
 
     @GetMapping("/{postId}")
     public ResponseEntity<PostFindApiResponse> findById(@PathVariable Long postId) {
