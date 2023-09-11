@@ -7,6 +7,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
@@ -32,8 +33,9 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET,Constants.permitAllArray).permitAll()
                         .anyRequest().authenticated())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .csrf(c -> c.disable())
-                .oauth2Login(withDefaults())
+                .csrf(AbstractHttpConfigurer::disable)
+                .httpBasic().disable()
+                .formLogin().disable()
                 .addFilterBefore(jwtTokenValidationFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
