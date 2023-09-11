@@ -1,16 +1,16 @@
 package com.daangn.dangunmarket.domain.member.model;
 
 import jakarta.persistence.Embeddable;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 
 import java.util.Objects;
 
 @Embeddable
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class NickName {
 
     private String nickName;
-
-
-    protected NickName() { }
 
     public NickName(String nickName) {
         validateName(nickName);
@@ -27,11 +27,6 @@ public class NickName {
         return nickName;
     }
 
-
-    public void setNickName(String nickName) {
-        this.nickName = nickName;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -44,4 +39,5 @@ public class NickName {
     public int hashCode() {
         return Objects.hash(nickName);
     }
+
 }
