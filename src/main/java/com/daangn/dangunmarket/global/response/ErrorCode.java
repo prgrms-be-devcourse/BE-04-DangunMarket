@@ -7,6 +7,7 @@ public enum ErrorCode {
 
     //global
     INTERNAL_SERVER_ERROR("G001", "Internal Server Error"),
+    NOT_FOUND_ENTITY("G002", "엔티티를 찾을 수 없습니다."),
 
     //s3 - image
     FAIL_TO_UPLOAD_IMAGES("S001", "이미지를 업로드 할 수 없습니다."),
