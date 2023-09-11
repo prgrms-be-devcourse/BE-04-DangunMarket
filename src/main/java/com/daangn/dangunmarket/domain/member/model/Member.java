@@ -48,15 +48,6 @@ public class Member {
         this.reviewScore = reviewScore;
     }
 
-    @Builder
-    public Member(RoleType roleType, MemberProvider memberProvider, String socialId, NickName nickName, Integer reviewScore) {
-        this.roleType = roleType;
-        this.memberProvider = memberProvider;
-        this.socialId = socialId;
-        this.nickName = nickName;
-        this.reviewScore = reviewScore;
-    }
-
     public String getNickName() {
         return nickName.getNickName();
     }
