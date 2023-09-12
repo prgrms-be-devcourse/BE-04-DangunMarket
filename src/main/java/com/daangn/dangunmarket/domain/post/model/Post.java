@@ -15,8 +15,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Getter
 @Table(name = "posts")
+@Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Post extends BaseEntity {
 
@@ -102,11 +102,11 @@ public class Post extends BaseEntity {
     }
 
     public void like() {
-        this.likeCount += 1;
+        likeCount += 1;
     }
 
     public void cancelLike() {
-        this.likeCount -= 1;
+        likeCount -= 1;
     }
 
 }

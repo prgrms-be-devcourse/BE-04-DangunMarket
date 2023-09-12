@@ -37,8 +37,7 @@ public class ClientService {
 
         Optional<Member> memberOptional = memberJpaRepository.findMemberIfExisted(socialId);
         Member savedMember = memberOptional.orElseGet(() -> memberJpaRepository.save(clientMember));
-
-
+        
         AuthToken newAuthToken = refreshTokenService.saveAccessTokenCache(savedMember.getId(),socialId);
 
         return AuthResponse.builder()

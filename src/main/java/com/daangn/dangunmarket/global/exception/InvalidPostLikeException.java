@@ -10,4 +10,5 @@ public class InvalidPostLikeException extends RuntimeException {
     public InvalidPostLikeException(ErrorCode errorCode) {
         this.errorCode = errorCode;
     }
+
 }

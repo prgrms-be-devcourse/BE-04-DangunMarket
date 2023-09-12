@@ -27,8 +27,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import java.net.URI;
 
 @RestController
-@RequestMapping(value = "/api/posts",
-        consumes = MediaType.APPLICATION_JSON_VALUE,
+@RequestMapping(value = "/posts",
         produces = MediaType.APPLICATION_JSON_VALUE)
 public class PostController {
 
@@ -36,22 +35,25 @@ public class PostController {
     private final PostApiMapper mapper;
     private final PostControllerMapper controllerMapper;
 
-    public PostController(PostFacade postFacade, PostApiMapper mapper, PostControllerMapper controllerMapper) {
+    public PostController(PostFacade postFacade,
+                          PostApiMapper mapper,
+                          PostControllerMapper controllerMapper) {
         this.postFacade = postFacade;
         this.mapper = mapper;
         this.controllerMapper = controllerMapper;
     }
 
-    @PostMapping
-    public ResponseEntity<PostCreateApiResponse> createProduct(@RequestBody @Valid PostCreateApiRequest request) {
-        Long productId = postFacade.createPost(mapper.toPostCreateRequest(request));
+    @PostMapping(
+            consumes = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<PostCreateApiResponse> createProduct(
+            @RequestBody @Valid PostCreateApiRequest request,
+            Authentication authentication
+    ) {
+        CustomUser customUser = (CustomUser) authentication.getPrincipal();
+        Long productId = postFacade.createPost(mapper.toPostCreateRequestParam(request, customUser.memberId()));
         PostCreateApiResponse response = PostCreateApiResponse.from(productId);
 
-        URI uri = ServletUriComponentsBuilder
-                .fromCurrentRequest()
-                .path("/{id}")
-                .buildAndExpand(productId)
-                .toUri();
+        URI uri = createURI(productId);
 
         return ResponseEntity.created(uri).body(response);
     }
@@ -79,6 +81,14 @@ public class PostController {
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(responses);
+    }
+
+    private static URI createURI(Long productId) {
+        return ServletUriComponentsBuilder
+                .fromCurrentRequest()
+                .path("/{id}")
+                .buildAndExpand(productId)
+                .toUri();
     }
 
 }

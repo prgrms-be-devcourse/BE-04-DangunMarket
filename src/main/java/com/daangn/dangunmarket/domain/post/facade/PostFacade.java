@@ -3,7 +3,7 @@ package com.daangn.dangunmarket.domain.post.facade;
 import com.daangn.dangunmarket.domain.area.service.AreaService;
 import com.daangn.dangunmarket.domain.member.model.ActivityArea;
 import com.daangn.dangunmarket.domain.member.service.MemberService;
-import com.daangn.dangunmarket.domain.member.service.dto.MemberResponse;
+import com.daangn.dangunmarket.domain.member.service.dto.MemberFindResponse;
 import com.daangn.dangunmarket.domain.post.facade.dto.PostCreateRequestParam;
 import com.daangn.dangunmarket.domain.post.facade.dto.PostFindResponseParam;
 import com.daangn.dangunmarket.domain.post.facade.dto.PostsGetResponseParam;
@@ -15,9 +15,9 @@ import com.daangn.dangunmarket.domain.post.service.CategoryService;
 import com.daangn.dangunmarket.domain.post.service.PostService;
 import com.daangn.dangunmarket.domain.post.service.dto.PostFindResponse;
 import com.daangn.dangunmarket.domain.post.service.dto.PostGetResponse;
+import com.daangn.dangunmarket.global.GeometryTypeFactory;
 import com.daangn.dangunmarket.global.aws.s3.S3Uploader;
-import org.locationtech.jts.geom.Coordinate;
-import org.locationtech.jts.geom.GeometryFactory;
+
 import org.locationtech.jts.geom.Point;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -25,7 +25,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Transactional(readOnly = true)
 @Service
@@ -53,20 +52,19 @@ public class PostFacade {
     }
 
     @Transactional
-    public Long createPost(PostCreateRequestParam reqest) {
-        GeometryFactory factory = new GeometryFactory();
-        Point point = factory.createPoint(new Coordinate(reqest.longitude(), reqest.latitude()));
-        LocationPreference locationPreference = new LocationPreference(point, reqest.alias());
+    public Long createPost(PostCreateRequestParam request) {
+        Point point = GeometryTypeFactory.createPoint(request.longitude(), request.latitude());
+        LocationPreference locationPreference = new LocationPreference(point, request.alias());
 
-        List<String> url = s3Uploader.saveImages(reqest.files());
+        List<String> url = s3Uploader.saveImages(request.files());
         List<PostImage> postImages = url.stream()
                 .map(PostImage::new)
-                .collect(Collectors.toList());
+                .toList();
 
-        Category findCategory = categoryService.findById(reqest.categoryId());
+        Category findCategory = categoryService.findById(request.categoryId());
 
         return postService.createPost(mapper.toPostCreateRequest(
-                reqest,
+                request,
                 locationPreference,
                 postImages,
                 findCategory));
@@ -82,7 +80,7 @@ public class PostFacade {
     }
 
     public PostsGetResponseParam getPosts(Long memberId, Pageable pageable) {
-        MemberResponse memberResponse = memberService.findById(memberId);
+        MemberFindResponse memberResponse = memberService.findById(memberId);
         if (!isMemberActivityAreaValid(memberResponse.activityAreas())) {
             throw new IllegalStateException("회원의 활동지역이 존재하지 않습니다.");
         }

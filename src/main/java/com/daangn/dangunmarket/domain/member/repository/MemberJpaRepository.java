@@ -8,7 +8,7 @@ import java.util.Optional;
 
 public interface MemberJpaRepository extends JpaRepository<Member, Long> {
 
-    @Query("select m from Member m join fetch m.activityArea ma")
+    @Query("select m from Member m join fetch m.activityAreas ma")
     Optional<Member> findById(Long memberId);
 
     Member findBySocialId(String socialId);

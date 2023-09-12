@@ -12,18 +12,18 @@ import java.time.LocalDateTime;
 @Component
 public class PostMapper {
 
-    public Post toEntity(PostCreateRequest reqest) {
+    public Post toEntity(PostCreateRequest request) {
         return Post.builder()
-                .memberId(reqest.memberId())
-                .areaId(reqest.areaId())
-                .localPreference(reqest.locationPreference())
-                .postImageList(reqest.postImages())
-                .category(reqest.category())
+                .memberId(request.memberId())
+                .areaId(request.areaId())
+                .localPreference(request.locationPreference())
+                .postImageList(request.postImages())
+                .category(request.category())
                 .tradeStatus(TradeStatus.IN_PROGRESS)
-                .title(new Title(reqest.title()))
-                .content(reqest.content())
-                .price(new Price(reqest.price()))
-                .isOfferAllowed(reqest.isOfferAllowed())
+                .title(new Title(request.title()))
+                .content(request.content())
+                .price(new Price(request.price()))
+                .isOfferAllowed(request.isOfferAllowed())
                 .refreshedAt(LocalDateTime.now())
                 .likeCount(0)
                 .build();

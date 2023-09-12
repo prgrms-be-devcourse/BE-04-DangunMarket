@@ -5,6 +5,7 @@ import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -37,6 +38,9 @@ public class Member {
     @Column(nullable = false)
     private MemberProvider memberProvider;
 
+    @OneToMany(mappedBy = "member", fetch = FetchType.LAZY)
+    private List<ActivityArea> activityAreas = new ArrayList<>();
+
     @Column(nullable = false)
     private String socialId;
 
@@ -47,13 +51,8 @@ public class Member {
     @Column
     private Integer reviewScore;
 
-    @OneToMany(mappedBy = "member")
-    private List<ActivityArea> activityArea = new ArrayList<>();
-
     @Builder
-    public Member(Long id, Long chatInformationId, Long messageId, Long productsId, Long wishListId,
-                  Long activityAreasId, RoleType roleType, MemberProvider memberProvider, String socialId,
-                  NickName nickName, Integer reviewScore) {
+    public Member(Long id, RoleType roleType, MemberProvider memberProvider, String socialId, NickName nickName, Integer reviewScore) {
         this.id = id;
         this.roleType = roleType;
         this.memberProvider = memberProvider;
@@ -67,6 +66,7 @@ public class Member {
     }
 
     public void addActivityArea(ActivityArea activityArea) {
-        this.activityArea.add(activityArea);
+        activityAreas.add(activityArea);
     }
+
 }
