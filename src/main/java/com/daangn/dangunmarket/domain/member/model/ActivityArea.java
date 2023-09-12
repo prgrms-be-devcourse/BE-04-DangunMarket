@@ -7,7 +7,6 @@ import org.springframework.util.Assert;
 @Entity
 @Table(name="activity_areas")
 @Getter
-@Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class ActivityArea {
 
@@ -26,6 +25,7 @@ public class ActivityArea {
     @Column
     private boolean isVerified;
 
+    @Builder
     public ActivityArea(Long id, Member member, Long emdAreaId, boolean isVerified) {
         this.id = id;
         this.member = member;
@@ -41,6 +41,10 @@ public class ActivityArea {
     public void addMember(Member member) {
         this.member = member;
         member.addActivityArea(this);
+    }
+
+    public void authorizedActivityArea () {
+        isVerified = true;
     }
 
 }
