@@ -30,8 +30,8 @@ public class ActivityAreaFacadeTest {
     @Autowired
     private MemberService memberService;
 
-    private Member member ;
-    private MemberCreateResponse saveMember ;
+    private Member member;
+    private MemberCreateResponse saveMember;
     private Long activityId ;
     private ActivityAreaFindResponse findActivityArea;
     private ActivityAreaCreateRequestParam request;

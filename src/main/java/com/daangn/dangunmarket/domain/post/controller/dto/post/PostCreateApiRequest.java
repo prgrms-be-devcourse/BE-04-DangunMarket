@@ -1,4 +1,4 @@
-package com.daangn.dangunmarket.domain.post.controller.dto;
+package com.daangn.dangunmarket.domain.post.controller.dto.post;
 
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;

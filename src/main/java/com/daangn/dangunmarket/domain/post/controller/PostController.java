@@ -1,17 +1,23 @@
 package com.daangn.dangunmarket.domain.post.controller;
 
 import com.daangn.dangunmarket.domain.auth.jwt.CustomUser;
-import com.daangn.dangunmarket.domain.post.controller.dto.PostCreateApiRequest;
-import com.daangn.dangunmarket.domain.post.controller.dto.PostCreateApiResponse;
-import com.daangn.dangunmarket.domain.post.controller.dto.PostFindApiResponse;
+import com.daangn.dangunmarket.domain.post.controller.dto.post.PostUpdateStatusApiRequest;
+import com.daangn.dangunmarket.domain.post.controller.dto.post.PostUpdateStatusApiResponse;
+import com.daangn.dangunmarket.domain.post.controller.dto.post.PostCreateApiRequest;
+import com.daangn.dangunmarket.domain.post.controller.dto.post.PostCreateApiResponse;
+import com.daangn.dangunmarket.domain.post.controller.dto.post.PostFindApiResponse;
 import com.daangn.dangunmarket.domain.post.controller.mapper.PostApiMapper;
 import com.daangn.dangunmarket.domain.post.facade.PostFacade;
 import com.daangn.dangunmarket.domain.post.facade.dto.PostFindResponseParam;
+import com.daangn.dangunmarket.domain.post.service.PostService;
+
 import jakarta.validation.Valid;
+
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -27,10 +33,12 @@ import java.net.URI;
 public class PostController {
 
     private final PostFacade postFacade;
+    private final PostService postService;
     private final PostApiMapper mapper;
 
-    public PostController(PostFacade postFacade, PostApiMapper mapper) {
+    public PostController(PostFacade postFacade, PostService postService, PostApiMapper mapper) {
         this.postFacade = postFacade;
+        this.postService = postService;
         this.mapper = mapper;
     }
 
@@ -49,13 +57,23 @@ public class PostController {
         return ResponseEntity.created(uri).body(response);
     }
 
-
     @GetMapping("/{postId}")
     public ResponseEntity<PostFindApiResponse> findById(@PathVariable Long postId) {
         PostFindResponseParam responseParam = postFacade.findById(postId);
         PostFindApiResponse response = PostFindApiResponse.from(responseParam);
 
         return ResponseEntity.ok(response);
+    }
+
+    @PatchMapping("/{postId}")
+    public ResponseEntity<PostUpdateStatusApiResponse> changeStatus(
+            @PathVariable Long postId,
+            @RequestBody PostUpdateStatusApiRequest request){
+
+        Long responsePostId = postService.changeStatus(mapper.toPostUpdateStatusRequest(request, postId));
+        PostUpdateStatusApiResponse apiResponse = PostUpdateStatusApiResponse.from(responsePostId);
+
+        return ResponseEntity.ok(apiResponse);
     }
 
     private static URI createURI(Long productId) {

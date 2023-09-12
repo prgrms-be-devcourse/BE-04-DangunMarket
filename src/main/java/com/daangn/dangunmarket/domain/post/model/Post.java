@@ -109,4 +109,9 @@ public class Post extends BaseEntity {
         likeCount -= 1;
     }
 
+    public void changeTradeStatus(TradeStatus tradeStatus) {
+        Assert.notNull(tradeStatus, "tradeStatus는 null이 될 수 없습니다.");
+
+        this.tradeStatus = tradeStatus;
+    }
 }

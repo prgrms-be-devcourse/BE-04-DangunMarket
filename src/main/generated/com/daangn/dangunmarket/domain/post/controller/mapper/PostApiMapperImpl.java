@@ -1,7 +1,7 @@
 package com.daangn.dangunmarket.domain.post.controller.mapper;
 
-import com.daangn.dangunmarket.domain.post.controller.dto.PostCreateApiRequest;
-import com.daangn.dangunmarket.domain.post.controller.dto.PostLikeApiResponse;
+import com.daangn.dangunmarket.domain.post.controller.dto.post.PostCreateApiRequest;
+import com.daangn.dangunmarket.domain.post.controller.dto.postlike.PostLikeApiResponse;
 import com.daangn.dangunmarket.domain.post.facade.dto.PostCreateRequestParam;
 import com.daangn.dangunmarket.domain.post.service.dto.PostLikeResponse;
 import java.time.LocalDateTime;
