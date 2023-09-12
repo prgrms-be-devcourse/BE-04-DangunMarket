@@ -14,4 +14,6 @@ public interface ActivityAreaRepository {
 
     Optional<ActivityArea> isExistedActivityAreaByMemberId(Long memberId);
 
+    Optional<ActivityArea> findActivityAreaByMemberIdAndEmdAreaId(Long memberId, Long areaId);
+
 }
