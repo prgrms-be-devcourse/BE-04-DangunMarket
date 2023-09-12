@@ -2,7 +2,6 @@ package com.daangn.dangunmarket.domain.post.service;
 
 import com.daangn.dangunmarket.domain.area.model.Area;
 import com.daangn.dangunmarket.domain.area.repository.AreaJpaRepository;
-import com.daangn.dangunmarket.domain.area.service.AreaService;
 import com.daangn.dangunmarket.domain.post.model.Post;
 import com.daangn.dangunmarket.domain.post.model.PostImage;
 import com.daangn.dangunmarket.domain.post.model.PostLike;
@@ -13,7 +12,6 @@ import com.daangn.dangunmarket.domain.post.repository.post.PostRepository;
 import com.daangn.dangunmarket.domain.post.repository.postlike.PostLikeRepository;
 import com.daangn.dangunmarket.domain.post.service.dto.LikedPostFindResponse;
 import com.daangn.dangunmarket.domain.post.service.dto.LikedPostFindResponseList;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -23,7 +21,6 @@ import org.locationtech.jts.io.ParseException;
 import org.locationtech.jts.io.WKTReader;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
@@ -32,7 +29,6 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 
 @ActiveProfiles("test")
 @Transactional

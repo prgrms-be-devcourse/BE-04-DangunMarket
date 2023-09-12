@@ -22,6 +22,8 @@ public class QMember extends EntityPathBase<Member> {
 
     public static final QMember member = new QMember("member1");
 
+    public final ListPath<ActivityArea, QActivityArea> activityAreas = this.<ActivityArea, QActivityArea>createList("activityAreas", ActivityArea.class, QActivityArea.class, PathInits.DIRECT2);
+
     public final NumberPath<Long> id = createNumber("id", Long.class);
 
     public final EnumPath<MemberProvider> memberProvider = createEnum("memberProvider", MemberProvider.class);

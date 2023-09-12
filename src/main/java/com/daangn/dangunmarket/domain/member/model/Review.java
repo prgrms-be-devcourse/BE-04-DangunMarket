@@ -42,11 +42,12 @@ public class Review {
     @Convert(converter = StringArrayConverter.class)
     private List<EvaluationItem> evaluation_items = new ArrayList<>();
 
-    @Builder
-    public Review(Long postId, Member member, String message, List<EvaluationItem> evaluation_items) {
+    public Review(Long id, Long postId, Member member, String message, List<EvaluationItem> evaluation_items) {
+        this.id = id;
         this.postId = postId;
         this.member = member;
         this.message = message;
         this.evaluation_items = evaluation_items;
     }
+
 }

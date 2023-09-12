@@ -4,6 +4,7 @@ import com.daangn.dangunmarket.domain.area.model.Area;
 import com.daangn.dangunmarket.domain.area.repository.AreaReader;
 import com.daangn.dangunmarket.domain.area.service.dto.AreaResponse;
 import com.daangn.dangunmarket.global.exception.EntityNotFoundException;
+import org.locationtech.jts.geom.Point;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,6 +25,10 @@ public class AreaService {
                 .orElseThrow(() -> new EntityNotFoundException(NOT_FOUND_AREA_ENTITY));
 
         return AreaResponse.of(area);
+    }
+
+    public Long findAreaIdByPolygon(Point point) {
+        return areaReader.findAreaIdByPolygon(point);
     }
 
 }
