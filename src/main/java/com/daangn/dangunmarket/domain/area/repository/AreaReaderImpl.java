@@ -1,6 +1,9 @@
 package com.daangn.dangunmarket.domain.area.repository;
 
+import com.amazonaws.services.kms.model.NotFoundException;
 import com.daangn.dangunmarket.domain.area.model.Area;
+import com.daangn.dangunmarket.global.response.ErrorCode;
+import org.locationtech.jts.geom.Point;
 import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
@@ -17,6 +20,14 @@ public class AreaReaderImpl implements AreaReader {
     @Override
     public Optional<Area> findById(Long id) {
         return areaJpaRepository.findById(id);
+    }
+
+    @Override
+    public Long findAreaIdByPolygon(Point point) {
+        Area area = areaJpaRepository.findAreasContainingPoint(point)
+                .orElseThrow(() -> new NotFoundException("존재하는 위도 경도 범위가 아닙니다."));
+
+        return area.getId();
     }
 
 }
