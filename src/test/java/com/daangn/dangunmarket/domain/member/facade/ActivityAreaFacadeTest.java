@@ -1,5 +1,6 @@
 package com.daangn.dangunmarket.domain.member.facade;
 
+import com.amazonaws.services.kms.model.NotFoundException;
 import com.daangn.dangunmarket.domain.member.facade.dto.ActivityAreaCreateRequestParam;
 import com.daangn.dangunmarket.domain.member.model.*;
 import com.daangn.dangunmarket.domain.member.service.ActivityAreaService;
@@ -14,6 +15,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @ActiveProfiles("test")
 @SpringBootTest
@@ -79,6 +81,34 @@ public class ActivityAreaFacadeTest {
 
         //then
         assertThat(count).isEqualTo(1);
+    }
+
+    @Test
+    @DisplayName("사용자의 위치정보가 인증된 지역의 위치 정보와 동일하면 true를 반환한다.")
+    void isVerifiedActivityArea_membersLocation_equal() {
+        //given
+        activityId = activityAreaFacade.createActivityArea(request,saveMember.id());
+        findActivityArea = activityAreaService.findByActivityId(activityId);
+
+        //then
+        boolean isVerified = activityAreaFacade.isVerifiedActivityArea(request.longitude(),request.latitude(),saveMember.id());
+
+        //then
+        assertThat(isVerified).isEqualTo(true);
+    }
+
+    @Test
+    @DisplayName("사용자의 위치정보가 인증된 지역의 위치 정보와 동일하지 핞으면 NOT FOUND EXCEPTION이 발생한다.")
+    void isVerifiedActivityArea_notEqualsLocation_throwException() {
+        //given
+        activityId = activityAreaFacade.createActivityArea(request,saveMember.id());
+        findActivityArea = activityAreaService.findByActivityId(activityId);
+        ActivityAreaCreateRequestParam changedRequest = new ActivityAreaCreateRequestParam(37.575328952171, 126.96496674529);
+
+        //when_then
+        assertThrows(NotFoundException.class, () -> {
+            activityAreaFacade.isVerifiedActivityArea(changedRequest.longitude(), changedRequest.latitude(), saveMember.id());
+        });
     }
 
 }

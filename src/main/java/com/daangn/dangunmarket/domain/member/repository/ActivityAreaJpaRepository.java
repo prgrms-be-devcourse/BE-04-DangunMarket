@@ -12,10 +12,13 @@ public interface ActivityAreaJpaRepository extends JpaRepository<ActivityArea, L
     @Query("SELECT a FROM ActivityArea a JOIN FETCH a.member WHERE a.id = :activityId")
     Optional<ActivityArea> findByActivityId(@Param("activityId") Long activityId);
 
-    @Query("SELECT DISTINCT a FROM ActivityArea a JOIN a.member m WHERE m.id = :memberId")
+    @Query("SELECT DISTINCT a FROM ActivityArea a JOIN FETCH a.member m WHERE m.id = :memberId")
     Optional<ActivityArea> isExistedActivityAreaByMemberId(@Param("memberId") Long memberId);
 
     @Query("SELECT COUNT(*) FROM ActivityArea a JOIN a.member m WHERE m.id=:memberId")
     int countActivityAreaByMemberId(Long memberId);
+
+    @Query("SELECT a FROM ActivityArea a JOIN FETCH a.member m where m.id=:memberId AND a.emdAreaId =:areaId")
+    Optional<ActivityArea> findActivityAreaByMemberIdAndEmdAreaId(@Param("memberId") Long memberId, @Param("areaId") Long areaId);
 
 }

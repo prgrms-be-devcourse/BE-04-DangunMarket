@@ -6,7 +6,7 @@ import org.springframework.stereotype.Repository;
 import java.util.Optional;
 
 @Repository
-public class ActivityAreaRepositoryImpl implements ActivityAreaRepository{
+public class ActivityAreaRepositoryImpl implements ActivityAreaRepository {
 
     private final ActivityAreaJpaRepository activityAreaJpaRepository;
 
@@ -32,6 +32,11 @@ public class ActivityAreaRepositoryImpl implements ActivityAreaRepository{
     @Override
     public Optional<ActivityArea> isExistedActivityAreaByMemberId(Long memberId) {
         return activityAreaJpaRepository.isExistedActivityAreaByMemberId(memberId);
+    }
+
+    @Override
+    public Optional<ActivityArea> findActivityAreaByMemberIdAndEmdAreaId(Long memberId, Long areaId) {
+        return activityAreaJpaRepository.findActivityAreaByMemberIdAndEmdAreaId(memberId, areaId);
     }
 
 }
