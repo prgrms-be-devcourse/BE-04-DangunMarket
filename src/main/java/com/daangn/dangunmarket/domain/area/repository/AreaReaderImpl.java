@@ -2,7 +2,6 @@ package com.daangn.dangunmarket.domain.area.repository;
 
 import com.amazonaws.services.kms.model.NotFoundException;
 import com.daangn.dangunmarket.domain.area.model.Area;
-import com.daangn.dangunmarket.global.response.ErrorCode;
 import org.locationtech.jts.geom.Point;
 import org.springframework.stereotype.Repository;
 

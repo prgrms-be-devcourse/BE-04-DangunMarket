@@ -5,7 +5,6 @@ import com.daangn.dangunmarket.domain.member.service.dto.MemberCreateResponse;
 import com.daangn.dangunmarket.domain.member.service.dto.MemberFindResponse;
 import org.mapstruct.InjectionStrategy;
 import org.mapstruct.Mapper;
-import org.mapstruct.factory.Mappers;
 
 @Mapper(
         componentModel = "spring",

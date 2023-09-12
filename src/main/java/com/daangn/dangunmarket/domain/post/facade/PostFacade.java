@@ -11,15 +11,14 @@ import com.daangn.dangunmarket.domain.post.model.PostImage;
 import com.daangn.dangunmarket.domain.post.service.CategoryService;
 import com.daangn.dangunmarket.domain.post.service.PostService;
 import com.daangn.dangunmarket.domain.post.service.dto.PostFindResponse;
+import com.daangn.dangunmarket.global.GeometryTypeFactory;
 import com.daangn.dangunmarket.global.aws.s3.S3Uploader;
-import org.locationtech.jts.geom.Coordinate;
-import org.locationtech.jts.geom.GeometryFactory;
+
 import org.locationtech.jts.geom.Point;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Transactional(readOnly = true)
 @Service
@@ -43,20 +42,19 @@ public class PostFacade {
     }
 
     @Transactional
-    public Long createPost(PostCreateRequestParam reqest) {
-        GeometryFactory factory = new GeometryFactory();
-        Point point = factory.createPoint(new Coordinate(reqest.longitude(), reqest.latitude()));
-        LocationPreference locationPreference = new LocationPreference(point, reqest.alias());
+    public Long createPost(PostCreateRequestParam request) {
+        Point point = GeometryTypeFactory.createPoint(request.longitude(), request.latitude());
+        LocationPreference locationPreference = new LocationPreference(point, request.alias());
 
-        List<String> url = s3Uploader.saveImages(reqest.files());
+        List<String> url = s3Uploader.saveImages(request.files());
         List<PostImage> postImages = url.stream()
                 .map(PostImage::new)
-                .collect(Collectors.toList());
+                .toList();
 
-        Category findCategory = categoryService.findById(reqest.categoryId());
+        Category findCategory = categoryService.findById(request.categoryId());
 
         return postService.createPost(mapper.toPostCreateRequest(
-                reqest,
+                request,
                 locationPreference,
                 postImages,
                 findCategory));

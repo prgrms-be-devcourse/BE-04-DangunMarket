@@ -16,7 +16,7 @@ public interface ActivityAreaJpaRepository extends JpaRepository<ActivityArea, L
     Optional<ActivityArea> isExistedActivityAreaByMemberId(@Param("memberId") Long memberId);
 
     @Query("SELECT COUNT(*) FROM ActivityArea a JOIN a.member m WHERE m.id=:memberId")
-    int countActivityAreaByMemberId(Long memberId);
+    int countActivityAreaByMemberId(@Param("memberId") Long memberId);
 
     @Query("SELECT a FROM ActivityArea a JOIN FETCH a.member m where m.id=:memberId AND a.emdAreaId =:areaId")
     Optional<ActivityArea> findActivityAreaByMemberIdAndEmdAreaId(@Param("memberId") Long memberId, @Param("areaId") Long areaId);

@@ -1,4 +1,4 @@
-package com.daangn.dangunmarket.global.Exception;
+package com.daangn.dangunmarket.global.exception;
 
 import com.amazonaws.services.kms.model.NotFoundException;
 import com.daangn.dangunmarket.domain.auth.exception.TokenExpiredException;

@@ -7,11 +7,12 @@ import com.daangn.dangunmarket.domain.post.facade.PostFacade;
 import com.daangn.dangunmarket.domain.post.facade.dto.PostCreateRequestParam;
 import com.daangn.dangunmarket.domain.post.model.Category;
 import com.daangn.dangunmarket.domain.post.model.Post;
-import com.daangn.dangunmarket.domain.post.repository.post.CategoryRepository;
+import com.daangn.dangunmarket.domain.post.repository.category.CategoryRepository;
 import com.daangn.dangunmarket.domain.post.repository.post.PostRepository;
 import com.daangn.dangunmarket.domain.post.service.PostLikeService;
-import com.daangn.dangunmarket.global.Exception.EntityNotFoundException;
-import com.daangn.dangunmarket.global.Exception.InvalidPostLikeException;
+
+import com.daangn.dangunmarket.global.exception.EntityNotFoundException;
+import com.daangn.dangunmarket.global.exception.InvalidPostLikeException;
 import com.daangn.dangunmarket.global.response.ErrorCode;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;

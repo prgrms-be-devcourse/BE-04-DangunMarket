@@ -5,7 +5,7 @@ import com.daangn.dangunmarket.domain.member.repository.MemberRepository;
 import com.daangn.dangunmarket.domain.member.service.dto.MemberCreateResponse;
 import com.daangn.dangunmarket.domain.member.service.dto.MemberFindResponse;
 import com.daangn.dangunmarket.domain.member.service.mapper.MemberDtoMapper;
-import com.daangn.dangunmarket.global.Exception.EntityNotFoundException;
+import com.daangn.dangunmarket.global.exception.EntityNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
