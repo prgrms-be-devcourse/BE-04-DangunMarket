@@ -84,7 +84,7 @@ public class ActivityAreaFacadeTest {
     }
 
     @Test
-    @DisplayName("사용자가 존재의 위치정보가 인증된 지역의 위치 정보가 동일하면 true를 반환한다.")
+    @DisplayName("사용자의 위치정보가 인증된 지역의 위치 정보와 동일하면 true를 반환한다.")
     void isVerifiedActivityArea_membersLocation_equal() {
         //given
         activityId = activityAreaFacade.createActivityArea(request,saveMember.id());
@@ -98,7 +98,7 @@ public class ActivityAreaFacadeTest {
     }
 
     @Test
-    @DisplayName("사용자가 존재의 위치정보가 인증된 지역의 위치 정보가 동일하지 핞으면 NOT FOUND EXCEPTION을 발생시킨다.")
+    @DisplayName("사용자의 위치정보가 인증된 지역의 위치 정보와 동일하지 핞으면 NOT FOUND EXCEPTION이 발생한다.")
     void isVerifiedActivityArea_notEqualsLocation_throwException() {
         //given
         activityId = activityAreaFacade.createActivityArea(request,saveMember.id());

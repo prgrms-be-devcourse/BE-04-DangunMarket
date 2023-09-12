@@ -21,7 +21,7 @@ import java.net.URI;
 
 
 @RestController
-@RequestMapping(value = "/api/activity-area",
+@RequestMapping(value = "/activity-area",
         produces = MediaType.APPLICATION_JSON_VALUE)
 public class ActivityAreaController {
 
