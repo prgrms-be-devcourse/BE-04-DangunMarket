@@ -51,14 +51,8 @@ class PostFacadeTest {
     @Autowired
     private MemberService memberService;
 
-    @MockBean
-    private AreaService areaService;
-
     @Autowired
     private CategoryService categoryService;
-
-    @MockBean
-    private S3Uploader s3Uploader;
 
     @Autowired
     private PostParamMapper mapper;
@@ -72,8 +66,13 @@ class PostFacadeTest {
     @Autowired
     private CategoryRepository categoryRepository;
 
-    private Long setupProductId;
+    @MockBean
+    private AreaService areaService;
 
+    @MockBean
+    private S3Uploader s3Uploader;
+
+    private Long setupProductId;
     private Category setupCategory;
 
     @BeforeEach

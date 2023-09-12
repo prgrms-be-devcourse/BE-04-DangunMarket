@@ -1,9 +1,12 @@
 package com.daangn.dangunmarket.domain.post.controller.mapper;
 
 import com.daangn.dangunmarket.domain.post.controller.dto.post.PostCreateApiRequest;
+import com.daangn.dangunmarket.domain.post.controller.dto.post.PostUpdateStatusApiRequest;
 import com.daangn.dangunmarket.domain.post.controller.dto.postlike.PostLikeApiResponse;
 import com.daangn.dangunmarket.domain.post.facade.dto.PostCreateRequestParam;
+import com.daangn.dangunmarket.domain.post.model.TradeStatus;
 import com.daangn.dangunmarket.domain.post.service.dto.PostLikeResponse;
+import com.daangn.dangunmarket.domain.post.service.dto.PostUpdateStatusRequest;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -13,7 +16,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2023-09-12T17:06:47+0900",
+    date = "2023-09-13T00:06:18+0900",
     comments = "version: 1.5.5.Final, compiler: javac, environment: Java 17.0.7 (Oracle Corporation)"
 )
 @Component
@@ -75,5 +78,23 @@ public class PostApiMapperImpl implements PostApiMapper {
         PostLikeApiResponse postLikeApiResponse = new PostLikeApiResponse( likeCount, isLiked );
 
         return postLikeApiResponse;
+    }
+
+    @Override
+    public PostUpdateStatusRequest toPostUpdateStatusRequest(PostUpdateStatusApiRequest request, Long postId) {
+        if ( request == null && postId == null ) {
+            return null;
+        }
+
+        TradeStatus tradeStatus = null;
+        if ( request != null ) {
+            tradeStatus = request.tradeStatus();
+        }
+        Long postId1 = null;
+        postId1 = postId;
+
+        PostUpdateStatusRequest postUpdateStatusRequest = new PostUpdateStatusRequest( tradeStatus, postId1 );
+
+        return postUpdateStatusRequest;
     }
 }

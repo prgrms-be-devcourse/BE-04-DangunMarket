@@ -69,6 +69,7 @@ public class Post extends BaseEntity {
         Assert.notNull(title, "title은 null값이 들어올 수 없습니다.");
         Assert.notNull(content, "content는 null값이 들어올 수 없습니다.");
         Assert.notNull(likeCount, "likeCount는 null값이 들어올 수 없습니다.");
+        Assert.notNull(postImageList, "postImageList는 null값이 들어올 수 없습니다.");
 
         this.memberId = memberId;
         this.areaId = areaId;
