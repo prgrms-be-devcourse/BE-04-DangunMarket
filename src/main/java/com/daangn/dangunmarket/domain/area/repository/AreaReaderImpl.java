@@ -25,7 +25,7 @@ public class AreaReaderImpl implements AreaReader {
     @Override
     public Long findAreaIdByPolygon(Point point) {
         Area area = areaJpaRepository.findAreasContainingPoint(point)
-                .orElseThrow(() -> new NotFoundException(ErrorCode.NOT_FOUND_ENTITY.getMessage()));
+                .orElseThrow(() -> new NotFoundException("존재하는 위도 경도 범위가 아닙니다."));
 
         return area.getId();
     }

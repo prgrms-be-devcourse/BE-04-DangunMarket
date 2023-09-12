@@ -1,5 +1,8 @@
 package com.daangn.dangunmarket.global.Exception;
 
+import com.amazonaws.services.kms.model.NotFoundException;
+import com.daangn.dangunmarket.domain.auth.exception.TokenExpiredException;
+import com.daangn.dangunmarket.domain.auth.exception.TokenValidFailedException;
 import com.daangn.dangunmarket.global.response.ErrorResponse;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.RequiredArgsConstructor;
@@ -96,6 +99,17 @@ public class GlobalExceptionRestHandler {
                 .body(response);
     }
 
+    /**
+     *
+     */
+    @ExceptionHandler(NotFoundException.class)
+    protected ResponseEntity<ErrorResponse> handleNotFoundException(NotFoundException e) {
+        log.warn("Handle NotFoundException : ", e);
+        final ErrorResponse response = ErrorResponse.of(NOT_FOUND_ENTITY, e.getMessage());
+        return ResponseEntity
+                .status(HttpStatus.NOT_FOUND)
+                .body(response);
+    }
 
     /**
      * [Exception] 커스텀 예외 - EntityNotFoundException
@@ -133,6 +147,15 @@ public class GlobalExceptionRestHandler {
                 .body(response);
     }
 
+    @ExceptionHandler({TokenExpiredException.class, TokenValidFailedException.class})
+    public ResponseEntity<ErrorResponse> handlePermissionDeniedException(TokenExpiredException e) {
+        log.warn("Handle InvalidPostLikeException :", e);
+        final ErrorResponse response = ErrorResponse.of(e.getErrorCode(), e.getMessage());
+        return ResponseEntity
+                .status(HttpStatus.UNAUTHORIZED)
+                .body(response);
+    }
+
     /**
      * [Exception] 서버에 정의되지 않은 모든 예외
      */
@@ -144,4 +167,5 @@ public class GlobalExceptionRestHandler {
                 .status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .body(response);
     }
+
 }

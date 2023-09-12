@@ -15,7 +15,6 @@ public enum ErrorCode {
     INVALID_TYPE_VALUE_ERROR("G006", "타입이 유효하지 않습니다."),
     NOT_FOUND_ENTITY("G007", "엔티티를 찾을 수 없습니다."),
 
-
     //s3 - image
     FAIL_TO_UPLOAD_IMAGES("S001", "이미지를 업로드 할 수 없습니다."),
 
