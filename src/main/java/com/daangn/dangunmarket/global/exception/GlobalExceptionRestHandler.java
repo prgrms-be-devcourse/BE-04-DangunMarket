@@ -1,4 +1,4 @@
-package com.daangn.dangunmarket.global.Exception;
+package com.daangn.dangunmarket.global.exception;
 
 import com.daangn.dangunmarket.global.response.ErrorResponse;
 import com.fasterxml.jackson.core.JsonProcessingException;
