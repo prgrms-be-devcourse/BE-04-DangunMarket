@@ -10,8 +10,10 @@ import com.daangn.dangunmarket.domain.member.service.dto.MemberFindResponse;
 import com.daangn.dangunmarket.domain.member.service.mapper.ActivityAreaDtoMapper;
 import com.daangn.dangunmarket.domain.member.service.mapper.ActivityAreaMapper;
 import com.daangn.dangunmarket.domain.member.service.mapper.MemberMapper;
+import com.daangn.dangunmarket.global.Exception.EntityNotFoundException;
 import com.daangn.dangunmarket.global.response.ErrorCode;
 import org.springframework.data.repository.query.Param;
+import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,14 +26,12 @@ public class ActivityAreaService {
     private final ActivityAreaMapper activityAreaMapper;
     private final MemberMapper memberMapper;
     private final ActivityAreaDtoMapper activityAreaDtoMapper;
-    private final MemberRepository memberRepository;
     private final ActivityAreaRepository activityAreaRepository;
 
-    public ActivityAreaService(ActivityAreaMapper activityAreaMapper, MemberMapper memberMapper, ActivityAreaDtoMapper activityAreaDtoMapper, MemberRepository memberRepository, ActivityAreaRepository activityAreaRepository) {
+    public ActivityAreaService(ActivityAreaMapper activityAreaMapper, MemberMapper memberMapper, ActivityAreaDtoMapper activityAreaDtoMapper, ActivityAreaRepository activityAreaRepository) {
         this.activityAreaMapper = activityAreaMapper;
         this.memberMapper = memberMapper;
         this.activityAreaDtoMapper = activityAreaDtoMapper;
-        this.memberRepository = memberRepository;
         this.activityAreaRepository = activityAreaRepository;
     }
 
@@ -69,8 +69,18 @@ public class ActivityAreaService {
         return activityAreaRepository.countActivityAreaByMemberId(memberId);
     }
 
-   public Optional<ActivityArea> isExistedActivityAreaByMemberId( Long memberId) {
+   public Optional<ActivityArea> isExistedActivityAreaByMemberId(Long memberId) {
         return activityAreaRepository.isExistedActivityAreaByMemberId(memberId);
+   }
+
+   @Transactional
+   public boolean isVerifiedActivityArea(Long memberId, Long areaId) {
+       ActivityArea activityArea = activityAreaRepository.findActivityAreaByMemberIdAndEmdAreaId(memberId, areaId).orElseThrow(()-> new NotFoundException("사용자의 위도 경도는 등록된 활동 지역이 아닙니다."));
+
+       activityArea.authorizedActivityArea();
+       activityAreaRepository.save(activityArea);
+
+       return true;
    }
 
 }
