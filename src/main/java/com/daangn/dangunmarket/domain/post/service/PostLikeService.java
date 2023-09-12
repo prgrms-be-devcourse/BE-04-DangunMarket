@@ -5,8 +5,8 @@ import com.daangn.dangunmarket.domain.post.model.PostLike;
 import com.daangn.dangunmarket.domain.post.repository.post.PostRepository;
 import com.daangn.dangunmarket.domain.post.repository.postlike.PostLikeRepository;
 import com.daangn.dangunmarket.domain.post.service.dto.PostLikeResponse;
-import com.daangn.dangunmarket.global.Exception.EntityNotFoundException;
-import com.daangn.dangunmarket.global.Exception.InvalidPostLikeException;
+import com.daangn.dangunmarket.global.exception.EntityNotFoundException;
+import com.daangn.dangunmarket.global.exception.InvalidPostLikeException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
