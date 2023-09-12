@@ -4,8 +4,11 @@ import com.daangn.dangunmarket.domain.post.model.Post;
 import com.daangn.dangunmarket.domain.post.repository.post.PostRepository;
 import com.daangn.dangunmarket.domain.post.service.dto.PostCreateRequest;
 import com.daangn.dangunmarket.domain.post.service.dto.PostFindResponse;
+import com.daangn.dangunmarket.domain.post.service.dto.PostGetResponse;
 import com.daangn.dangunmarket.domain.post.service.mapper.PostMapper;
-import com.daangn.dangunmarket.global.Exception.EntityNotFoundException;
+import com.daangn.dangunmarket.global.exception.EntityNotFoundException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -35,6 +38,12 @@ public class PostService {
                 .orElseThrow(() -> new EntityNotFoundException(NOT_FOUND_POST_ENTITY));
 
         return PostFindResponse.from(post);
+    }
+
+    public Page<PostGetResponse> getPosts(Long areaId, Pageable pageable) {
+        Page<PostGetResponse> responses = postRepository.getPostsSimple(areaId, pageable);
+
+        return responses;
     }
 
 }
