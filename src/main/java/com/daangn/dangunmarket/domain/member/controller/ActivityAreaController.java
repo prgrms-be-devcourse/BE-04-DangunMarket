@@ -4,25 +4,25 @@ import com.daangn.dangunmarket.domain.auth.jwt.AuthTokenProvider;
 import com.daangn.dangunmarket.domain.auth.jwt.CustomUser;
 import com.daangn.dangunmarket.domain.member.controller.dto.ActivityAreaCreateApiRequest;
 import com.daangn.dangunmarket.domain.member.controller.dto.ActivityAreaCreateApiResponse;
+import com.daangn.dangunmarket.domain.member.controller.dto.ActivityAreaIsVerifiedApiResponse;
 import com.daangn.dangunmarket.domain.member.controller.mapper.ActivityAreaApiMapper;
 import com.daangn.dangunmarket.domain.member.facade.ActivityAreaFacade;
 import com.daangn.dangunmarket.domain.member.facade.dto.ActivityAreaCreateRequestParam;
 import com.daangn.dangunmarket.domain.member.facade.dto.ActivityAreaCreateResponseParam;
 import com.daangn.dangunmarket.domain.member.service.dto.ActivityAreaCreateResponse;
 import jakarta.validation.Valid;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
 
 
 @RestController
-@RequestMapping(value = "/api/activity-area")
+@RequestMapping(value = "/api/activity-area",
+        produces = MediaType.APPLICATION_JSON_VALUE)
 public class ActivityAreaController {
 
     private final ActivityAreaFacade activityAreaFacade;
@@ -51,5 +51,13 @@ public class ActivityAreaController {
         return ResponseEntity.created(uri).body(activityAreaCreateApiResponse);
     }
 
+    @GetMapping
+    public ResponseEntity<ActivityAreaIsVerifiedApiResponse> isVerifiedActivityArea(@RequestParam Double latitude, @RequestParam Double longitude, Authentication authentication) {
+        CustomUser customUser = (CustomUser) authentication.getPrincipal();
+        boolean isVerified = activityAreaFacade.isVerifiedActivityArea(longitude, latitude, customUser.memberId());
+
+        ActivityAreaIsVerifiedApiResponse activityAreaIsVerifiedApiResponse = activityAreaApiMapper.toActivityAreaIsVerifiedApiResponse(isVerified);
+        return ResponseEntity.ok(activityAreaIsVerifiedApiResponse);
+    }
 
 }
