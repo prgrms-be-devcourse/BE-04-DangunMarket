@@ -6,4 +6,4 @@ public record ActivityAreaFindResponse(
         Long id,
         Member member,
         Long emdAreaId,
-        boolean isVerified) { }
+        Boolean isVerified) { }
