@@ -5,10 +5,13 @@ import com.daangn.dangunmarket.domain.post.controller.dto.PostCreateApiRequest;
 import com.daangn.dangunmarket.domain.post.controller.dto.PostCreateApiResponse;
 import com.daangn.dangunmarket.domain.post.controller.dto.PostFindApiResponse;
 import com.daangn.dangunmarket.domain.post.controller.dto.PostGetApiResponses;
+import com.daangn.dangunmarket.domain.post.controller.dto.PostSearchApiRequest;
+import com.daangn.dangunmarket.domain.post.controller.dto.PostSearchApiResponses;
 import com.daangn.dangunmarket.domain.post.controller.mapper.PostApiMapper;
 import com.daangn.dangunmarket.domain.post.facade.PostFacade;
 import com.daangn.dangunmarket.domain.post.facade.dto.PostFindResponseParam;
-import com.daangn.dangunmarket.domain.post.facade.dto.PostsGetResponseParam;
+import com.daangn.dangunmarket.domain.post.facade.dto.PostGetResponseParams;
+import com.daangn.dangunmarket.domain.post.facade.dto.PostSearchResponseParams;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -16,6 +19,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -63,7 +67,6 @@ public class PostController {
         return ResponseEntity.ok(response);
     }
 
-
     @GetMapping
     public ResponseEntity<PostGetApiResponses> getPosts(
             Pageable pageable,
@@ -71,8 +74,30 @@ public class PostController {
     ) {
         CustomUser customUser = (CustomUser) authentication.getPrincipal();
 
-        PostsGetResponseParam responseparam = postFacade.getPosts(customUser.memberId(), pageable);
+        PostGetResponseParams responseparam = postFacade.getPosts(customUser.memberId(), pageable);
         PostGetApiResponses responses = mapper.toPostGetApiResponses(responseparam);
+
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(responses);
+    }
+
+    /**
+     * 게시글 검색 API
+     */
+    @GetMapping("/search")
+    public ResponseEntity<PostSearchApiResponses> getPostsByConditions(
+            @ModelAttribute PostSearchApiRequest postSearchApiRequest,
+            Pageable pageable,
+            Authentication authentiction
+    ) {
+        CustomUser customUser = (CustomUser) authentiction.getPrincipal();
+
+        PostSearchResponseParams responseParams = postFacade.getPostsByConditions(
+                mapper.toPostSearchRequestParam(postSearchApiRequest, pageable),
+                customUser.memberId()
+        );
+        PostSearchApiResponses responses = mapper.toPostSearchApiResponses(responseParams);
 
         return ResponseEntity
                 .status(HttpStatus.OK)
