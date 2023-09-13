@@ -1,13 +1,17 @@
 package com.daangn.dangunmarket.domain.post.facade;
 
+import com.amazonaws.services.kms.model.NotFoundException;
 import com.daangn.dangunmarket.domain.area.service.AreaService;
 import com.daangn.dangunmarket.domain.area.service.dto.AreaResponse;
 import com.daangn.dangunmarket.domain.member.model.Member;
 import com.daangn.dangunmarket.domain.member.model.NickName;
 import com.daangn.dangunmarket.domain.member.repository.MemberJpaRepository;
 import com.daangn.dangunmarket.domain.member.service.MemberService;
+import com.daangn.dangunmarket.domain.post.exception.UnauthorizedAccessException;
 import com.daangn.dangunmarket.domain.post.facade.dto.PostCreateRequestParam;
 import com.daangn.dangunmarket.domain.post.facade.dto.PostFindResponseParam;
+import com.daangn.dangunmarket.domain.post.facade.dto.PostToUpdateResponseParam;
+import com.daangn.dangunmarket.domain.post.facade.mpper.PostParamDtoMapper;
 import com.daangn.dangunmarket.domain.post.facade.mpper.PostParamMapper;
 import com.daangn.dangunmarket.domain.post.model.Category;
 import com.daangn.dangunmarket.domain.post.model.Post;
@@ -15,6 +19,7 @@ import com.daangn.dangunmarket.domain.post.repository.post.CategoryRepository;
 import com.daangn.dangunmarket.domain.post.repository.post.PostRepository;
 import com.daangn.dangunmarket.domain.post.service.CategoryService;
 import com.daangn.dangunmarket.domain.post.service.PostService;
+
 import com.daangn.dangunmarket.global.aws.s3.S3Uploader;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -33,11 +38,11 @@ import java.util.List;
 import static com.daangn.dangunmarket.domain.member.model.MemberProvider.GOOGLE;
 import static com.daangn.dangunmarket.domain.member.model.RoleType.USER;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 
 @ActiveProfiles("test")
-@Transactional
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
 class PostFacadeTest {
 
@@ -70,6 +75,9 @@ class PostFacadeTest {
     @Autowired
     private CategoryRepository categoryRepository;
 
+    @Autowired
+    private PostParamDtoMapper postParamDtoMapper;
+
     private Long setupProductId;
 
     private Category setupCategory;
@@ -82,7 +90,7 @@ class PostFacadeTest {
                 areaService,
                 categoryService,
                 s3Uploader,
-                mapper);
+                mapper, postParamDtoMapper);
 
         given(s3Uploader.saveImages(any())).willReturn(List.of("z", "s"));
 
@@ -132,6 +140,43 @@ class PostFacadeTest {
         assertThat(responseParam.memberName()).isEqualTo("james");
         assertThat(responseParam.urls().size()).isEqualTo(2);
         assertThat(responseParam.likeCount()).isEqualTo(0);
+    }
+
+    @Test
+    @DisplayName("")
+    void findPostInfoToUpdate_createdPost_equals() {
+        //given
+        given(s3Uploader.saveImages(any())).willReturn(List.of("a", "b", "c"));
+        List<MultipartFile> mockMultipartFiles = List.of(new MockMultipartFile("first", (byte[]) null), new MockMultipartFile("second", (byte[]) null));
+        PostCreateRequestParam requestParam = new PostCreateRequestParam(1L, 2L, 37.5297, 126.8876, "seoul", mockMultipartFiles, setupCategory.getId(), "firstTile", "firstContent", 100L, true, LocalDateTime.now());
+
+        Long productId = postFacade.createPost(requestParam);
+
+        //when
+        PostToUpdateResponseParam postInfoToUpdate = postFacade.findPostInfoToUpdateById(1L, productId);
+
+        //then
+        assertThat(postInfoToUpdate.postImages().size()).isEqualTo(3);
+        assertThat(postInfoToUpdate.locationPreferenceAreas()).isEqualTo("seoul");
+        assertThat(postInfoToUpdate.title()).isEqualTo("firstTile");
+        assertThat(postInfoToUpdate.content()).isEqualTo("firstContent");
+        assertThat(postInfoToUpdate.price()).isEqualTo(100L);
+    }
+
+    @Test
+    @DisplayName("")
+    void findPostInfoToUpdate_notWriter_throwException() {
+        //given
+        given(s3Uploader.saveImages(any())).willReturn(List.of("a", "b", "c"));
+        List<MultipartFile> mockMultipartFiles = List.of(new MockMultipartFile("first", (byte[]) null), new MockMultipartFile("second", (byte[]) null));
+        PostCreateRequestParam requestParam = new PostCreateRequestParam(1L, 2L, 37.5297, 126.8876, "seoul", mockMultipartFiles, setupCategory.getId(), "firstTile", "firstContent", 100L, true, LocalDateTime.now());
+
+        Long productId = postFacade.createPost(requestParam);
+
+        //when_then
+        assertThrows(UnauthorizedAccessException.class, () -> {
+            postFacade.findPostInfoToUpdateById(2L, productId);
+        });
     }
 
     /**
