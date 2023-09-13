@@ -22,6 +22,7 @@ import java.util.Objects;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Post extends BaseEntity {
+    private static final int AVAILABLE_REFRESH_DAYS = 2;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -133,11 +134,11 @@ public class Post extends BaseEntity {
     private void checkRefreshedAt(LocalDateTime inputTime) {
         Duration betweenTime = Duration.between(refreshedAt, inputTime);
 
-        if (betweenTime.toDays() < 2) {
-            Duration twoDays = Duration.ofDays(2);
+        if (betweenTime.toDays() < AVAILABLE_REFRESH_DAYS) {
+            Duration availableRefreshDays = Duration.ofDays(AVAILABLE_REFRESH_DAYS);
 
             throw new TooEarlyToRefreshException(
-                    twoDays.minus(betweenTime)
+                    availableRefreshDays.minus(betweenTime)
             );
         }
 
