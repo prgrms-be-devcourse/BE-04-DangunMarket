@@ -11,7 +11,8 @@ import com.daangn.dangunmarket.domain.post.service.dto.PostLikeResponse;
 import org.mapstruct.InjectionStrategy;
 import org.mapstruct.Mapper;
 
-@Mapper(componentModel = "spring",
+@Mapper(
+        componentModel = "spring",
         injectionStrategy = InjectionStrategy.CONSTRUCTOR
 )
 public interface PostApiMapper {

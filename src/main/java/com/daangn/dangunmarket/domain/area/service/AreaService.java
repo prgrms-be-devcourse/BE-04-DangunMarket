@@ -31,4 +31,9 @@ public class AreaService {
         return areaReader.findAreaIdByPolygon(point);
     }
 
+    @Transactional
+    public AreaResponse save(Area area) {
+        return AreaResponse.of(areaReader.save(area));
+    }
+
 }

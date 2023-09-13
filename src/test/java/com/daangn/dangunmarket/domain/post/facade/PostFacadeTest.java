@@ -44,6 +44,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 
 @ActiveProfiles("test")
+@Transactional
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
 class PostFacadeTest {
 
@@ -83,6 +84,8 @@ class PostFacadeTest {
 
     private Category setupCategory;
 
+    private Long setupMemberId;
+
     @BeforeEach
     void setup() {
         postFacade = new PostFacade(
@@ -104,14 +107,14 @@ class PostFacadeTest {
         //given
         given(s3Uploader.saveImages(any())).willReturn(List.of("a", "b", "c"));
         List<MultipartFile> mockMultipartFiles = List.of(new MockMultipartFile("first", (byte[]) null), new MockMultipartFile("second", (byte[]) null));
-        PostCreateRequestParam requestParam = new PostCreateRequestParam(1L, 2L, 37.5297, 126.8876, "seoul", mockMultipartFiles, setupCategory.getId(), "firstTile", "firstContent", 100L, true, LocalDateTime.now());
+        PostCreateRequestParam requestParam = new PostCreateRequestParam(setupMemberId, 2L, 37.5297, 126.8876, "seoul", mockMultipartFiles, setupCategory.getId(), "firstTile", "firstContent", 100L, true, LocalDateTime.now());
 
         //when
         Long productId = postFacade.createPost(requestParam);
 
         //then
         Post post = postRepository.findById(productId).orElseThrow();
-        assertThat(post.getMemberId()).isEqualTo(1L);
+        assertThat(post.getMemberId()).isEqualTo(setupMemberId);
         assertThat(post.getAreaId()).isEqualTo(2l);
         assertThat(post.getLocalPreference().getAlias()).isEqualTo("seoul");
         assertThat(post.getPostImageList().size()).isEqualTo(3);
@@ -158,7 +161,7 @@ class PostFacadeTest {
 
         //then
         assertThat(postInfoToUpdate.postImages().size()).isEqualTo(3);
-        assertThat(postInfoToUpdate.locationPreferenceAreas()).isEqualTo("seoul");
+        assertThat(postInfoToUpdate.locationPreferenceAlias()).isEqualTo("seoul");
         assertThat(postInfoToUpdate.title()).isEqualTo("firstTile");
         assertThat(postInfoToUpdate.content()).isEqualTo("firstContent");
         assertThat(postInfoToUpdate.price()).isEqualTo(100L);
@@ -185,20 +188,19 @@ class PostFacadeTest {
      */
     private void dataSetup() {
         Member setupMember = Member.builder()
-                .id(2L)
                 .roleType(USER)
                 .memberProvider(GOOGLE)
                 .socialId("member2 socialId")
                 .nickName(new NickName("james"))
                 .reviewScore(35)
                 .build();
-        memberJpaRepository.save(setupMember);
+        setupMemberId = memberJpaRepository.save(setupMember).getId();
 
         Category setupCategory = new Category("전자기기", null, 1L, new ArrayList<>());
         this.setupCategory = categoryRepository.save(setupCategory);
 
         List<MultipartFile> mockMultipartFiles = List.of(new MockMultipartFile("third", (byte[]) null), new MockMultipartFile("four", (byte[]) null));
-        PostCreateRequestParam requestParam = new PostCreateRequestParam(2L, 1L, 53.5297, 126.8876, "네이버 그린 팩토리", mockMultipartFiles, this.setupCategory.getId(), "SetupTile", "SetupContent", 200L, true, LocalDateTime.now());
+        PostCreateRequestParam requestParam = new PostCreateRequestParam(setupMemberId, 1L, 53.5297, 126.8876, "네이버 그린 팩토리", mockMultipartFiles, this.setupCategory.getId(), "SetupTile", "SetupContent", 200L, true, LocalDateTime.now());
         setupProductId = postFacade.createPost(requestParam);
     }
 
