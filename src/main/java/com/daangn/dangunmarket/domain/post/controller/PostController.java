@@ -36,12 +36,10 @@ public class PostController {
 
     private final PostFacade postFacade;
     private final PostApiMapper mapper;
-    private final PostUpdateApiMapper postUpdateApiMapper;
 
-    public PostController(PostFacade postFacade, PostApiMapper mapper, PostUpdateApiMapper postUpdateApiMapper) {
+    public PostController(PostFacade postFacade, PostApiMapper mapper ) {
         this.postFacade = postFacade;
         this.mapper = mapper;
-        this.postUpdateApiMapper = postUpdateApiMapper;
     }
 
     @PostMapping(
@@ -73,7 +71,7 @@ public class PostController {
         CustomUser customUser = (CustomUser) authentication.getPrincipal();
         PostToUpdateResponseParam postInfoToUpdate = postFacade.findPostInfoToUpdateById(customUser.memberId(), postId);
 
-        return ResponseEntity.ok(postUpdateApiMapper.toPostToUpdateApiResponse(postInfoToUpdate));
+        return ResponseEntity.ok(mapper.toPostToUpdateApiResponse(postInfoToUpdate));
     }
 
     @GetMapping
