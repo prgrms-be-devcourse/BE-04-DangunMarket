@@ -56,7 +56,6 @@ class PostServiceTest {
 
         //then
         Post post = postRepository.findById(responsePostId).get();
-
         assertThat(post.getTradeStatus()).isEqualTo(RESERVATED);
     }
 

@@ -17,6 +17,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -42,17 +43,16 @@ public class PostController {
         this.mapper = mapper;
     }
 
-    @PostMapping(
-            consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping
     public ResponseEntity<PostCreateApiResponse> createProduct(
-            @RequestBody @Valid PostCreateApiRequest request,
+            @ModelAttribute @Valid PostCreateApiRequest request,
             Authentication authentication
     ) {
         CustomUser customUser = (CustomUser) authentication.getPrincipal();
-        Long productId = postFacade.createPost(mapper.toPostCreateRequestParam(request, customUser.memberId()));
-        PostCreateApiResponse response = PostCreateApiResponse.from(productId);
+        Long postId = postFacade.createPost(mapper.toPostCreateRequestParam(request, customUser.memberId()));
+        PostCreateApiResponse response = PostCreateApiResponse.from(postId);
 
-        URI uri = createURI(productId);
+        URI uri = createURI(postId);
 
         return ResponseEntity.created(uri).body(response);
     }

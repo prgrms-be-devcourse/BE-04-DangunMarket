@@ -19,4 +19,5 @@ public interface PostApiMapper {
     PostLikeApiResponse toPostLikeApiResponse(PostLikeResponse response);
 
     PostUpdateStatusRequest toPostUpdateStatusRequest(PostUpdateStatusApiRequest request, Long postId);
+
 }

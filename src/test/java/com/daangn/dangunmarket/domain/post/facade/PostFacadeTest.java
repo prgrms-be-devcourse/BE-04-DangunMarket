@@ -17,6 +17,7 @@ import com.daangn.dangunmarket.domain.post.model.Post;
 
 import com.daangn.dangunmarket.domain.post.service.PostService;
 import com.daangn.dangunmarket.global.aws.s3.S3Uploader;
+import com.daangn.dangunmarket.global.exception.EntityNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -35,6 +36,7 @@ import java.util.List;
 import static com.daangn.dangunmarket.domain.member.model.MemberProvider.GOOGLE;
 import static com.daangn.dangunmarket.domain.member.model.RoleType.USER;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.catchException;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 
@@ -135,25 +137,34 @@ class PostFacadeTest {
         assertThat(responseParam.likeCount()).isEqualTo(0);
     }
 
+    @Test
+    @DisplayName("올바르지 않은 PostId로 조회 시 EntityNotFoundException가 발생하는 것을 확인한다.")
+    void findById_inCorrectProductId_EntityNotFoundException(){
+        //when
+        Exception exception = catchException(() -> postFacade.findById(5L));
+
+        //when
+        assertThat(exception).isInstanceOf(EntityNotFoundException.class);
+    }
+
     /**
      * Member, Category, Product을 미리 setup함.
      */
     private void dataSetup() {
         Member setupMember = Member.builder()
-                .id(2L)
                 .roleType(USER)
                 .memberProvider(GOOGLE)
                 .socialId("member2 socialId")
                 .nickName(new NickName("james"))
                 .reviewScore(35)
                 .build();
-        memberJpaRepository.save(setupMember);
+        Long setupMemberId = memberJpaRepository.save(setupMember).getId();
 
         Category setupCategory = new Category("전자기기", null, 1L, new ArrayList<>());
         this.setupCategory = categoryRepository.save(setupCategory);
 
         List<MultipartFile> mockMultipartFiles = List.of(new MockMultipartFile("third", (byte[]) null), new MockMultipartFile("four", (byte[]) null));
-        PostCreateRequestParam requestParam = new PostCreateRequestParam(2L, 1L, 53.5297, 126.8876, "네이버 그린 팩토리", mockMultipartFiles, this.setupCategory.getId(), "SetupTile", "SetupContent", 200L, true, LocalDateTime.now());
+        PostCreateRequestParam requestParam = new PostCreateRequestParam(setupMemberId, 1L, 53.5297, 126.8876, "네이버 그린 팩토리", mockMultipartFiles, this.setupCategory.getId(), "SetupTile", "SetupContent", 200L, true, LocalDateTime.now());
         setupProductId = postFacade.createPost(requestParam);
     }
 

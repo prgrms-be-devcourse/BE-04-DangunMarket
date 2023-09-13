@@ -12,7 +12,7 @@ public record PostFindApiResponse(
         String areaName,
         double latitude,
         double longitude,
-        String LocationPreferenceAreas,
+        String LocationPreferenceAlias,
         List<String> urls,
         Long categoryId,
         String categoryName,

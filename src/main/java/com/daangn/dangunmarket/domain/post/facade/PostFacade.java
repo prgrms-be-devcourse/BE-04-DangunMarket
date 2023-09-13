@@ -24,13 +24,12 @@ import java.util.List;
 @Service
 public class PostFacade {
 
-    private PostService postService;
-    private MemberService memberService;
-    private AreaService areaService;
-    private CategoryService categoryService;
-    private S3Uploader s3Uploader;
-    private PostParamMapper mapper;
-
+    private final PostService postService;
+    private final MemberService memberService;
+    private final AreaService areaService;
+    private final CategoryService categoryService;
+    private final S3Uploader s3Uploader;
+    private final PostParamMapper mapper;
 
     public PostFacade(PostService postService, MemberService memberService, AreaService areaService, CategoryService categoryService, S3Uploader s3Uploader, PostParamMapper mapper) {
         this.postService = postService;
@@ -59,7 +58,6 @@ public class PostFacade {
                 postImages,
                 findCategory));
     }
-
 
     public PostFindResponseParam findById(Long productId) {
         PostFindResponse response = postService.findById(productId);

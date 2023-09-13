@@ -1,6 +1,6 @@
 package com.daangn.dangunmarket.domain.post.repository.postlike;
 
-import com.daangn.dangunmarket.domain.post.repository.postlike.dto.JoinedWithArea;
+import com.daangn.dangunmarket.domain.post.repository.postlike.dto.JoinedPostWithArea;
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.springframework.data.domain.Pageable;
@@ -23,11 +23,11 @@ public class PostLikeJoinRepository {
         this.queryFactory = queryFactory;
     }
 
-    public Slice<JoinedWithArea> findDetailsByMemberId(Long memberId, Pageable pageable){
+    public Slice<JoinedPostWithArea> findDetailsByMemberId(Long memberId, Pageable pageable){
         int pageSize = pageable.getPageSize();
 
-        List<JoinedWithArea> contents = queryFactory
-                .select(Projections.fields(JoinedWithArea.class,
+        List<JoinedPostWithArea> contents = queryFactory
+                .select(Projections.fields(JoinedPostWithArea.class,
                         post.as("post"),
                         area.as("area")
                 ))

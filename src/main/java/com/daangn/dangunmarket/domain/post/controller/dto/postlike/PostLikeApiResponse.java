@@ -10,4 +10,5 @@ public record PostLikeApiResponse(
                 isLiked
         );
     }
+
 }
