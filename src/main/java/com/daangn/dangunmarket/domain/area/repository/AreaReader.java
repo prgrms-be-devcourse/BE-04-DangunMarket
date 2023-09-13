@@ -9,4 +9,6 @@ public interface AreaReader {
 
     Long findAreaIdByPolygon(Point point);
 
+    Area save(Area area);
+
 }
