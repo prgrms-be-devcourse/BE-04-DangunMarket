@@ -4,11 +4,8 @@ import com.daangn.dangunmarket.domain.area.service.AreaService;
 import com.daangn.dangunmarket.domain.member.model.ActivityArea;
 import com.daangn.dangunmarket.domain.member.service.MemberService;
 import com.daangn.dangunmarket.domain.member.service.dto.MemberFindResponse;
-import com.daangn.dangunmarket.domain.post.facade.dto.PostCreateRequestParam;
-import com.daangn.dangunmarket.domain.post.facade.dto.PostFindResponseParam;
-import com.daangn.dangunmarket.domain.post.facade.dto.PostToUpdateResponseParam;
+import com.daangn.dangunmarket.domain.post.facade.dto.*;
 import com.daangn.dangunmarket.domain.post.facade.mpper.PostParamDtoMapper;
-import com.daangn.dangunmarket.domain.post.facade.dto.PostsGetResponseParam;
 import com.daangn.dangunmarket.domain.post.facade.mpper.PostParamMapper;
 import com.daangn.dangunmarket.domain.post.model.Category;
 import com.daangn.dangunmarket.domain.post.model.LocationPreference;
@@ -105,6 +102,29 @@ public class PostFacade {
 
     private boolean isMemberActivityAreaValid(List<ActivityArea> activityAreas) {
         return activityAreas.size() > 0;
+    }
+
+    @Transactional
+    public Long updatePost(PostUpdateRequestParam request) {
+
+        Point point = GeometryTypeFactory.createPoint(request.longitude(), request.latitude());
+        LocationPreference locationPreference = new LocationPreference(point, request.alias());
+
+        Long areaId = areaService.findAreaIdByPolygon(point);
+
+        List<String> url = s3Uploader.saveImages(request.files());
+        List<PostImage> postImages = url.stream()
+                .map(PostImage::new)
+                .toList();
+
+        Category findCategory = categoryService.findById(request.categoryId());
+
+        return postService.updatePost(postParamMapper.toPostUpdateRequest(
+                request,
+                locationPreference,
+                postImages,
+                findCategory,
+                areaId));
     }
 
 }

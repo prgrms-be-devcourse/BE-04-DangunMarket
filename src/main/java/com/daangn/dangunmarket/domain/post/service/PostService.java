@@ -3,12 +3,10 @@ package com.daangn.dangunmarket.domain.post.service;
 import com.daangn.dangunmarket.domain.post.exception.UnauthorizedAccessException;
 import com.daangn.dangunmarket.domain.post.model.Post;
 import com.daangn.dangunmarket.domain.post.repository.dto.PostDto;
+import com.daangn.dangunmarket.domain.post.model.vo.PostEditor;
 import com.daangn.dangunmarket.domain.post.repository.post.PostRepository;
-import com.daangn.dangunmarket.domain.post.service.dto.PostCreateRequest;
-import com.daangn.dangunmarket.domain.post.service.dto.PostFindResponse;
-import com.daangn.dangunmarket.domain.post.service.dto.PostToUpdateResponse;
+import com.daangn.dangunmarket.domain.post.service.dto.*;
 import com.daangn.dangunmarket.domain.post.service.mapper.PostDtoMapper;
-import com.daangn.dangunmarket.domain.post.service.dto.PostGetResponses;
 import com.daangn.dangunmarket.domain.post.service.mapper.PostMapper;
 import com.daangn.dangunmarket.global.exception.EntityNotFoundException;
 import org.springframework.data.domain.Page;
@@ -66,5 +64,17 @@ public class PostService {
         PostGetResponses responses = PostGetResponses.from(postDtoPages);
         return responses;
     }
+
+    @Transactional
+    public Long updatePost(PostUpdateRequest request) {
+        Post post = postRepository.findById(request.postId())
+                .orElseThrow(() -> new EntityNotFoundException(NOT_FOUND_POST_ENTITY));
+
+        PostEditor postEditor = PostEditor.toPostEditor(request);
+        post.edit(postEditor);
+
+        return request.postId();
+    }
+
 
 }
