@@ -4,6 +4,8 @@ import com.daangn.dangunmarket.domain.area.service.AreaService;
 import com.daangn.dangunmarket.domain.member.service.MemberService;
 import com.daangn.dangunmarket.domain.post.facade.dto.PostCreateRequestParam;
 import com.daangn.dangunmarket.domain.post.facade.dto.PostFindResponseParam;
+import com.daangn.dangunmarket.domain.post.facade.dto.PostToUpdateResponseParam;
+import com.daangn.dangunmarket.domain.post.facade.mpper.PostParamDtoMapper;
 import com.daangn.dangunmarket.domain.post.facade.mpper.PostParamMapper;
 import com.daangn.dangunmarket.domain.post.model.Category;
 import com.daangn.dangunmarket.domain.post.model.LocationPreference;
@@ -25,21 +27,23 @@ import java.util.stream.Collectors;
 @Service
 public class PostFacade {
 
-    private PostService postService;
-    private MemberService memberService;
-    private AreaService areaService;
-    private CategoryService categoryService;
-    private S3Uploader s3Uploader;
-    private PostParamMapper mapper;
+    private final PostService postService;
+    private final MemberService memberService;
+    private final AreaService areaService;
+    private final CategoryService categoryService;
+    private final S3Uploader s3Uploader;
+    private final PostParamMapper postParamMapper;
+    private final PostParamDtoMapper postParamDtoMapper;
 
 
-    public PostFacade(PostService postService, MemberService memberService, AreaService areaService, CategoryService categoryService, S3Uploader s3Uploader, PostParamMapper mapper) {
+    public PostFacade(PostService postService, MemberService memberService, AreaService areaService, CategoryService categoryService, S3Uploader s3Uploader, PostParamMapper postParamMapper, PostParamDtoMapper postParamDtoMapper) {
         this.postService = postService;
         this.memberService = memberService;
         this.areaService = areaService;
         this.categoryService = categoryService;
         this.s3Uploader = s3Uploader;
-        this.mapper = mapper;
+        this.postParamMapper = postParamMapper;
+        this.postParamDtoMapper = postParamDtoMapper;
     }
 
     @Transactional
@@ -55,13 +59,12 @@ public class PostFacade {
 
         Category findCategory = categoryService.findById(reqest.categoryId());
 
-        return postService.createPost(mapper.toPostCreateRequest(
+        return postService.createPost(postParamMapper.toPostCreateRequest(
                 reqest,
                 locationPreference,
                 postImages,
                 findCategory));
     }
-
 
     public PostFindResponseParam findById(Long productId) {
         PostFindResponse response = postService.findById(productId);
@@ -70,6 +73,12 @@ public class PostFacade {
         String areaName = areaService.findById(response.areaId()).areaName();
 
         return PostFindResponseParam.of(response, memberName, areaName);
+    }
+
+    public PostToUpdateResponseParam findPostInfoToUpdateById(Long memberId, Long postId) {
+
+        return postParamDtoMapper.toPostToUpdateResponseParam(postService.getPostInfoToUpdate(memberId,postId));
+
     }
 
 }
