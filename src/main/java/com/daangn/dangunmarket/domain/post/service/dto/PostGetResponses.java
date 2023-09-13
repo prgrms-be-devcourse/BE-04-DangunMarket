@@ -31,7 +31,7 @@ public record PostGetResponses(
                                 dto.areaName()
                         )
                 )
-                .collect(Collectors.toList());
+                .toList();
 
         return new PostGetResponses(posts,
                 postDtos.getTotalPages(),

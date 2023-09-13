@@ -4,7 +4,6 @@ import com.daangn.dangunmarket.domain.post.repository.dto.PostDto;
 import org.springframework.data.domain.Page;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 public record PostSearchResponses(
         List<PostSearchResponse> contents,
@@ -30,7 +29,7 @@ public record PostSearchResponses(
                                 dto.areaName()
                         )
                 )
-                .collect(Collectors.toList());
+                .toList();
 
         return new PostSearchResponses(posts,
                 postDtos.getTotalPages(),
