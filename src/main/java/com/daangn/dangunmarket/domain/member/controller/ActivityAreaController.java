@@ -1,6 +1,5 @@
 package com.daangn.dangunmarket.domain.member.controller;
 
-import com.daangn.dangunmarket.domain.auth.jwt.AuthTokenProvider;
 import com.daangn.dangunmarket.domain.auth.jwt.CustomUser;
 import com.daangn.dangunmarket.domain.member.controller.dto.ActivityAreaCreateApiRequest;
 import com.daangn.dangunmarket.domain.member.controller.dto.ActivityAreaCreateApiResponse;
@@ -8,8 +7,6 @@ import com.daangn.dangunmarket.domain.member.controller.dto.ActivityAreaIsVerifi
 import com.daangn.dangunmarket.domain.member.controller.mapper.ActivityAreaApiMapper;
 import com.daangn.dangunmarket.domain.member.facade.ActivityAreaFacade;
 import com.daangn.dangunmarket.domain.member.facade.dto.ActivityAreaCreateRequestParam;
-import com.daangn.dangunmarket.domain.member.facade.dto.ActivityAreaCreateResponseParam;
-import com.daangn.dangunmarket.domain.member.service.dto.ActivityAreaCreateResponse;
 import jakarta.validation.Valid;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
