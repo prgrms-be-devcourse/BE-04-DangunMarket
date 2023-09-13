@@ -14,11 +14,10 @@ import com.daangn.dangunmarket.domain.post.model.PostImage;
 import com.daangn.dangunmarket.domain.post.service.CategoryService;
 import com.daangn.dangunmarket.domain.post.service.PostService;
 import com.daangn.dangunmarket.domain.post.service.dto.PostFindResponse;
-import com.daangn.dangunmarket.domain.post.service.dto.PostGetResponse;
+import com.daangn.dangunmarket.domain.post.service.dto.PostGetResponses;
 import com.daangn.dangunmarket.global.GeometryTypeFactory;
 import com.daangn.dangunmarket.global.aws.s3.S3Uploader;
 import org.locationtech.jts.geom.Point;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -92,7 +91,7 @@ public class PostFacade {
                 .findById(areaId)
                 .areaName();
 
-        Page<PostGetResponse> postResponses = postService.getPosts(areaId, pageable);
+        PostGetResponses postResponses = postService.getPosts(areaId, pageable);
         PostsGetResponseParam postGetResponseParam = mapper.toPostsGetResponseParam(areaName, postResponses);
 
         return postGetResponseParam;

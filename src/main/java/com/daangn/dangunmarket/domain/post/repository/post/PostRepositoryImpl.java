@@ -1,7 +1,7 @@
 package com.daangn.dangunmarket.domain.post.repository.post;
 
 import com.daangn.dangunmarket.domain.post.model.Post;
-import com.daangn.dangunmarket.domain.post.service.dto.PostGetResponse;
+import com.daangn.dangunmarket.domain.post.repository.dto.PostDto;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
@@ -29,9 +29,8 @@ public class PostRepositoryImpl implements PostRepository {
         return postJpaRepository.findById(productId);
     }
 
-
     @Override
-    public Page<PostGetResponse> getPostsSimple(Long areaId, Pageable pageable) {
+    public Page<PostDto> getPostsSimple(Long areaId, Pageable pageable) {
         return postQueryRepository
                 .getPostsSimple(areaId, pageable);
     }

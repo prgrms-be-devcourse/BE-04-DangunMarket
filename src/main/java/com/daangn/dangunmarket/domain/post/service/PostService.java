@@ -1,10 +1,11 @@
 package com.daangn.dangunmarket.domain.post.service;
 
 import com.daangn.dangunmarket.domain.post.model.Post;
+import com.daangn.dangunmarket.domain.post.repository.dto.PostDto;
 import com.daangn.dangunmarket.domain.post.repository.post.PostRepository;
 import com.daangn.dangunmarket.domain.post.service.dto.PostCreateRequest;
 import com.daangn.dangunmarket.domain.post.service.dto.PostFindResponse;
-import com.daangn.dangunmarket.domain.post.service.dto.PostGetResponse;
+import com.daangn.dangunmarket.domain.post.service.dto.PostGetResponses;
 import com.daangn.dangunmarket.domain.post.service.mapper.PostMapper;
 import com.daangn.dangunmarket.global.exception.EntityNotFoundException;
 import org.springframework.data.domain.Page;
@@ -40,9 +41,10 @@ public class PostService {
         return PostFindResponse.from(post);
     }
 
-    public Page<PostGetResponse> getPosts(Long areaId, Pageable pageable) {
-        Page<PostGetResponse> responses = postRepository.getPostsSimple(areaId, pageable);
+    public PostGetResponses getPosts(Long areaId, Pageable pageable) {
+        Page<PostDto> postDtoPages = postRepository.getPostsSimple(areaId, pageable);
 
+        PostGetResponses responses = PostGetResponses.from(postDtoPages);
         return responses;
     }
 
