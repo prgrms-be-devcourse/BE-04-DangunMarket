@@ -7,7 +7,6 @@ import com.daangn.dangunmarket.domain.post.controller.dto.PostFindApiResponse;
 import com.daangn.dangunmarket.domain.post.controller.dto.PostToUpdateApiResponse;
 import com.daangn.dangunmarket.domain.post.controller.dto.PostGetApiResponses;
 import com.daangn.dangunmarket.domain.post.controller.mapper.PostApiMapper;
-import com.daangn.dangunmarket.domain.post.controller.mapper.PostUpdateApiMapper;
 import com.daangn.dangunmarket.domain.post.facade.PostFacade;
 import com.daangn.dangunmarket.domain.post.facade.dto.PostFindResponseParam;
 import com.daangn.dangunmarket.domain.post.facade.dto.PostToUpdateResponseParam;
