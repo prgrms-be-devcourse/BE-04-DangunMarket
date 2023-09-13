@@ -9,6 +9,8 @@ import com.daangn.dangunmarket.domain.post.facade.dto.PostFindResponseParam;
 import com.daangn.dangunmarket.domain.post.facade.dto.PostGetResponseParams;
 import com.daangn.dangunmarket.domain.post.facade.dto.PostSearchRequestParam;
 import com.daangn.dangunmarket.domain.post.facade.dto.PostSearchResponseParams;
+import com.daangn.dangunmarket.domain.post.facade.dto.PostToUpdateResponseParam;
+import com.daangn.dangunmarket.domain.post.facade.mpper.PostParamDtoMapper;
 import com.daangn.dangunmarket.domain.post.facade.mpper.PostParamMapper;
 import com.daangn.dangunmarket.domain.post.model.Category;
 import com.daangn.dangunmarket.domain.post.model.LocationPreference;
@@ -37,20 +39,17 @@ public class PostFacade {
     private final AreaService areaService;
     private final CategoryService categoryService;
     private final S3Uploader s3Uploader;
-    private final PostParamMapper mapper;
+    private final PostParamMapper postParamMapper;
+    private final PostParamDtoMapper postParamDtoMapper;
 
-    public PostFacade(PostService postService,
-                      MemberService memberService,
-                      AreaService areaService,
-                      CategoryService categoryService,
-                      S3Uploader s3Uploader,
-                      PostParamMapper mapper) {
+    public PostFacade(PostService postService, MemberService memberService, AreaService areaService, CategoryService categoryService, S3Uploader s3Uploader, PostParamMapper postParamMapper, PostParamDtoMapper postParamDtoMapper) {
         this.postService = postService;
         this.memberService = memberService;
         this.areaService = areaService;
         this.categoryService = categoryService;
         this.s3Uploader = s3Uploader;
-        this.mapper = mapper;
+        this.postParamMapper = postParamMapper;
+        this.postParamDtoMapper = postParamDtoMapper;
     }
 
     @Transactional
@@ -65,7 +64,7 @@ public class PostFacade {
 
         Category findCategory = categoryService.findById(request.categoryId());
 
-        return postService.createPost(mapper.toPostCreateRequest(
+        return postService.createPost(postParamMapper.toPostCreateRequest(
                 request,
                 locationPreference,
                 postImages,
@@ -79,6 +78,11 @@ public class PostFacade {
         String areaName = areaService.findById(response.areaId()).areaName();
 
         return PostFindResponseParam.of(response, memberName, areaName);
+    }
+
+    public PostToUpdateResponseParam findPostInfoToUpdateById(Long memberId, Long postId) {
+
+        return postParamDtoMapper.toPostToUpdateResponseParam(postService.getPostInfoToUpdate(memberId, postId));
     }
 
     public PostGetResponseParams getPosts(Long memberId, Pageable pageable) {
@@ -95,7 +99,7 @@ public class PostFacade {
                 .areaName();
 
         PostGetResponses postResponses = postService.getPosts(areaId, pageable);
-        PostGetResponseParams postGetResponseParam = mapper.toPostsGetResponseParam(areaName, postResponses);
+        PostGetResponseParams postGetResponseParam = postParamMapper.toPostsGetResponseParam(areaName, postResponses);
 
         return postGetResponseParam;
     }
@@ -113,10 +117,10 @@ public class PostFacade {
                 .findById(areaId)
                 .areaName();
 
-        PostSearchConditionRequest searchConditionRequest = mapper.toPostSearchConditionRequest(postSearchRequestParam);
+        PostSearchConditionRequest searchConditionRequest = postParamMapper.toPostSearchConditionRequest(postSearchRequestParam);
 
         PostSearchResponses responses = postService.searchPosts(areaId, searchConditionRequest);
-        PostSearchResponseParams params = mapper.toPostSearchResponseParams(areaName, responses);
+        PostSearchResponseParams params = postParamMapper.toPostSearchResponseParams(areaName, responses);
 
         return params;
     }

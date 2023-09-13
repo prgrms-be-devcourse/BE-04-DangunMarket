@@ -4,6 +4,7 @@ import com.daangn.dangunmarket.domain.auth.jwt.CustomUser;
 import com.daangn.dangunmarket.domain.post.controller.dto.PostCreateApiRequest;
 import com.daangn.dangunmarket.domain.post.controller.dto.PostCreateApiResponse;
 import com.daangn.dangunmarket.domain.post.controller.dto.PostFindApiResponse;
+import com.daangn.dangunmarket.domain.post.controller.dto.PostToUpdateApiResponse;
 import com.daangn.dangunmarket.domain.post.controller.dto.PostGetApiResponses;
 import com.daangn.dangunmarket.domain.post.controller.dto.PostSearchApiRequest;
 import com.daangn.dangunmarket.domain.post.controller.dto.PostSearchApiResponses;
@@ -12,6 +13,8 @@ import com.daangn.dangunmarket.domain.post.facade.PostFacade;
 import com.daangn.dangunmarket.domain.post.facade.dto.PostFindResponseParam;
 import com.daangn.dangunmarket.domain.post.facade.dto.PostGetResponseParams;
 import com.daangn.dangunmarket.domain.post.facade.dto.PostSearchResponseParams;
+import com.daangn.dangunmarket.domain.post.facade.dto.PostToUpdateResponseParam;
+
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -37,8 +40,7 @@ public class PostController {
     private final PostFacade postFacade;
     private final PostApiMapper mapper;
 
-    public PostController(PostFacade postFacade,
-                          PostApiMapper mapper) {
+    public PostController(PostFacade postFacade, PostApiMapper mapper ) {
         this.postFacade = postFacade;
         this.mapper = mapper;
     }
@@ -64,7 +66,6 @@ public class PostController {
     /**
      * 게시글 상세 조회
      */
-
     @GetMapping("/{postId}")
     public ResponseEntity<PostFindApiResponse> findById(@PathVariable Long postId) {
         PostFindResponseParam responseParam = postFacade.findById(postId);
@@ -74,7 +75,19 @@ public class PostController {
     }
 
     /**
-     * 메인 페이지 내 게시글 조회
+     * 게시글 수정을 위한 조회
+     */
+    @GetMapping("/{postId}/edit")
+    public ResponseEntity<PostToUpdateApiResponse> findPostInfoToUpdate(@PathVariable Long postId, Authentication authentication) {
+
+        CustomUser customUser = (CustomUser) authentication.getPrincipal();
+        PostToUpdateResponseParam postInfoToUpdate = postFacade.findPostInfoToUpdateById(customUser.memberId(), postId);
+
+        return ResponseEntity.ok(mapper.toPostToUpdateApiResponse(postInfoToUpdate));
+    }
+
+    /**
+     * 메인 페이지 내 게시글 리스트 조회
      */
     @GetMapping
     public ResponseEntity<PostGetApiResponses> getPosts(
@@ -92,7 +105,7 @@ public class PostController {
     }
 
     /**
-     * 게시글 검색 API
+     * 게시글 검색
      */
     @GetMapping("/search")
     public ResponseEntity<PostSearchApiResponses> getPostsByConditions(
