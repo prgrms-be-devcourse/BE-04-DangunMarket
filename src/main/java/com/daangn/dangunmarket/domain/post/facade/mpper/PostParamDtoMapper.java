@@ -19,7 +19,7 @@ public interface PostParamDtoMapper {
 
     @Mapping(target = "latitude", source = "locationPreference.latitude")
     @Mapping(target = "longitude", source = "locationPreference.longitude")
-    @Mapping(target = "locationPreferenceAreas", source = "locationPreference.alias")
+    @Mapping(target = "locationPreferenceAlias", source = "locationPreference.alias")
     @Mapping(target = "categoryId", source = "category.id")
     @Mapping(target = "categoryName", source = "category.name")
     @Mapping(target = "postImages", source = "postImages", qualifiedByName = "mapPostImages")

@@ -6,7 +6,7 @@ public record PostToUpdateApiResponse(
         Long postId,
         double latitude,
         double longitude,
-        String LocationPreferenceAreas,
+        String LocationPreferenceAlias,
         List<String> postImages,
         Long categoryId,
         String categoryName,

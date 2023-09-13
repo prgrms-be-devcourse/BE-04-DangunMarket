@@ -6,7 +6,7 @@ public record PostToUpdateResponseParam(
         Long postId,
         double latitude,
         double longitude,
-        String locationPreferenceAreas,
+        String locationPreferenceAlias,
         List<String> postImages,
         Long categoryId,
         String categoryName,
