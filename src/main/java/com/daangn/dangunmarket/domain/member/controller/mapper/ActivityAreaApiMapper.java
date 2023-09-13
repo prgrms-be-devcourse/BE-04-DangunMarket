@@ -4,12 +4,9 @@ import com.daangn.dangunmarket.domain.member.controller.dto.ActivityAreaCreateAp
 import com.daangn.dangunmarket.domain.member.controller.dto.ActivityAreaCreateApiResponse;
 import com.daangn.dangunmarket.domain.member.controller.dto.ActivityAreaIsVerifiedApiResponse;
 import com.daangn.dangunmarket.domain.member.facade.dto.ActivityAreaCreateRequestParam;
-import com.daangn.dangunmarket.domain.member.facade.dto.ActivityAreaCreateResponseParam;
-import com.daangn.dangunmarket.domain.member.facade.dto.ActivityAreaIsVerifiedRequestParam;
-import com.daangn.dangunmarket.domain.member.service.dto.ActivityAreaCreateResponse;
 import org.mapstruct.InjectionStrategy;
 import org.mapstruct.Mapper;
-import org.mapstruct.factory.Mappers;
+
 
 @Mapper(
         componentModel = "spring",

@@ -15,7 +15,7 @@ import com.daangn.dangunmarket.domain.post.facade.mpper.PostParamDtoMapper;
 import com.daangn.dangunmarket.domain.post.facade.mpper.PostParamMapper;
 import com.daangn.dangunmarket.domain.post.model.Category;
 import com.daangn.dangunmarket.domain.post.model.Post;
-import com.daangn.dangunmarket.domain.post.repository.post.CategoryRepository;
+import com.daangn.dangunmarket.domain.post.repository.category.CategoryRepository;
 import com.daangn.dangunmarket.domain.post.repository.post.PostRepository;
 import com.daangn.dangunmarket.domain.post.service.CategoryService;
 import com.daangn.dangunmarket.domain.post.service.PostService;
@@ -33,6 +33,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 import static com.daangn.dangunmarket.domain.member.model.MemberProvider.GOOGLE;
@@ -193,7 +194,7 @@ class PostFacadeTest {
                 .build();
         memberJpaRepository.save(setupMember);
 
-        Category setupCategory = new Category("전자기기", null, 1L, null);
+        Category setupCategory = new Category("전자기기", null, 1L, new ArrayList<>());
         this.setupCategory = categoryRepository.save(setupCategory);
 
         List<MultipartFile> mockMultipartFiles = List.of(new MockMultipartFile("third", (byte[]) null), new MockMultipartFile("four", (byte[]) null));

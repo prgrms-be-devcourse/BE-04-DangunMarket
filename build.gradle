@@ -1,63 +1,87 @@
 plugins {
-	id 'java'
-	id 'org.springframework.boot' version '3.0.10'
-	id 'io.spring.dependency-management' version '1.1.3'
+    id 'java'
+    id 'org.springframework.boot' version '3.0.10'
+    id 'io.spring.dependency-management' version '1.1.3'
 }
 
 group = 'com.daangn'
 version = '0.0.1-SNAPSHOT'
 
 java {
-	sourceCompatibility = '17'
+    sourceCompatibility = '17'
 }
 
 configurations {
-	compileOnly {
-		extendsFrom annotationProcessor
-	}
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
 }
 
 repositories {
-	mavenCentral()
+    mavenCentral()
 }
 
 dependencies {
-	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-	implementation 'org.springframework.boot:spring-boot-starter-web'
-	implementation 'org.springframework.boot:spring-boot-starter-validation'
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
 
-	implementation 'org.hibernate:hibernate-core:6.1.7.Final'
-	implementation 'org.hibernate:hibernate-spatial:6.1.7.Final'
+    implementation 'org.hibernate:hibernate-core:6.1.7.Final'
+    implementation 'org.hibernate:hibernate-spatial:6.1.7.Final'
 
-	compileOnly 'org.projectlombok:lombok'
-	runtimeOnly 'com.mysql:mysql-connector-j'
-	annotationProcessor 'org.projectlombok:lombok'
-	testImplementation 'org.springframework.boot:spring-boot-starter-test'
-	testImplementation "org.mockito:mockito-core:3.+"
+    compileOnly 'org.projectlombok:lombok'
+    runtimeOnly 'com.mysql:mysql-connector-j'
+    annotationProcessor 'org.projectlombok:lombok'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation "org.mockito:mockito-core:3.+"
 
-	//aws
-	implementation 'io.awspring.cloud:spring-cloud-starter-aws:2.4.4'
+    //aws
+    implementation 'io.awspring.cloud:spring-cloud-starter-aws:2.4.4'
 
-	//JWT 토큰 생성
-	implementation group: 'io.jsonwebtoken', name: 'jjwt-api', version: '0.11.2'
-	implementation group: 'io.jsonwebtoken', name: 'jjwt-impl', version: '0.11.2'
-	implementation group: 'io.jsonwebtoken', name: 'jjwt-jackson', version: '0.11.2'
+    //JWT 토큰 생성
+    implementation group: 'io.jsonwebtoken', name: 'jjwt-api', version: '0.11.2'
+    implementation group: 'io.jsonwebtoken', name: 'jjwt-impl', version: '0.11.2'
+    implementation group: 'io.jsonwebtoken', name: 'jjwt-jackson', version: '0.11.2'
 
-	// Spring Security 추가
-	implementation 'org.springframework.boot:spring-boot-starter-security'
-	implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
+    // Spring Security 추가
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+    implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
 
-	//webflux
-	implementation 'org.springframework.boot:spring-boot-starter-webflux'
+    //webflux
+    implementation 'org.springframework.boot:spring-boot-starter-webflux'
 
-	//redis
-	implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+    //redis
+    implementation 'org.springframework.boot:spring-boot-starter-data-redis'
 
-	//mapstruct
-	implementation 'org.mapstruct:mapstruct:1.5.3.Final'
-	annotationProcessor 'org.mapstruct:mapstruct-processor:1.5.3.Final'
+    //Querydsl
+    implementation 'com.querydsl:querydsl-jpa:5.0.0:jakarta'
+    annotationProcessor "com.querydsl:querydsl-apt:${dependencyManagement.importedProperties['querydsl.version']}:jakarta"
+    annotationProcessor "jakarta.annotation:jakarta.annotation-api"
+    annotationProcessor "jakarta.persistence:jakarta.persistence-api"
+
+    //map struct
+    implementation 'org.mapstruct:mapstruct:1.5.5.Final'
+    annotationProcessor 'org.mapstruct:mapstruct-processor:1.5.5.Final'
 }
 
 tasks.named('test') {
-	useJUnitPlatform()
+    useJUnitPlatform()
+}
+
+//querydsl 추가 시작
+def generated = "$buildDir/generated/querydsl"
+
+// querydsl QClass 파일 생성 위치를 지정
+tasks.withType(JavaCompile) {
+    options.getGeneratedSourceOutputDirectory().set(file(generated))
+}
+
+// java source set 에 querydsl QClass 위치 추가
+sourceSets {
+    main.java.srcDirs += [generated]
+}
+
+// gradle clean 시에 QClass 디렉토리 삭제
+clean {
+    delete file(generated)
 }
