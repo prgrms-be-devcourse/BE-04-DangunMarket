@@ -6,7 +6,6 @@ import com.daangn.dangunmarket.domain.post.controller.dto.PostCreateApiResponse;
 import com.daangn.dangunmarket.domain.post.controller.dto.PostFindApiResponse;
 import com.daangn.dangunmarket.domain.post.controller.dto.PostGetApiResponses;
 import com.daangn.dangunmarket.domain.post.controller.mapper.PostApiMapper;
-import com.daangn.dangunmarket.domain.post.controller.mapper.PostControllerMapper;
 import com.daangn.dangunmarket.domain.post.facade.PostFacade;
 import com.daangn.dangunmarket.domain.post.facade.dto.PostFindResponseParam;
 import com.daangn.dangunmarket.domain.post.facade.dto.PostsGetResponseParam;
@@ -33,14 +32,11 @@ public class PostController {
 
     private final PostFacade postFacade;
     private final PostApiMapper mapper;
-    private final PostControllerMapper controllerMapper;
 
     public PostController(PostFacade postFacade,
-                          PostApiMapper mapper,
-                          PostControllerMapper controllerMapper) {
+                          PostApiMapper mapper) {
         this.postFacade = postFacade;
         this.mapper = mapper;
-        this.controllerMapper = controllerMapper;
     }
 
     @PostMapping(
@@ -76,7 +72,7 @@ public class PostController {
         CustomUser customUser = (CustomUser) authentication.getPrincipal();
 
         PostsGetResponseParam responseparam = postFacade.getPosts(customUser.memberId(), pageable);
-        PostGetApiResponses responses = controllerMapper.toPostGetApiResponses(responseparam);
+        PostGetApiResponses responses = mapper.toPostGetApiResponses(responseparam);
 
         return ResponseEntity
                 .status(HttpStatus.OK)
