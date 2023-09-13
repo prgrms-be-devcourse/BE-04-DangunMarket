@@ -4,11 +4,15 @@ import com.daangn.dangunmarket.domain.auth.jwt.CustomUser;
 import com.daangn.dangunmarket.domain.post.controller.dto.PostCreateApiRequest;
 import com.daangn.dangunmarket.domain.post.controller.dto.PostCreateApiResponse;
 import com.daangn.dangunmarket.domain.post.controller.dto.PostFindApiResponse;
+import com.daangn.dangunmarket.domain.post.controller.dto.PostToUpdateApiResponse;
 import com.daangn.dangunmarket.domain.post.controller.dto.PostGetApiResponses;
 import com.daangn.dangunmarket.domain.post.controller.mapper.PostApiMapper;
+import com.daangn.dangunmarket.domain.post.controller.mapper.PostUpdateApiMapper;
 import com.daangn.dangunmarket.domain.post.facade.PostFacade;
 import com.daangn.dangunmarket.domain.post.facade.dto.PostFindResponseParam;
+import com.daangn.dangunmarket.domain.post.facade.dto.PostToUpdateResponseParam;
 import com.daangn.dangunmarket.domain.post.facade.dto.PostsGetResponseParam;
+
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -33,8 +37,7 @@ public class PostController {
     private final PostFacade postFacade;
     private final PostApiMapper mapper;
 
-    public PostController(PostFacade postFacade,
-                          PostApiMapper mapper) {
+    public PostController(PostFacade postFacade, PostApiMapper mapper ) {
         this.postFacade = postFacade;
         this.mapper = mapper;
     }
@@ -54,7 +57,6 @@ public class PostController {
         return ResponseEntity.created(uri).body(response);
     }
 
-
     @GetMapping("/{postId}")
     public ResponseEntity<PostFindApiResponse> findById(@PathVariable Long postId) {
         PostFindResponseParam responseParam = postFacade.findById(postId);
@@ -63,6 +65,14 @@ public class PostController {
         return ResponseEntity.ok(response);
     }
 
+    @GetMapping("/{postId}/edit")
+    public ResponseEntity<PostToUpdateApiResponse> findPostInfoToUpdate(@PathVariable Long postId, Authentication authentication) {
+
+        CustomUser customUser = (CustomUser) authentication.getPrincipal();
+        PostToUpdateResponseParam postInfoToUpdate = postFacade.findPostInfoToUpdateById(customUser.memberId(), postId);
+
+        return ResponseEntity.ok(mapper.toPostToUpdateApiResponse(postInfoToUpdate));
+    }
 
     @GetMapping
     public ResponseEntity<PostGetApiResponses> getPosts(

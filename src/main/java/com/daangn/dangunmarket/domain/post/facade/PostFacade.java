@@ -6,6 +6,8 @@ import com.daangn.dangunmarket.domain.member.service.MemberService;
 import com.daangn.dangunmarket.domain.member.service.dto.MemberFindResponse;
 import com.daangn.dangunmarket.domain.post.facade.dto.PostCreateRequestParam;
 import com.daangn.dangunmarket.domain.post.facade.dto.PostFindResponseParam;
+import com.daangn.dangunmarket.domain.post.facade.dto.PostToUpdateResponseParam;
+import com.daangn.dangunmarket.domain.post.facade.mpper.PostParamDtoMapper;
 import com.daangn.dangunmarket.domain.post.facade.dto.PostsGetResponseParam;
 import com.daangn.dangunmarket.domain.post.facade.mpper.PostParamMapper;
 import com.daangn.dangunmarket.domain.post.model.Category;
@@ -33,20 +35,18 @@ public class PostFacade {
     private final AreaService areaService;
     private final CategoryService categoryService;
     private final S3Uploader s3Uploader;
-    private final PostParamMapper mapper;
+    private final PostParamMapper postParamMapper;
+    private final PostParamDtoMapper postParamDtoMapper;
 
-    public PostFacade(PostService postService,
-                      MemberService memberService,
-                      AreaService areaService,
-                      CategoryService categoryService,
-                      S3Uploader s3Uploader,
-                      PostParamMapper mapper) {
+
+    public PostFacade(PostService postService, MemberService memberService, AreaService areaService, CategoryService categoryService, S3Uploader s3Uploader, PostParamMapper postParamMapper, PostParamDtoMapper postParamDtoMapper) {
         this.postService = postService;
         this.memberService = memberService;
         this.areaService = areaService;
         this.categoryService = categoryService;
         this.s3Uploader = s3Uploader;
-        this.mapper = mapper;
+        this.postParamMapper = postParamMapper;
+        this.postParamDtoMapper = postParamDtoMapper;
     }
 
     @Transactional
@@ -61,7 +61,7 @@ public class PostFacade {
 
         Category findCategory = categoryService.findById(request.categoryId());
 
-        return postService.createPost(mapper.toPostCreateRequest(
+        return postService.createPost(postParamMapper.toPostCreateRequest(
                 request,
                 locationPreference,
                 postImages,
@@ -76,6 +76,12 @@ public class PostFacade {
 
         return PostFindResponseParam.of(response, memberName, areaName);
     }
+
+    public PostToUpdateResponseParam findPostInfoToUpdateById(Long memberId, Long postId) {
+
+        return postParamDtoMapper.toPostToUpdateResponseParam(postService.getPostInfoToUpdate(memberId, postId));
+    }
+
 
     public PostsGetResponseParam getPosts(Long memberId, Pageable pageable) {
         MemberFindResponse memberResponse = memberService.findById(memberId);
@@ -92,7 +98,7 @@ public class PostFacade {
                 .areaName();
 
         PostGetResponses postResponses = postService.getPosts(areaId, pageable);
-        PostsGetResponseParam postGetResponseParam = mapper.toPostsGetResponseParam(areaName, postResponses);
+        PostsGetResponseParam postGetResponseParam = postParamMapper.toPostsGetResponseParam(areaName, postResponses);
 
         return postGetResponseParam;
     }
