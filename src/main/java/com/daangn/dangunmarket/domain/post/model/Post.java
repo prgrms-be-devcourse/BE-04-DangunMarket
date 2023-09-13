@@ -1,5 +1,6 @@
 package com.daangn.dangunmarket.domain.post.model;
 
+import com.daangn.dangunmarket.domain.post.model.vo.PostEditor;
 import com.daangn.dangunmarket.domain.post.model.vo.Price;
 import com.daangn.dangunmarket.domain.post.model.vo.Title;
 import com.daangn.dangunmarket.global.entity.BaseEntity;
@@ -8,6 +9,7 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.security.core.parameters.P;
 import org.springframework.util.Assert;
 
 import java.time.LocalDateTime;
@@ -107,6 +109,17 @@ public class Post extends BaseEntity {
 
     public void cancelLike() {
         likeCount -= 1;
+    }
+
+    public void edit (PostEditor postEditor) {
+        areaId = postEditor.areaId();
+        localPreference = postEditor.locationPreference();
+        postImageList = postEditor.postImages();
+        category = postEditor.category();
+        title = new Title(postEditor.title());
+        content = postEditor.content();
+        price = new Price(postEditor.price());
+        isOfferAllowed = postEditor.isOfferAllowed();
     }
 
 }
