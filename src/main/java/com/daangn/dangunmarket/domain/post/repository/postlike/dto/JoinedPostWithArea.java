@@ -2,17 +2,11 @@ package com.daangn.dangunmarket.domain.post.repository.postlike.dto;
 
 import com.daangn.dangunmarket.domain.area.model.Area;
 import com.daangn.dangunmarket.domain.post.model.Post;
-import lombok.Getter;
+import com.querydsl.core.annotations.QueryProjection;
 
-@Getter
-public class JoinedPostWithArea {
+public record JoinedPostWithArea(Post post, Area area) {
 
-    private Post post;
-    private Area area;
-
-    public JoinedPostWithArea() {
-    }
-
+    @QueryProjection
     public JoinedPostWithArea(Post post, Area area) {
         this.post = post;
         this.area = area;
