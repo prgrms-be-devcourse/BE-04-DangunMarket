@@ -10,10 +10,7 @@ import com.daangn.dangunmarket.domain.post.controller.mapper.PostApiMapper;
 import com.daangn.dangunmarket.domain.post.controller.mapper.PostUpdateApiMapper;
 import com.daangn.dangunmarket.domain.post.facade.PostFacade;
 import com.daangn.dangunmarket.domain.post.facade.dto.PostFindResponseParam;
-
 import com.daangn.dangunmarket.domain.post.facade.dto.PostToUpdateResponseParam;
-import com.daangn.dangunmarket.domain.post.service.dto.PostToUpdateResponse;
-
 import com.daangn.dangunmarket.domain.post.facade.dto.PostsGetResponseParam;
 
 import jakarta.validation.Valid;

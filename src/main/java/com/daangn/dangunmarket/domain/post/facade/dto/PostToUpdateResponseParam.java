@@ -2,7 +2,7 @@ package com.daangn.dangunmarket.domain.post.facade.dto;
 
 import java.util.List;
 
-public record PostToUpdateResponseParam (
+public record PostToUpdateResponseParam(
         Long postId,
         double latitude,
         double longitude,

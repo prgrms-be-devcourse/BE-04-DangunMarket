@@ -19,7 +19,6 @@ import org.springframework.transaction.annotation.Transactional;
 import static com.daangn.dangunmarket.global.response.ErrorCode.NOT_FOUND_POST_ENTITY;
 import static com.daangn.dangunmarket.global.response.ErrorCode.POST_NOT_CREATED_BY_USER;
 
-
 @Transactional(readOnly = true)
 @Service
 public class PostService {
@@ -40,14 +39,12 @@ public class PostService {
         return savePost.getId();
     }
 
-
     public PostFindResponse findById(Long productId) {
         Post post = postRepository.findById(productId)
                 .orElseThrow(() -> new EntityNotFoundException(NOT_FOUND_POST_ENTITY));
 
         return PostFindResponse.from(post);
     }
-
 
     public PostToUpdateResponse getPostInfoToUpdate(Long memberId, Long postId) {
         PostFindResponse response = findById(postId);
