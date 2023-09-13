@@ -20,8 +20,8 @@ import static com.daangn.dangunmarket.global.response.ErrorCode.*;
 @Transactional(readOnly = true)
 public class PostLikeService {
 
-    private PostLikeRepository postLikeRepository;
-    private PostRepository postRepository;
+    private final PostLikeRepository postLikeRepository;
+    private final PostRepository postRepository;
 
     public PostLikeService(PostLikeRepository postLikeRepository, PostRepository postRepository) {
         this.postLikeRepository = postLikeRepository;

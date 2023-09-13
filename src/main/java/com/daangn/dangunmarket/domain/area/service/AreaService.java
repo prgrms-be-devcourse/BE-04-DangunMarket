@@ -14,7 +14,7 @@ import static com.daangn.dangunmarket.global.response.ErrorCode.NOT_FOUND_AREA_E
 @Service
 public class AreaService {
 
-    private AreaReader areaReader;
+    private final AreaReader areaReader;
 
     public AreaService(AreaReader areaReader) {
         this.areaReader = areaReader;

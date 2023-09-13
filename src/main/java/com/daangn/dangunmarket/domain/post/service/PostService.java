@@ -18,8 +18,8 @@ import static com.daangn.dangunmarket.global.response.ErrorCode.NOT_FOUND_POST_E
 @Service
 public class PostService {
 
-    private PostRepository postRepository;
-    private PostMapper mapper;
+    private final PostRepository postRepository;
+    private final PostMapper mapper;
 
     public PostService(PostRepository postRepository, PostMapper mapper) {
         this.postRepository = postRepository;

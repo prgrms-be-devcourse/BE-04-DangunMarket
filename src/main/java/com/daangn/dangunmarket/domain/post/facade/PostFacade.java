@@ -17,7 +17,6 @@ import com.daangn.dangunmarket.domain.post.service.dto.PostFindResponse;
 import com.daangn.dangunmarket.domain.post.service.dto.PostGetResponse;
 import com.daangn.dangunmarket.global.GeometryTypeFactory;
 import com.daangn.dangunmarket.global.aws.s3.S3Uploader;
-
 import org.locationtech.jts.geom.Point;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -30,12 +29,12 @@ import java.util.List;
 @Service
 public class PostFacade {
 
-    private PostService postService;
-    private MemberService memberService;
-    private AreaService areaService;
-    private CategoryService categoryService;
-    private S3Uploader s3Uploader;
-    private PostParamMapper mapper;
+    private final PostService postService;
+    private final MemberService memberService;
+    private final AreaService areaService;
+    private final CategoryService categoryService;
+    private final S3Uploader s3Uploader;
+    private final PostParamMapper mapper;
 
     public PostFacade(PostService postService,
                       MemberService memberService,
