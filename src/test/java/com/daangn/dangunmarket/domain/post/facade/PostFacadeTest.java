@@ -5,12 +5,12 @@ import com.daangn.dangunmarket.domain.area.service.AreaService;
 import com.daangn.dangunmarket.domain.area.service.dto.AreaResponse;
 import com.daangn.dangunmarket.domain.member.model.Member;
 import com.daangn.dangunmarket.domain.member.model.NickName;
-import com.daangn.dangunmarket.domain.member.repository.MemberJpaRepository;
 import com.daangn.dangunmarket.domain.member.service.MemberService;
 import com.daangn.dangunmarket.domain.post.exception.UnauthorizedAccessException;
 import com.daangn.dangunmarket.domain.post.facade.dto.PostCreateRequestParam;
 import com.daangn.dangunmarket.domain.post.facade.dto.PostFindResponseParam;
 import com.daangn.dangunmarket.domain.post.facade.dto.PostToUpdateResponseParam;
+import com.daangn.dangunmarket.domain.post.facade.dto.PostUpdateRequestParam;
 import com.daangn.dangunmarket.domain.post.facade.mpper.PostParamDtoMapper;
 import com.daangn.dangunmarket.domain.post.facade.mpper.PostParamMapper;
 import com.daangn.dangunmarket.domain.post.model.Category;
@@ -24,12 +24,13 @@ import com.daangn.dangunmarket.global.aws.s3.S3Uploader;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+
+import org.locationtech.jts.io.ParseException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
@@ -47,6 +48,7 @@ import static org.mockito.BDDMockito.given;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
 class PostFacadeTest {
 
+    @Autowired
     private PostFacade postFacade;
 
     @Autowired
@@ -68,10 +70,10 @@ class PostFacadeTest {
     private PostParamMapper mapper;
 
     @Autowired
-    private PostRepository postRepository;
+    private AreaService areaService;
 
     @Autowired
-    private MemberJpaRepository memberJpaRepository;
+    private PostRepository postRepository;
 
     @Autowired
     private CategoryRepository categoryRepository;
@@ -83,18 +85,11 @@ class PostFacadeTest {
 
     private Category setupCategory;
 
+    private Long setUpMemberId;
+
     @BeforeEach
-    void setup() {
-        postFacade = new PostFacade(
-                postService,
-                memberService,
-                areaService,
-                categoryService,
-                s3Uploader,
-                mapper, postParamDtoMapper);
-
+    void setup() throws ParseException {
         given(s3Uploader.saveImages(any())).willReturn(List.of("z", "s"));
-
         dataSetup();
     }
 
@@ -104,14 +99,14 @@ class PostFacadeTest {
         //given
         given(s3Uploader.saveImages(any())).willReturn(List.of("a", "b", "c"));
         List<MultipartFile> mockMultipartFiles = List.of(new MockMultipartFile("first", (byte[]) null), new MockMultipartFile("second", (byte[]) null));
-        PostCreateRequestParam requestParam = new PostCreateRequestParam(1L, 2L, 37.5297, 126.8876, "seoul", mockMultipartFiles, setupCategory.getId(), "firstTile", "firstContent", 100L, true, LocalDateTime.now());
+        PostCreateRequestParam requestParam = new PostCreateRequestParam(setUpMemberId, 2L, 37.5297, 126.8876, "seoul", mockMultipartFiles, setupCategory.getId(), "firstTile", "firstContent", 100L, true, LocalDateTime.now());
 
         //when
         Long productId = postFacade.createPost(requestParam);
 
         //then
         Post post = postRepository.findById(productId).orElseThrow();
-        assertThat(post.getMemberId()).isEqualTo(1L);
+        assertThat(post.getMemberId()).isEqualTo(setUpMemberId);
         assertThat(post.getAreaId()).isEqualTo(2l);
         assertThat(post.getLocalPreference().getAlias()).isEqualTo("seoul");
         assertThat(post.getPostImageList().size()).isEqualTo(3);
@@ -158,7 +153,7 @@ class PostFacadeTest {
 
         //then
         assertThat(postInfoToUpdate.postImages().size()).isEqualTo(3);
-        assertThat(postInfoToUpdate.locationPreferenceAreas()).isEqualTo("seoul");
+        assertThat(postInfoToUpdate.locationPreferenceAlias()).isEqualTo("seoul");
         assertThat(postInfoToUpdate.title()).isEqualTo("firstTile");
         assertThat(postInfoToUpdate.content()).isEqualTo("firstContent");
         assertThat(postInfoToUpdate.price()).isEqualTo(100L);
@@ -185,14 +180,13 @@ class PostFacadeTest {
      */
     private void dataSetup() {
         Member setupMember = Member.builder()
-                .id(2L)
                 .roleType(USER)
                 .memberProvider(GOOGLE)
                 .socialId("member2 socialId")
                 .nickName(new NickName("james"))
                 .reviewScore(35)
                 .build();
-        memberJpaRepository.save(setupMember);
+        setUpMemberId = memberService.save(setupMember).id();
 
         Category setupCategory = new Category("전자기기", null, 1L, new ArrayList<>());
         this.setupCategory = categoryRepository.save(setupCategory);
@@ -201,5 +195,4 @@ class PostFacadeTest {
         PostCreateRequestParam requestParam = new PostCreateRequestParam(2L, 1L, 53.5297, 126.8876, "네이버 그린 팩토리", mockMultipartFiles, this.setupCategory.getId(), "SetupTile", "SetupContent", 200L, true, LocalDateTime.now());
         setupProductId = postFacade.createPost(requestParam);
     }
-
 }
