@@ -51,12 +51,15 @@ public class PostService {
     }
 
     @Transactional
-    public Long refreshTime(Long postId) {
+    public Long refreshTime(Long postId, Long memberId) {
         Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new EntityNotFoundException(NOT_FOUND_POST_ENTITY));
 
-        post.changeRefreshedAt(timeGenerator.getCurrentTime());
+        if (post.isNotOwner(memberId)){
+            throw new IllegalStateException("해당 유저는 게시글의 주인이 아닙니다.");
+        }
 
+        post.changeRefreshedAt(timeGenerator.getCurrentTime());
         return post.getId();
     }
 

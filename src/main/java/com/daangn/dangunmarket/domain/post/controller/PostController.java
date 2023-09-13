@@ -78,10 +78,14 @@ public class PostController {
     }
 
     @PatchMapping("/refreshed-at/{postId}")
-    public ResponseEntity<PostRefreshApiResponse> refreshPostTime(@PathVariable Long postId){
+    public ResponseEntity<PostRefreshApiResponse> refreshPostTime(
+            @PathVariable Long postId,
+            Authentication authentication
+            ){
 
+        CustomUser customUser = (CustomUser) authentication.getPrincipal();
         PostRefreshApiResponse apiResponse = PostRefreshApiResponse.from(
-                postService.refreshTime(postId)
+                postService.refreshTime(postId, customUser.memberId())
         );
 
         return ResponseEntity.ok(apiResponse);

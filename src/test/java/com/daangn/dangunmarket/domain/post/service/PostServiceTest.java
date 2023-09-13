@@ -78,7 +78,7 @@ class PostServiceTest {
         given(timeGenerator.getCurrentTime()).willReturn(now);
 
         //when
-        Long postId = postService.refreshTime(setupPost1.getId());
+        Long postId = postService.refreshTime(setupPost1.getId(), 1L);
 
         //then
         Post post = postRepository.findById(postId).get();
@@ -94,7 +94,7 @@ class PostServiceTest {
 
         //when
         TooEarlyToRefreshException exception = (TooEarlyToRefreshException) catchException(() ->
-                postService.refreshTime(setupPost2.getId()));
+                postService.refreshTime(setupPost2.getId(), 1L));
 
         //then
         assertThat(exception).isInstanceOf(TooEarlyToRefreshException.class);

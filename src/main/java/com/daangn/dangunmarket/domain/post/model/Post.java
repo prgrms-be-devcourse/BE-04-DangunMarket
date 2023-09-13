@@ -15,6 +15,7 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Entity
 @Table(name = "posts")
@@ -116,6 +117,10 @@ public class Post extends BaseEntity {
         Assert.notNull(tradeStatus, "tradeStatus는 null이 될 수 없습니다.");
 
         this.tradeStatus = tradeStatus;
+    }
+
+    public boolean isNotOwner(Long memberId){
+        return !Objects.equals(this.memberId, memberId);
     }
 
     public void changeRefreshedAt(LocalDateTime refreshedAt) {
