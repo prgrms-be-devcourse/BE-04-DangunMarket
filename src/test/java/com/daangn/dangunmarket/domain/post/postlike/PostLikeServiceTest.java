@@ -34,6 +34,7 @@ import static com.daangn.dangunmarket.domain.member.model.MemberProvider.GOOGLE;
 import static com.daangn.dangunmarket.domain.member.model.RoleType.USER;
 
 @SpringBootTest
+@Transactional
 @ActiveProfiles("test")
 public class PostLikeServiceTest {
 
