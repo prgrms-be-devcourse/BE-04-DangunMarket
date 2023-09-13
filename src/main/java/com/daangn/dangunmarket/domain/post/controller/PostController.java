@@ -43,6 +43,9 @@ public class PostController {
         this.mapper = mapper;
     }
 
+    /**
+     * 게시글 등록
+     */
     @PostMapping(
             consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<PostCreateApiResponse> createProduct(
@@ -58,6 +61,9 @@ public class PostController {
         return ResponseEntity.created(uri).body(response);
     }
 
+    /**
+     * 게시글 상세 조회
+     */
 
     @GetMapping("/{postId}")
     public ResponseEntity<PostFindApiResponse> findById(@PathVariable Long postId) {
@@ -67,6 +73,9 @@ public class PostController {
         return ResponseEntity.ok(response);
     }
 
+    /**
+     * 메인 페이지 내 게시글 조회
+     */
     @GetMapping
     public ResponseEntity<PostGetApiResponses> getPosts(
             Pageable pageable,
