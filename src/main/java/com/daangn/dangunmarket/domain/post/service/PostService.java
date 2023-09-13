@@ -6,6 +6,7 @@ import com.daangn.dangunmarket.domain.post.service.dto.PostCreateRequest;
 import com.daangn.dangunmarket.domain.post.service.dto.PostFindResponse;
 import com.daangn.dangunmarket.domain.post.service.dto.PostUpdateStatusRequest;
 import com.daangn.dangunmarket.domain.post.service.mapper.PostMapper;
+import com.daangn.dangunmarket.global.TimeGenerator;
 import com.daangn.dangunmarket.global.exception.EntityNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,10 +19,12 @@ public class PostService {
 
     private final PostRepository postRepository;
     private final PostMapper mapper;
+    private final TimeGenerator timeGenerator;
 
-    public PostService(PostRepository postRepository, PostMapper mapper) {
+    public PostService(PostRepository postRepository, PostMapper mapper, TimeGenerator timeGenerator) {
         this.postRepository = postRepository;
         this.mapper = mapper;
+        this.timeGenerator = timeGenerator;
     }
 
     @Transactional
@@ -37,11 +40,22 @@ public class PostService {
         return PostFindResponse.from(post);
     }
 
+    @Transactional
     public Long changeStatus(PostUpdateStatusRequest request) {
         Post post = postRepository.findById(request.postId())
                 .orElseThrow(() -> new EntityNotFoundException(NOT_FOUND_POST_ENTITY));
 
         post.changeTradeStatus(request.tradeStatus());
+
+        return post.getId();
+    }
+
+    @Transactional
+    public Long refreshTime(Long postId) {
+        Post post = postRepository.findById(postId)
+                .orElseThrow(() -> new EntityNotFoundException(NOT_FOUND_POST_ENTITY));
+
+        post.changeRefreshedAt(timeGenerator.getCurrentTime());
 
         return post.getId();
     }

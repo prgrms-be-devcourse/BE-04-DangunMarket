@@ -1,6 +1,7 @@
 package com.daangn.dangunmarket.domain.post.controller;
 
 import com.daangn.dangunmarket.domain.auth.jwt.CustomUser;
+import com.daangn.dangunmarket.domain.post.controller.dto.post.PostRefreshApiResponse;
 import com.daangn.dangunmarket.domain.post.controller.dto.post.PostUpdateStatusApiRequest;
 import com.daangn.dangunmarket.domain.post.controller.dto.post.PostUpdateStatusApiResponse;
 import com.daangn.dangunmarket.domain.post.controller.dto.post.PostCreateApiRequest;
@@ -72,6 +73,16 @@ public class PostController {
 
         Long responsePostId = postService.changeStatus(mapper.toPostUpdateStatusRequest(request, postId));
         PostUpdateStatusApiResponse apiResponse = PostUpdateStatusApiResponse.from(responsePostId);
+
+        return ResponseEntity.ok(apiResponse);
+    }
+
+    @PatchMapping("/refreshedat/{postId}")
+    public ResponseEntity<PostRefreshApiResponse> refreshPostTime(@PathVariable Long postId){
+
+        PostRefreshApiResponse apiResponse = PostRefreshApiResponse.from(
+                postService.refreshTime(postId)
+        );
 
         return ResponseEntity.ok(apiResponse);
     }

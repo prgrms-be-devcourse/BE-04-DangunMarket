@@ -7,15 +7,16 @@ import com.daangn.dangunmarket.domain.post.model.vo.Price;
 import com.daangn.dangunmarket.domain.post.model.vo.Title;
 import com.daangn.dangunmarket.domain.post.repository.post.PostRepository;
 import com.daangn.dangunmarket.domain.post.service.dto.PostUpdateStatusRequest;
+import com.daangn.dangunmarket.domain.post.service.mapper.PostMapper;
 import com.daangn.dangunmarket.global.GeometryTypeFactory;
-import org.assertj.core.api.Assertions;
+import com.daangn.dangunmarket.global.TimeGenerator;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.locationtech.jts.geom.Coordinate;
 import org.locationtech.jts.geom.Point;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,23 +25,30 @@ import java.util.ArrayList;
 
 import static com.daangn.dangunmarket.domain.post.model.TradeStatus.RESERVATED;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.BDDMockito.given;
 
 @ActiveProfiles("test")
 @Transactional
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
 class PostServiceTest {
 
-    @Autowired
     private PostService postService;
 
     @Autowired
     private PostRepository postRepository;
 
+    @Autowired
+    private PostMapper mapper;
+
+    @MockBean
+    private TimeGenerator timeGenerator;
+
     private Post setupPost;
 
     @BeforeEach
-    void setup(){
+    void setup() {
+        postService = new PostService(postRepository, mapper, timeGenerator);
+
         setupData();
     }
 
@@ -59,6 +67,21 @@ class PostServiceTest {
         assertThat(post.getTradeStatus()).isEqualTo(RESERVATED);
     }
 
+    @Test
+    @DisplayName("셋팅해 놓은 post의 refreshAt 값을 현재 시간으로 업데이트하고 해당 post의 refreshAt을 확인한다.")
+    void refreshTime_correctPostId_PostId() {
+        //when
+        LocalDateTime now = LocalDateTime.now();
+        given(timeGenerator.getCurrentTime()).willReturn(now);
+
+        //when
+        Long postId = postService.refreshTime(setupPost.getId());
+
+        //then
+        Post post = postRepository.findById(postId).get();
+        assertThat(post.getRefreshedAt()).isEqualTo(now);
+    }
+
     /**
      * 게시글 하나를 TradeStatus.IN_PROGRESS 상태로 넣어 놓음.
      */
@@ -74,7 +97,7 @@ class PostServiceTest {
                 "테스트 글 내용",
                 new Price(780L),
                 true,
-                LocalDateTime.now(),
+                LocalDateTime.of(2023, 9, 10, 0, 0),
                 1);
 
         setupPost = postRepository.save(post);

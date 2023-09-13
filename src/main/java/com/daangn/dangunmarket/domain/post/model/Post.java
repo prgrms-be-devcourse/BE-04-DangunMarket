@@ -115,4 +115,10 @@ public class Post extends BaseEntity {
 
         this.tradeStatus = tradeStatus;
     }
+
+    public void changeRefreshedAt(LocalDateTime refreshedAt) {
+        Assert.notNull(refreshedAt, "refreshedAt은 null이 될 수 없습니다.");
+
+        this.refreshedAt = refreshedAt;
+    }
 }
