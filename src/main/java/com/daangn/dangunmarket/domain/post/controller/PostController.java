@@ -77,7 +77,7 @@ public class PostController {
         return ResponseEntity.ok(apiResponse);
     }
 
-    @PatchMapping("/refreshedat/{postId}")
+    @PatchMapping("/refreshed-at/{postId}")
     public ResponseEntity<PostRefreshApiResponse> refreshPostTime(@PathVariable Long postId){
 
         PostRefreshApiResponse apiResponse = PostRefreshApiResponse.from(

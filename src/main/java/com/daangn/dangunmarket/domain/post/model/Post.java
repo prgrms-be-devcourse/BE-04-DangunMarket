@@ -1,5 +1,6 @@
 package com.daangn.dangunmarket.domain.post.model;
 
+import com.daangn.dangunmarket.domain.post.exception.TooEarlyToRefreshException;
 import com.daangn.dangunmarket.domain.post.model.vo.Price;
 import com.daangn.dangunmarket.domain.post.model.vo.Title;
 import com.daangn.dangunmarket.global.entity.BaseEntity;
@@ -10,6 +11,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.util.Assert;
 
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -119,6 +121,21 @@ public class Post extends BaseEntity {
     public void changeRefreshedAt(LocalDateTime refreshedAt) {
         Assert.notNull(refreshedAt, "refreshedAt은 null이 될 수 없습니다.");
 
+        checkRefreshedAt(refreshedAt);
         this.refreshedAt = refreshedAt;
     }
+
+    private void checkRefreshedAt(LocalDateTime inputTime) {
+        Duration betweenTime = Duration.between(refreshedAt, inputTime);
+
+        if (betweenTime.toDays() < 2) {
+            Duration twoDays = Duration.ofDays(2);
+
+            throw new TooEarlyToRefreshException(
+                    twoDays.minus(betweenTime)
+            );
+        }
+
+    }
+
 }

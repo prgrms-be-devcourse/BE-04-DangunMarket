@@ -3,6 +3,8 @@ package com.daangn.dangunmarket.global.exception;
 import com.amazonaws.services.kms.model.NotFoundException;
 import com.daangn.dangunmarket.domain.auth.exception.TokenExpiredException;
 import com.daangn.dangunmarket.domain.auth.exception.TokenValidFailedException;
+import com.daangn.dangunmarket.domain.post.exception.TooEarlyToRefreshException;
+import com.daangn.dangunmarket.domain.post.exception.TooEarlyToRefreshResponse;
 import com.daangn.dangunmarket.global.response.ErrorResponse;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.RequiredArgsConstructor;
@@ -145,6 +147,20 @@ public class GlobalExceptionRestHandler {
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(response);
+    }
+
+    /**
+     *  [Exception] 커스텀 예외 - TooEarlyToRefreshException
+     *  해당 예외는 클라이언트에게 유저가 refresh 가능한 남은 시간을 알려주는 응답이다.
+     */
+    @ExceptionHandler(TooEarlyToRefreshException.class)
+    public ResponseEntity<TooEarlyToRefreshResponse> handleTooEarlyToRefreshException(TooEarlyToRefreshException e){
+        TooEarlyToRefreshResponse response = TooEarlyToRefreshResponse.of(
+                e.getRemainingDays(),
+                e.getRemainingHours(),
+                e.getRemainingMinutes());
+
+        return ResponseEntity.ok(response);
     }
 
     @ExceptionHandler({TokenExpiredException.class, TokenValidFailedException.class})
