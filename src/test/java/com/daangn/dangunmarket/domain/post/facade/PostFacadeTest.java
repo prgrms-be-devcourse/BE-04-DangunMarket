@@ -143,7 +143,7 @@ class PostFacadeTest {
     }
 
     @Test
-    @DisplayName("")
+    @DisplayName("게시글을 수정하기 위해서 기존에 작성한 글에 대한 정보를 제대로 불러오는지 확인한다.")
     void findPostInfoToUpdate_createdPost_equals() {
         //given
         given(s3Uploader.saveImages(any())).willReturn(List.of("a", "b", "c"));
@@ -164,7 +164,7 @@ class PostFacadeTest {
     }
 
     @Test
-    @DisplayName("")
+    @DisplayName("게시글 수정을 요청한 회원과 게시글 작성자와 다른 경우 예외를 발생시킨다.")
     void findPostInfoToUpdate_notWriter_throwException() {
         //given
         given(s3Uploader.saveImages(any())).willReturn(List.of("a", "b", "c"));
