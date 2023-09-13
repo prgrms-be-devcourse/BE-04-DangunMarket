@@ -8,7 +8,6 @@ import com.daangn.dangunmarket.global.exception.ImageUploadException;
 import com.daangn.dangunmarket.global.response.ErrorCode;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,7 +21,7 @@ import java.util.UUID;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class S3UploaderImpl implements S3Uploader{
+public class S3UploaderImpl implements S3Uploader {
 
     @Value("${cloud.aws.s3.bucket}")
     private String bucket;
@@ -66,7 +65,7 @@ public class S3UploaderImpl implements S3Uploader{
         }
     }
 
-    private String changeFileName(String fileName){
+    private String changeFileName(String fileName) {
         String uuid = UUID.randomUUID().toString();
         return uuid + "-" + fileName;
     }

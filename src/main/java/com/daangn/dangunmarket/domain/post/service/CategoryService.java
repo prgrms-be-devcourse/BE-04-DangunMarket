@@ -10,7 +10,7 @@ import static com.daangn.dangunmarket.global.response.ErrorCode.NOT_FOUND_CATEGO
 @Service
 public class CategoryService {
 
-    private CategoryRepository categoryRepository;
+    private final CategoryRepository categoryRepository;
 
     public CategoryService(CategoryRepository categoryRepository) {
         this.categoryRepository = categoryRepository;

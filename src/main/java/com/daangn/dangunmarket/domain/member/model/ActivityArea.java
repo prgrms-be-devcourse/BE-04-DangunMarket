@@ -1,5 +1,6 @@
 package com.daangn.dangunmarket.domain.member.model;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -7,18 +8,17 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.OneToOne;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import jakarta.persistence.*;
-import lombok.*;
 import org.springframework.util.Assert;
 
 @Entity
-@Table(name="activity_areas")
 @Getter
+@Table(name = "activity_areas")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class ActivityArea {
 
@@ -27,8 +27,8 @@ public class ActivityArea {
     @Column(name = "id")
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "member_id", nullable = false)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
+    @JoinColumn(name = "members_id", nullable = false)
     private Member member;
 
     @Column(nullable = false)
@@ -46,7 +46,7 @@ public class ActivityArea {
     }
 
     public void changeAreaId(Long emdAreaId) {
-        Assert.notNull(emdAreaId,"활동 지역 아이디는 null일 수 없습니다.");
+        Assert.notNull(emdAreaId, "활동 지역 아이디는 null일 수 없습니다.");
         this.emdAreaId = emdAreaId;
     }
 
@@ -55,7 +55,7 @@ public class ActivityArea {
         member.addActivityArea(this);
     }
 
-    public void authorizedActivityArea () {
+    public void authorizedActivityArea() {
         isVerified = true;
     }
 

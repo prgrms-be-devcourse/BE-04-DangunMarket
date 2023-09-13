@@ -1,6 +1,9 @@
 package com.daangn.dangunmarket.domain.post.repository.post;
 
 import com.daangn.dangunmarket.domain.post.model.Post;
+import com.daangn.dangunmarket.domain.post.repository.dto.PostDto;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
@@ -8,10 +11,12 @@ import java.util.Optional;
 @Repository
 public class PostRepositoryImpl implements PostRepository {
 
-    private PostJpaRepository postJpaRepository;
+    private final PostJpaRepository postJpaRepository;
+    private final PostQueryRepository postQueryRepository;
 
-    public PostRepositoryImpl(PostJpaRepository postJpaRepository) {
+    public PostRepositoryImpl(PostJpaRepository postJpaRepository, PostQueryRepository postQueryRepository) {
         this.postJpaRepository = postJpaRepository;
+        this.postQueryRepository = postQueryRepository;
     }
 
     @Override
@@ -22,6 +27,12 @@ public class PostRepositoryImpl implements PostRepository {
     @Override
     public Optional<Post> findById(Long productId) {
         return postJpaRepository.findById(productId);
+    }
+
+    @Override
+    public Page<PostDto> getPostsSimple(Long areaId, Pageable pageable) {
+        return postQueryRepository
+                .getPostsSimple(areaId, pageable);
     }
 
 }

@@ -10,11 +10,10 @@ import com.daangn.dangunmarket.domain.post.facade.dto.PostCreateRequestParam;
 import com.daangn.dangunmarket.domain.post.facade.dto.PostFindResponseParam;
 import com.daangn.dangunmarket.domain.post.facade.mpper.PostParamMapper;
 import com.daangn.dangunmarket.domain.post.model.Category;
+import com.daangn.dangunmarket.domain.post.model.Post;
 import com.daangn.dangunmarket.domain.post.repository.category.CategoryRepository;
 import com.daangn.dangunmarket.domain.post.repository.post.PostRepository;
 import com.daangn.dangunmarket.domain.post.service.CategoryService;
-import com.daangn.dangunmarket.domain.post.model.Post;
-
 import com.daangn.dangunmarket.domain.post.service.PostService;
 import com.daangn.dangunmarket.global.aws.s3.S3Uploader;
 import org.junit.jupiter.api.BeforeEach;

@@ -1,11 +1,15 @@
 package com.daangn.dangunmarket.domain.post.service;
 
 import com.daangn.dangunmarket.domain.post.model.Post;
+import com.daangn.dangunmarket.domain.post.repository.dto.PostDto;
 import com.daangn.dangunmarket.domain.post.repository.post.PostRepository;
 import com.daangn.dangunmarket.domain.post.service.dto.PostCreateRequest;
 import com.daangn.dangunmarket.domain.post.service.dto.PostFindResponse;
+import com.daangn.dangunmarket.domain.post.service.dto.PostGetResponses;
 import com.daangn.dangunmarket.domain.post.service.mapper.PostMapper;
 import com.daangn.dangunmarket.global.exception.EntityNotFoundException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -15,8 +19,8 @@ import static com.daangn.dangunmarket.global.response.ErrorCode.NOT_FOUND_POST_E
 @Service
 public class PostService {
 
-    private PostRepository postRepository;
-    private PostMapper mapper;
+    private final PostRepository postRepository;
+    private final PostMapper mapper;
 
     public PostService(PostRepository postRepository, PostMapper mapper) {
         this.postRepository = postRepository;
@@ -35,6 +39,13 @@ public class PostService {
                 .orElseThrow(() -> new EntityNotFoundException(NOT_FOUND_POST_ENTITY));
 
         return PostFindResponse.from(post);
+    }
+
+    public PostGetResponses getPosts(Long areaId, Pageable pageable) {
+        Page<PostDto> postDtoPages = postRepository.getPostsSimple(areaId, pageable);
+
+        PostGetResponses responses = PostGetResponses.from(postDtoPages);
+        return responses;
     }
 
 }
