@@ -4,9 +4,13 @@ import com.daangn.dangunmarket.domain.post.model.Post;
 import com.daangn.dangunmarket.domain.post.model.PostLike;
 import com.daangn.dangunmarket.domain.post.repository.post.PostRepository;
 import com.daangn.dangunmarket.domain.post.repository.postlike.PostLikeRepository;
+import com.daangn.dangunmarket.domain.post.repository.postlike.dto.JoinedWithArea;
+import com.daangn.dangunmarket.domain.post.service.dto.LikedPostFindResponseList;
 import com.daangn.dangunmarket.domain.post.service.dto.PostLikeResponse;
-import com.daangn.dangunmarket.global.Exception.EntityNotFoundException;
-import com.daangn.dangunmarket.global.Exception.InvalidPostLikeException;
+import com.daangn.dangunmarket.global.exception.EntityNotFoundException;
+import com.daangn.dangunmarket.global.exception.InvalidPostLikeException;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -16,8 +20,8 @@ import static com.daangn.dangunmarket.global.response.ErrorCode.*;
 @Transactional(readOnly = true)
 public class PostLikeService {
 
-    private PostLikeRepository postLikeRepository;
-    private PostRepository postRepository;
+    private final PostLikeRepository postLikeRepository;
+    private final PostRepository postRepository;
 
     public PostLikeService(PostLikeRepository postLikeRepository, PostRepository postRepository) {
         this.postLikeRepository = postLikeRepository;
@@ -57,6 +61,11 @@ public class PostLikeService {
         postLikeRepository.delete(postLike);
 
         return PostLikeResponse.of(post.getLikeCount(), false);
+    }
+
+    public LikedPostFindResponseList findByMemberId(Long memberId, Pageable pageable) {
+        Slice<JoinedWithArea> responseList = postLikeRepository.findByMemberId(memberId, pageable);
+        return LikedPostFindResponseList.from(responseList);
     }
 
 }
