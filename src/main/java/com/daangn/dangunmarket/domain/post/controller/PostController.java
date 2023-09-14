@@ -8,6 +8,8 @@ import com.daangn.dangunmarket.domain.post.controller.dto.post.PostCreateApiRequ
 import com.daangn.dangunmarket.domain.post.controller.dto.post.PostCreateApiResponse;
 import com.daangn.dangunmarket.domain.post.controller.dto.post.PostFindApiResponse;
 import com.daangn.dangunmarket.domain.post.controller.mapper.PostApiMapper;
+import com.daangn.dangunmarket.domain.post.exception.TooEarlyToRefreshException;
+import com.daangn.dangunmarket.domain.post.exception.TooEarlyToRefreshResponse;
 import com.daangn.dangunmarket.domain.post.facade.PostFacade;
 import com.daangn.dangunmarket.domain.post.facade.dto.PostFindResponseParam;
 import com.daangn.dangunmarket.domain.post.service.PostService;
@@ -17,6 +19,7 @@ import jakarta.validation.Valid;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -77,7 +80,7 @@ public class PostController {
         return ResponseEntity.ok(apiResponse);
     }
 
-    @PatchMapping("/refreshed-at/{postId}")
+    @PatchMapping("/{postId}/refresh")
     public ResponseEntity<PostRefreshApiResponse> refreshPostTime(
             @PathVariable Long postId,
             Authentication authentication
@@ -89,6 +92,20 @@ public class PostController {
         );
 
         return ResponseEntity.ok(apiResponse);
+    }
+
+    /**
+     *  [Exception] 커스텀 예외 - TooEarlyToRefreshException
+     *  해당 예외는 클라이언트에게 유저가 refresh 가능한 남은 시간을 알려주는 응답이다.
+     */
+    @ExceptionHandler(TooEarlyToRefreshException.class)
+    public ResponseEntity<TooEarlyToRefreshResponse> handleTooEarlyToRefreshException(TooEarlyToRefreshException e){
+        TooEarlyToRefreshResponse response = TooEarlyToRefreshResponse.of(
+                e.getRemainingDays(),
+                e.getRemainingHours(),
+                e.getRemainingMinutes());
+
+        return ResponseEntity.ok(response);
     }
 
     private static URI createURI(Long productId) {
