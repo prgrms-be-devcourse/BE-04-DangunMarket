@@ -17,7 +17,6 @@ import com.daangn.dangunmarket.global.exception.InvalidPostLikeException;
 import com.daangn.dangunmarket.global.response.ErrorCode;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,7 +33,7 @@ import static com.daangn.dangunmarket.domain.member.model.MemberProvider.GOOGLE;
 import static com.daangn.dangunmarket.domain.member.model.RoleType.USER;
 
 @SpringBootTest
-@Transactional
+//@Transactional
 @ActiveProfiles("test")
 public class PostLikeServiceTest {
 
@@ -60,7 +59,7 @@ public class PostLikeServiceTest {
     }
 
     @Test
-    @Disabled
+//    @Disabled
     @DisplayName("좋아요 기능 동시성 테스트")
     void likePost_PostIdMemberId_Success() throws InterruptedException {
         //given
@@ -123,7 +122,7 @@ public class PostLikeServiceTest {
                 .memberId(2L)
                 .areaId(1L)
                 .localPreference(null)
-                .postImageList(List.of(new PostImage("abc"), new PostImage("123")))
+                .postImageList(List.of(new PostImage("abc", "파일이름1"), new PostImage("123", "파일이름2")))
                 .category(category1)
                 .tradeStatus(TradeStatus.IN_PROGRESS)
                 .title(new Title("제목"))

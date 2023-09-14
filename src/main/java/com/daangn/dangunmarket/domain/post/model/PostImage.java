@@ -26,7 +26,7 @@ public class PostImage extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 500)
     private String url;
 
     @Column(nullable = false)
@@ -48,6 +48,10 @@ public class PostImage extends BaseEntity {
             this.post.getPostImageList().remove(this);
         }
         this.post = post;
+    }
+
+    public void deletePostImage() {
+        isDeleted = true;
     }
 
 }

@@ -1,6 +1,5 @@
 package com.daangn.dangunmarket.domain.post.facade;
 
-import com.amazonaws.services.kms.model.NotFoundException;
 import com.daangn.dangunmarket.domain.area.service.AreaService;
 import com.daangn.dangunmarket.domain.area.service.dto.AreaResponse;
 import com.daangn.dangunmarket.domain.member.model.Member;
@@ -19,8 +18,10 @@ import com.daangn.dangunmarket.domain.post.repository.category.CategoryRepositor
 import com.daangn.dangunmarket.domain.post.repository.post.PostRepository;
 import com.daangn.dangunmarket.domain.post.service.CategoryService;
 import com.daangn.dangunmarket.domain.post.service.PostService;
-
+import com.daangn.dangunmarket.global.aws.dto.ImageInfo;
 import com.daangn.dangunmarket.global.aws.s3.S3Uploader;
+import com.daangn.dangunmarket.global.exception.EntityNotFoundException;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -96,7 +97,7 @@ class PostFacadeTest {
                 s3Uploader,
                 mapper, postParamDtoMapper);
 
-        given(s3Uploader.saveImages(any())).willReturn(List.of("z", "s"));
+        given(s3Uploader.saveImages(any())).willReturn(List.of(new ImageInfo("z", "zname"), new ImageInfo("s", "sname")));
 
         dataSetup();
     }
@@ -105,7 +106,7 @@ class PostFacadeTest {
     @DisplayName("product를 저장 후 저장된 product불러와 필드값들을 확인한다.")
     void createProduct_correctRequest_Long() {
         //given
-        given(s3Uploader.saveImages(any())).willReturn(List.of("a", "b", "c"));
+        given(s3Uploader.saveImages(any())).willReturn(List.of(new ImageInfo("a", "zname"), new ImageInfo("b", "sname"), new ImageInfo("c", "sname")));
         List<MultipartFile> mockMultipartFiles = List.of(new MockMultipartFile("first", (byte[]) null), new MockMultipartFile("second", (byte[]) null));
         PostCreateRequestParam requestParam = new PostCreateRequestParam(setupMemberId, 2L, 37.5297, 126.8876, "seoul", mockMultipartFiles, setupCategory.getId(), "firstTile", "firstContent", 100L, true, LocalDateTime.now());
 
@@ -150,7 +151,7 @@ class PostFacadeTest {
     @DisplayName("게시글을 수정하기 위해서 기존에 작성한 글에 대한 정보를 제대로 불러오는지 확인한다.")
     void findPostInfoToUpdate_createdPost_equals() {
         //given
-        given(s3Uploader.saveImages(any())).willReturn(List.of("a", "b", "c"));
+        given(s3Uploader.saveImages(any())).willReturn(List.of(new ImageInfo("a", "zname"), new ImageInfo("b", "sname"), new ImageInfo("c", "sname")));
         List<MultipartFile> mockMultipartFiles = List.of(new MockMultipartFile("first", (byte[]) null), new MockMultipartFile("second", (byte[]) null));
         PostCreateRequestParam requestParam = new PostCreateRequestParam(1L, 2L, 37.5297, 126.8876, "seoul", mockMultipartFiles, setupCategory.getId(), "firstTile", "firstContent", 100L, true, LocalDateTime.now());
 
@@ -171,7 +172,7 @@ class PostFacadeTest {
     @DisplayName("게시글 수정을 요청한 회원과 게시글 작성자와 다른 경우 예외를 발생시킨다.")
     void findPostInfoToUpdate_notWriter_throwException() {
         //given
-        given(s3Uploader.saveImages(any())).willReturn(List.of("a", "b", "c"));
+        given(s3Uploader.saveImages(any())).willReturn(List.of(new ImageInfo("a", "zname"), new ImageInfo("b", "sname"), new ImageInfo("c", "sname")));
         List<MultipartFile> mockMultipartFiles = List.of(new MockMultipartFile("first", (byte[]) null), new MockMultipartFile("second", (byte[]) null));
         PostCreateRequestParam requestParam = new PostCreateRequestParam(1L, 2L, 37.5297, 126.8876, "seoul", mockMultipartFiles, setupCategory.getId(), "firstTile", "firstContent", 100L, true, LocalDateTime.now());
 
@@ -182,6 +183,43 @@ class PostFacadeTest {
             postFacade.findPostInfoToUpdateById(2L, productId);
         });
     }
+
+    @Test
+    @DisplayName("게시글을 작성한 유저가 게시글 삭제 요청 시 게시글을 성공적으로 삭제한다.")
+    void deletePost_MemberIdAndPostID_Success() {
+        //given
+        Long memberId = 1L;
+        given(s3Uploader.saveImages(any())).willReturn(List.of(new ImageInfo("a", "zname"), new ImageInfo("b", "sname"), new ImageInfo("c", "sname")));
+        List<MultipartFile> mockMultipartFiles = List.of(new MockMultipartFile("first", (byte[]) null), new MockMultipartFile("second", (byte[]) null));
+        PostCreateRequestParam requestParam = new PostCreateRequestParam(memberId, 2L, 37.5297, 126.8876, "seoul", mockMultipartFiles, setupCategory.getId(), "firstTile", "firstContent", 100L, true, LocalDateTime.now());
+        Long postId = postFacade.createPost(requestParam);
+
+        //when
+        Long deletePostId = postFacade.deletePost(memberId, postId);
+
+        //then
+        Assertions.assertThatThrownBy(() -> postFacade.findById(deletePostId))
+                .isInstanceOf(EntityNotFoundException.class);
+
+    }
+
+
+    @Test
+    @DisplayName("게시글을 삭제 권한이 없는 유저가 게시글 삭제 요청시 예외가 발생한다. ")
+    void deletePost_MemberIdAndPostID_Throw() {
+        //given
+        Long memberId = 1L;
+        given(s3Uploader.saveImages(any())).willReturn(List.of(new ImageInfo("a", "zname"), new ImageInfo("b", "sname"), new ImageInfo("c", "sname")));
+        List<MultipartFile> mockMultipartFiles = List.of(new MockMultipartFile("first", (byte[]) null), new MockMultipartFile("second", (byte[]) null));
+        PostCreateRequestParam requestParam = new PostCreateRequestParam(memberId, 2L, 37.5297, 126.8876, "seoul", mockMultipartFiles, setupCategory.getId(), "firstTile", "firstContent", 100L, true, LocalDateTime.now());
+        Long postId = postFacade.createPost(requestParam);
+
+        //when
+        Long strangeMemberId = 5L;
+        Assertions.assertThatThrownBy(() -> postFacade.deletePost(strangeMemberId, postId))
+                .isInstanceOf(UnauthorizedAccessException.class);
+    }
+
 
     /**
      * Member, Category, Product을 미리 setup함.
