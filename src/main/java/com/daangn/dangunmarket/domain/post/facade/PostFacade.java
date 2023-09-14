@@ -20,6 +20,7 @@ import org.locationtech.jts.geom.Point;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -109,13 +110,9 @@ public class PostFacade {
 
         Point point = GeometryTypeFactory.createPoint(request.longitude(), request.latitude());
         LocationPreference locationPreference = new LocationPreference(point, request.alias());
-
         Long areaId = areaService.findAreaIdByPolygon(point);
 
-        List<String> url = s3Uploader.saveImages(request.files());
-        List<PostImage> postImages = url.stream()
-                .map(PostImage::new)
-                .toList();
+        List<PostImage> postImages = saveImagesFromRequest(request.files());
 
         Category findCategory = categoryService.findById(request.categoryId());
 
@@ -125,6 +122,13 @@ public class PostFacade {
                 postImages,
                 findCategory,
                 areaId));
+    }
+
+    private List<PostImage> saveImagesFromRequest(List<MultipartFile> files) {
+        List<String> url = s3Uploader.saveImages(files);
+        return url.stream()
+                .map(PostImage::new)
+                .toList();
     }
 
 }

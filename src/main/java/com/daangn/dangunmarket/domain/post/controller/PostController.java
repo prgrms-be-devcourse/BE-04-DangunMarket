@@ -1,15 +1,12 @@
 package com.daangn.dangunmarket.domain.post.controller;
 
 import com.daangn.dangunmarket.domain.auth.jwt.CustomUser;
-import com.daangn.dangunmarket.domain.post.controller.dto.PostCreateApiRequest;
-import com.daangn.dangunmarket.domain.post.controller.dto.PostCreateApiResponse;
-import com.daangn.dangunmarket.domain.post.controller.dto.PostFindApiResponse;
-import com.daangn.dangunmarket.domain.post.controller.dto.PostToUpdateApiResponse;
-import com.daangn.dangunmarket.domain.post.controller.dto.PostGetApiResponses;
+import com.daangn.dangunmarket.domain.post.controller.dto.*;
 import com.daangn.dangunmarket.domain.post.controller.mapper.PostApiMapper;
 import com.daangn.dangunmarket.domain.post.facade.PostFacade;
 import com.daangn.dangunmarket.domain.post.facade.dto.PostFindResponseParam;
 import com.daangn.dangunmarket.domain.post.facade.dto.PostToUpdateResponseParam;
+import com.daangn.dangunmarket.domain.post.facade.dto.PostUpdateRequestParam;
 import com.daangn.dangunmarket.domain.post.facade.dto.PostsGetResponseParam;
 
 import jakarta.validation.Valid;
@@ -81,6 +78,17 @@ public class PostController {
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(responses);
+    }
+
+    @PutMapping
+    public ResponseEntity<PostUpdateApiResponse> updatePost(@RequestBody @Valid PostUpdateApiRequest postUpdateApiRequest) {
+        PostUpdateRequestParam postUpdateRequestParam = mapper.toPostUpdateRequestParam(postUpdateApiRequest);
+        Long postId = postFacade.updatePost(postUpdateRequestParam);
+        PostUpdateApiResponse postUpdateApiResponse = mapper.toPostUpdateApiResponse(postId);
+
+        URI uri = createURI(postId);
+
+        return ResponseEntity.created(uri).body(postUpdateApiResponse);
     }
 
     private static URI createURI(Long productId) {
