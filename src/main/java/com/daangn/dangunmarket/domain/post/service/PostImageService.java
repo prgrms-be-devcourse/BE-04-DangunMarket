@@ -5,17 +5,12 @@ import com.daangn.dangunmarket.domain.post.model.Post;
 import com.daangn.dangunmarket.domain.post.model.PostImage;
 import com.daangn.dangunmarket.domain.post.repository.post.PostRepository;
 import com.daangn.dangunmarket.global.aws.s3.S3Uploader;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import org.apache.commons.io.FileUtils;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.IntStream;
 
 @Transactional
 @Service
@@ -29,34 +24,23 @@ public class PostImageService {
         this.s3Uploader = s3Uploader;
     }
 
-    public void editImages(Long postId, List<PostImage> newPostImages, List<MultipartFile> files) {
+    //urls에는 기존 혹은 삭제만 확인한다.
+    public void removeImages(Long postId, List<String> urls) {
         Post postToEdit = postRepository.findById(postId).orElseThrow(() -> new NotFoundException("해당 게시글이 존재하지 않습니다."));
         List<PostImage> existingPostImages = postToEdit.getPostImageList();
 
-
-        List<MultipartFile> addedMultipartFiles = IntStream.range(0, newPostImages.size())
-                .filter(i -> existingPostImages.contains(newPostImages.get(i)))
-                .mapToObj(files::get)
-                .toList();
-
-
-        List<PostImage> addedImages = newPostImages.stream()
-                .filter(image -> !existingPostImages.contains(image))
-                .toList();
-
-        addedImages.forEach(postToEdit::addPostImage);
-        addedMultipartFiles.forEach(s3Uploader::saveImage);
-
-
-        List<PostImage> removedImages = existingPostImages.stream()
-                .filter(image -> !newPostImages.contains(image))
-                .toList();
-        removedImages.forEach(image -> {
-            postToEdit.removePostImage(image);
-            s3Uploader.deleteImage(image.getUrl());
+        List<PostImage> postImagesToRemove = existingPostImages.stream().filter(u -> !urls.contains(u.getUrl())).toList();
+        postImagesToRemove.forEach(r -> {
+            postToEdit.removePostImage(r);
+            s3Uploader.deleteImage(r.getUrl());
         });
-
     }
 
+    public List<PostImage> saveImagesFromRequest(List<MultipartFile> files) {
+        List<String> url = s3Uploader.saveImages(files);
+        return url.stream()
+                .map(PostImage::new)
+                .toList();
+    }
 
 }

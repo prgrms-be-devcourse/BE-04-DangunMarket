@@ -76,6 +76,7 @@ public class PostService {
                 .orElseThrow(() -> new NotFoundException("해당 게시글이 존재하지 않습니다."));
 
         PostEditor postEditor = PostEditor.toPostEditor(request);
+        postToUpdate.addPostImages(request.postImages());
         postToUpdate.edit(postEditor);
 
         postRepository.save(postToUpdate);
@@ -87,7 +88,6 @@ public class PostService {
 
         PostSearchResponses responses = PostSearchResponses.from(postDtoPages);
         return responses;
-
     }
 
 }

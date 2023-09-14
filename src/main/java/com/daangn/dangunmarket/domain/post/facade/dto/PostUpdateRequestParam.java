@@ -10,6 +10,7 @@ public record PostUpdateRequestParam(
         Double longitude,
         String alias,
         List<MultipartFile> files,
+        List<String> urls,
         Long categoryId,
         String title,
         String content,

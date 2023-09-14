@@ -46,7 +46,6 @@ public class PostFacade {
     private final PostParamDtoMapper postParamDtoMapper;
     private final PostImageService postImageService;
 
-
     public PostFacade(PostService postService, MemberService memberService, AreaService areaService, CategoryService categoryService, S3Uploader s3Uploader, PostParamMapper postParamMapper, PostParamDtoMapper postParamDtoMapper, PostImageService postImageService) {
         this.postService = postService;
         this.memberService = memberService;
@@ -142,8 +141,8 @@ public class PostFacade {
         LocationPreference locationPreference = new LocationPreference(point, request.alias());
         Long areaId = areaService.findAreaIdByPolygon(point);
 
-        List<PostImage> postImages = saveImagesFromRequest(request.files());
-        postImageService.editImages(request.postId(), postImages, request.files());
+        List<PostImage> postImages = postImageService.saveImagesFromRequest(request.files());
+        postImageService.removeImages(request.postId(), request.urls());
 
         Category findCategory = categoryService.findById(request.categoryId());
 
@@ -153,13 +152,6 @@ public class PostFacade {
                 postImages,
                 findCategory,
                 areaId));
-    }
-
-    private List<PostImage> saveImagesFromRequest(List<MultipartFile> files) {
-        List<String> url = s3Uploader.saveImages(files);
-        return url.stream()
-                .map(PostImage::new)
-                .toList();
     }
 
 }

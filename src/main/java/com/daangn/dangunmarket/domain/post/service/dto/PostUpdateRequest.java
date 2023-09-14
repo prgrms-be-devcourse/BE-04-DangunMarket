@@ -10,6 +10,7 @@ public record PostUpdateRequest (
         Long postId,
         LocationPreference locationPreference,
         List<PostImage> postImages,
+        List<String> urls,
         Category category,
         Long areaId,
         String title,

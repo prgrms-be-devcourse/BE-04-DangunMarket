@@ -32,6 +32,12 @@ public interface PostParamMapper {
 
     @Mapping(source = "areaName", target = "userAreaName")
     PostGetResponseParams toPostsGetResponseParam(String areaName, PostGetResponses responsePage);
+    @Mapping(source = "request.postId", target = "postId")
+    @Mapping(source = "request.urls", target = "urls")
+    @Mapping(source = "request.title", target = "title")
+    @Mapping(source = "request.content", target = "content")
+    @Mapping(source = "request.price", target = "price")
+    @Mapping(source = "request.isOfferAllowed", target = "isOfferAllowed")
     PostUpdateRequest toPostUpdateRequest(
             PostUpdateRequestParam request,
             LocationPreference locationPreference,

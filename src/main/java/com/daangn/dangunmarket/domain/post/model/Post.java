@@ -90,16 +90,17 @@ public class Post extends BaseEntity {
         return postImageList;
     }
 
-    public void addPostImage(PostImage postImage) {
-        this.postImageList.add(postImage);
-        postImage.changePost(this);
+    public void addPostImages(List<PostImage> postImages) {
+        for(PostImage postImage : postImages) {
+            this.postImageList.add(postImage);
+            postImage.changePost(this);
+        }
     }
 
     public void removePostImage(PostImage postImage) {
         postImageList.remove(postImage);
         postImage.changeIsDeleted(true);
         postImage.removePost();
-
     }
 
     public String getTitle() {
