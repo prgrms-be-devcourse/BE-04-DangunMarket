@@ -2,26 +2,19 @@ package com.daangn.dangunmarket.domain.post.facade;
 
 import com.amazonaws.services.kms.model.NotFoundException;
 import com.daangn.dangunmarket.domain.DataInitializerFactory;
-import com.daangn.dangunmarket.domain.area.model.Area;
 import com.daangn.dangunmarket.domain.area.service.AreaService;
 import com.daangn.dangunmarket.domain.area.service.dto.AreaResponse;
 import com.daangn.dangunmarket.domain.member.model.Member;
-import com.daangn.dangunmarket.domain.member.model.NickName;
 import com.daangn.dangunmarket.domain.member.service.MemberService;
 import com.daangn.dangunmarket.domain.post.exception.UnauthorizedAccessException;
 import com.daangn.dangunmarket.domain.post.facade.dto.PostCreateRequestParam;
 import com.daangn.dangunmarket.domain.post.facade.dto.PostFindResponseParam;
 import com.daangn.dangunmarket.domain.post.facade.dto.PostToUpdateResponseParam;
 import com.daangn.dangunmarket.domain.post.facade.dto.PostUpdateRequestParam;
-import com.daangn.dangunmarket.domain.post.facade.mpper.PostParamDtoMapper;
-import com.daangn.dangunmarket.domain.post.facade.mpper.PostParamMapper;
 import com.daangn.dangunmarket.domain.post.model.Category;
 import com.daangn.dangunmarket.domain.post.model.Post;
 import com.daangn.dangunmarket.domain.post.repository.category.CategoryRepository;
 import com.daangn.dangunmarket.domain.post.repository.post.PostRepository;
-import com.daangn.dangunmarket.domain.post.service.CategoryService;
-import com.daangn.dangunmarket.domain.post.service.PostService;
-
 import com.daangn.dangunmarket.global.aws.s3.S3Uploader;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -31,10 +24,8 @@ import org.locationtech.jts.io.ParseException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -73,8 +64,10 @@ class PostFacadeTest {
 
     private Long setUpMemberId;
 
+    private Long setupMemberId;
+
     @BeforeEach
-    void setup() throws ParseException {
+    void setup()  {
         given(s3Uploader.saveImages(any())).willReturn(List.of("z", "s"));
         dataSetup();
     }
@@ -83,13 +76,14 @@ class PostFacadeTest {
     @DisplayName("product를 저장 후 저장된 product 불러와 필드값들을 확인한다.")
     void createProduct_correctRequest_Long() {
         //given
-        PostCreateRequestParam postCreateRequestParam = DataInitializerFactory.getPostCreateRequestParams(setupProductId,setUpCategory.getId()).get(1);
+        PostCreateRequestParam postCreateRequestParam = DataInitializerFactory.getPostCreateRequestParams(setupProductId, setUpCategory.getId()).get(1);
 
         //when
         Long productId = postFacade.createPost(postCreateRequestParam);
 
         //then
         Post post = postRepository.findById(productId).orElseThrow();
+
         assertThat(post.getMemberId()).isEqualTo(postCreateRequestParam.memberId());
         assertThat(post.getAreaId()).isEqualTo(postCreateRequestParam.areaId());
         assertThat(post.getLocalPreference().getAlias()).isEqualTo(postCreateRequestParam.alias());
@@ -126,7 +120,7 @@ class PostFacadeTest {
     @DisplayName("게시글을 수정하기 위해서 기존에 작성한 글에 대한 정보를 제대로 불러오는지 확인한다.")
     void findPostInfoToUpdate_createdPost_equals() {
         //given
-        PostCreateRequestParam postCreateRequestParam = DataInitializerFactory.getPostCreateRequestParams(setUpMemberId,setUpCategory.getId()).get(1);
+        PostCreateRequestParam postCreateRequestParam = DataInitializerFactory.getPostCreateRequestParams(setUpMemberId, setUpCategory.getId()).get(1);
 
         Long productId = postFacade.createPost(postCreateRequestParam);
 
@@ -145,7 +139,7 @@ class PostFacadeTest {
     @DisplayName("게시글 수정을 요청한 회원과 게시글 작성자와 다른 경우 예외를 발생시킨다.")
     void findPostInfoToUpdate_notWriter_throwException() {
         //given
-        PostCreateRequestParam postCreateRequestParam = DataInitializerFactory.getPostCreateRequestParams(setUpMemberId,setUpCategory.getId()).get(1);
+        PostCreateRequestParam postCreateRequestParam = DataInitializerFactory.getPostCreateRequestParams(setUpMemberId, setUpCategory.getId()).get(1);
         Long productId = postFacade.createPost(postCreateRequestParam);
 
         //when_then
@@ -158,13 +152,13 @@ class PostFacadeTest {
     @DisplayName("")
     void updatePost_response_equals() {
         //given
-        List<PostCreateRequestParam> postCreateRequestParams = DataInitializerFactory.getPostCreateRequestParams(setUpMemberId,setUpCategory.getId());
+        List<PostCreateRequestParam> postCreateRequestParams = DataInitializerFactory.getPostCreateRequestParams(setUpMemberId, setUpCategory.getId());
         Long postId = postFacade.createPost(postCreateRequestParams.get(0));
         PostUpdateRequestParam postUpdateRequestParam = DataInitializerFactory.postUpdateRequestParam(postId, setUpCategory.getId());
 
         //when
         postFacade.updatePost(postUpdateRequestParam);
-        Post updatedPost = postRepository.findById(postId).orElseThrow(()->new NotFoundException("해당 게시글이 없습니다."));
+        Post updatedPost = postRepository.findById(postId).orElseThrow(() -> new NotFoundException("해당 게시글이 없습니다."));
 
         //then
         assertThat(updatedPost.getId()).isEqualTo(postId);
@@ -179,7 +173,8 @@ class PostFacadeTest {
         Member setupMember = DataInitializerFactory.member();
         setUpMemberId = memberService.save(setupMember).id();
         setUpCategory = categoryRepository.save(DataInitializerFactory.category());
-        setupProductId = postFacade.createPost(DataInitializerFactory.getPostCreateRequestParams(setUpMemberId,setUpCategory.getId()).get(0));
+        setupProductId = postFacade.createPost(DataInitializerFactory.getPostCreateRequestParams(setUpMemberId, setUpCategory.getId()).get(0));
+
     }
 
 }

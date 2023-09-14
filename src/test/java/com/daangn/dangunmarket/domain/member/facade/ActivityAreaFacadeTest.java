@@ -1,6 +1,7 @@
 package com.daangn.dangunmarket.domain.member.facade;
 
 import com.amazonaws.services.kms.model.NotFoundException;
+
 import com.daangn.dangunmarket.domain.DataInitializerFactory;
 import com.daangn.dangunmarket.domain.area.model.Area;
 import com.daangn.dangunmarket.domain.area.service.AreaService;
@@ -42,21 +43,20 @@ public class ActivityAreaFacadeTest {
     @Autowired
     private MemberService memberService;
 
-    private Member member ;
-    private MemberCreateResponse saveMember ;
-    private Long activityId ;
+    private Member member;
+    private MemberCreateResponse saveMember;
+    private Long activityId;
     private ActivityAreaFindResponse findActivityArea;
     private ActivityAreaCreateRequestParam activityAreaCreateRequestParam;
     private ActivityAreaIsVerifiedRequestParam activityAreaIsVerifiedRequestParam;
 
     @BeforeEach
     void setUp() throws ParseException {
-        member = DataInitializerFactory.member();
 
+        member = DataInitializerFactory.member();
         saveMember = memberService.save(member);
         activityAreaCreateRequestParam = new ActivityAreaCreateRequestParam(37.575328952171, 126.96496674529);
         activityAreaIsVerifiedRequestParam = new ActivityAreaIsVerifiedRequestParam(37.575328952171, 126.96496674529);
-
         setUpArea();
     }
 
@@ -64,8 +64,7 @@ public class ActivityAreaFacadeTest {
     @DisplayName("위도, 경도를 받아 저장한 활동 지역에 회원의 정보가 제대로 저장되었음을 확인한다.")
     public void createActivityArea_returnActivityArea_equalsSavedActivityArea() {
         //when
-        saveMember.id();
-        activityId = activityAreaFacade.createActivityArea(activityAreaCreateRequestParam,saveMember.id());
+        activityId = activityAreaFacade.createActivityArea(activityAreaCreateRequestParam, saveMember.id());
         findActivityArea = activityAreaService.findByActivityId(activityId);
 
         //then
@@ -81,11 +80,11 @@ public class ActivityAreaFacadeTest {
     @DisplayName("기존에 저장된 활동 지역을 수정하여 새롭게 저장할 경우 회원 당 한 개의 활동 지역을 저장할 수 있음을 보장한다.")
     void countActivityAreaByMemberId_changeActivityArea_returnOneActivityAreaPerMemberId() {
         //given
-        activityId = activityAreaFacade.createActivityArea(activityAreaCreateRequestParam,saveMember.id());
+        activityId = activityAreaFacade.createActivityArea(activityAreaCreateRequestParam, saveMember.id());
         findActivityArea = activityAreaService.findByActivityId(activityId);
 
         ActivityAreaCreateRequestParam changedRequest = new ActivityAreaCreateRequestParam(37.589115410344, 126.9807978842);
-        activityAreaFacade.createActivityArea(changedRequest,saveMember.id());
+        activityAreaFacade.createActivityArea(changedRequest, saveMember.id());
 
         //then
         int count = activityAreaService.countActivityAreaByMemberId(saveMember.id());
@@ -98,11 +97,11 @@ public class ActivityAreaFacadeTest {
     @DisplayName("사용자의 위치정보가 인증된 지역의 위치 정보와 동일하면 true를 반환한다.")
     void isVerifiedActivityArea_membersLocation_equal() {
         //given
-        activityId = activityAreaFacade.createActivityArea(activityAreaCreateRequestParam,saveMember.id());
+        activityId = activityAreaFacade.createActivityArea(activityAreaCreateRequestParam, saveMember.id());
         findActivityArea = activityAreaService.findByActivityId(activityId);
 
         //then
-        boolean isVerified = activityAreaFacade.isVerifiedActivityArea(activityAreaIsVerifiedRequestParam,saveMember.id());
+        boolean isVerified = activityAreaFacade.isVerifiedActivityArea(activityAreaIsVerifiedRequestParam, saveMember.id());
 
         //then
         assertThat(isVerified).isEqualTo(true);
@@ -112,7 +111,7 @@ public class ActivityAreaFacadeTest {
     @DisplayName("사용자의 위치정보가 인증된 지역의 위치 정보와 동일하지 핞으면 NOT FOUND EXCEPTION이 발생한다.")
     void isVerifiedActivityArea_notEqualsLocation_throwException() {
         //given
-        activityId = activityAreaFacade.createActivityArea(activityAreaCreateRequestParam,saveMember.id());
+        activityId = activityAreaFacade.createActivityArea(activityAreaCreateRequestParam, saveMember.id());
         findActivityArea = activityAreaService.findByActivityId(activityId);
         ActivityAreaIsVerifiedRequestParam requestParam = new ActivityAreaIsVerifiedRequestParam(37.589115410344, 126.9807978842);
 
@@ -124,9 +123,9 @@ public class ActivityAreaFacadeTest {
 
     void setUpArea() throws ParseException {
         List<Area> areas = DataInitializerFactory.getAreas();
-
         areaService.save(areas.get(0));
         areaService.save(areas.get(1));
+
     }
 
 }

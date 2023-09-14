@@ -28,7 +28,7 @@ public class PostController {
     private final PostFacade postFacade;
     private final PostApiMapper mapper;
 
-    public PostController(PostFacade postFacade, PostApiMapper mapper ) {
+    public PostController(PostFacade postFacade, PostApiMapper mapper) {
         this.postFacade = postFacade;
         this.mapper = mapper;
     }
