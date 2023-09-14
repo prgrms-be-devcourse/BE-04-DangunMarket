@@ -1,6 +1,7 @@
 package com.daangn.dangunmarket.domain.post.controller.mapper;
 
 import com.daangn.dangunmarket.domain.post.controller.dto.PostCreateApiRequest;
+import com.daangn.dangunmarket.domain.post.controller.dto.PostDeleteApiResponse;
 import com.daangn.dangunmarket.domain.post.controller.dto.PostGetApiResponses;
 import com.daangn.dangunmarket.domain.post.controller.dto.PostLikeApiResponse;
 import com.daangn.dangunmarket.domain.post.controller.dto.PostSearchApiRequest;
@@ -11,7 +12,6 @@ import com.daangn.dangunmarket.domain.post.facade.dto.PostGetResponseParams;
 import com.daangn.dangunmarket.domain.post.facade.dto.PostSearchRequestParam;
 import com.daangn.dangunmarket.domain.post.facade.dto.PostSearchResponseParams;
 import com.daangn.dangunmarket.domain.post.facade.dto.PostToUpdateResponseParam;
-
 import com.daangn.dangunmarket.domain.post.service.dto.PostLikeResponse;
 import org.mapstruct.InjectionStrategy;
 import org.mapstruct.Mapper;
@@ -35,4 +35,5 @@ public interface PostApiMapper {
 
     PostToUpdateApiResponse toPostToUpdateApiResponse(PostToUpdateResponseParam postToUpdateResponseParam);
 
+    PostDeleteApiResponse toPostDeleteApiResponse(Long deletedPostId);
 }

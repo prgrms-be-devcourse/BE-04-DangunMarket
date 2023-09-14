@@ -4,6 +4,7 @@ import com.daangn.dangunmarket.domain.area.service.AreaService;
 import com.daangn.dangunmarket.domain.member.model.ActivityArea;
 import com.daangn.dangunmarket.domain.member.service.MemberService;
 import com.daangn.dangunmarket.domain.member.service.dto.MemberFindResponse;
+import com.daangn.dangunmarket.domain.post.exception.UnauthorizedAccessException;
 import com.daangn.dangunmarket.domain.post.facade.dto.PostCreateRequestParam;
 import com.daangn.dangunmarket.domain.post.facade.dto.PostFindResponseParam;
 import com.daangn.dangunmarket.domain.post.facade.dto.PostGetResponseParams;
@@ -22,6 +23,7 @@ import com.daangn.dangunmarket.domain.post.service.dto.PostGetResponses;
 import com.daangn.dangunmarket.domain.post.service.dto.PostSearchConditionRequest;
 import com.daangn.dangunmarket.domain.post.service.dto.PostSearchResponses;
 import com.daangn.dangunmarket.global.GeometryTypeFactory;
+import com.daangn.dangunmarket.global.aws.dto.ImageInfo;
 import com.daangn.dangunmarket.global.aws.s3.S3Uploader;
 import org.locationtech.jts.geom.Point;
 import org.springframework.data.domain.Pageable;
@@ -29,6 +31,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Objects;
+
+import static com.daangn.dangunmarket.global.response.ErrorCode.POST_NOT_CREATED_BY_USER;
 
 @Transactional(readOnly = true)
 @Service
@@ -57,9 +62,9 @@ public class PostFacade {
         Point point = GeometryTypeFactory.createPoint(request.longitude(), request.latitude());
         LocationPreference locationPreference = new LocationPreference(point, request.alias());
 
-        List<String> url = s3Uploader.saveImages(request.files());
-        List<PostImage> postImages = url.stream()
-                .map(PostImage::new)
+        List<ImageInfo> imageInfos = s3Uploader.saveImages(request.files());
+        List<PostImage> postImages = imageInfos.stream()
+                .map(p -> new PostImage(p.url(), p.fileName()))
                 .toList();
 
         Category findCategory = categoryService.findById(request.categoryId());
@@ -125,8 +130,33 @@ public class PostFacade {
         return params;
     }
 
+    @Transactional
+    public Long deletePost(Long memberId, Long postId) {
+        PostFindResponse response = postService.findById(postId);
+
+        if (!isPostCreatedByUser(response.memberId(), memberId)) {
+            throw new UnauthorizedAccessException(POST_NOT_CREATED_BY_USER);
+        }
+
+        //1. s3 사진 삭제
+        List<String> deleteFileNames = response.postImageList()
+                .stream()
+                .map(PostImage::getFileName)
+                .toList();
+        s3Uploader.deleteImages(deleteFileNames);
+
+        //2. 게시물 soft-delete
+        Long deletedPostId = postService.deletePost(postId);
+
+        return deletedPostId;
+    }
+
     private boolean isMemberActivityAreaValid(List<ActivityArea> activityAreas) {
         return activityAreas.size() > 0;
+    }
+
+    private boolean isPostCreatedByUser(Long postCreatorId, Long memberId) {
+        return Objects.equals(postCreatorId, memberId);
     }
 
 }

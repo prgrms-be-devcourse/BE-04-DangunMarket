@@ -6,11 +6,11 @@ import com.daangn.dangunmarket.domain.post.repository.dto.PostDto;
 import com.daangn.dangunmarket.domain.post.repository.post.PostRepository;
 import com.daangn.dangunmarket.domain.post.service.dto.PostCreateRequest;
 import com.daangn.dangunmarket.domain.post.service.dto.PostFindResponse;
-import com.daangn.dangunmarket.domain.post.service.dto.PostToUpdateResponse;
-import com.daangn.dangunmarket.domain.post.service.mapper.PostDtoMapper;
 import com.daangn.dangunmarket.domain.post.service.dto.PostGetResponses;
 import com.daangn.dangunmarket.domain.post.service.dto.PostSearchConditionRequest;
 import com.daangn.dangunmarket.domain.post.service.dto.PostSearchResponses;
+import com.daangn.dangunmarket.domain.post.service.dto.PostToUpdateResponse;
+import com.daangn.dangunmarket.domain.post.service.mapper.PostDtoMapper;
 import com.daangn.dangunmarket.domain.post.service.mapper.PostMapper;
 import com.daangn.dangunmarket.global.exception.EntityNotFoundException;
 import org.springframework.data.domain.Page;
@@ -74,6 +74,15 @@ public class PostService {
 
         PostSearchResponses responses = PostSearchResponses.from(postDtoPages);
         return responses;
+    }
+
+    @Transactional
+    public Long deletePost(Long postId) {
+        Post post = postRepository.findById(postId)
+                .orElseThrow(() -> new EntityNotFoundException(NOT_FOUND_POST_ENTITY));
+
+        post.deletePost();
+        return post.getId();
     }
 
 }

@@ -3,29 +3,29 @@ package com.daangn.dangunmarket.domain.post.controller;
 import com.daangn.dangunmarket.domain.auth.jwt.CustomUser;
 import com.daangn.dangunmarket.domain.post.controller.dto.PostCreateApiRequest;
 import com.daangn.dangunmarket.domain.post.controller.dto.PostCreateApiResponse;
+import com.daangn.dangunmarket.domain.post.controller.dto.PostDeleteApiResponse;
 import com.daangn.dangunmarket.domain.post.controller.dto.PostFindApiResponse;
-import com.daangn.dangunmarket.domain.post.controller.dto.PostToUpdateApiResponse;
 import com.daangn.dangunmarket.domain.post.controller.dto.PostGetApiResponses;
 import com.daangn.dangunmarket.domain.post.controller.dto.PostSearchApiRequest;
 import com.daangn.dangunmarket.domain.post.controller.dto.PostSearchApiResponses;
+import com.daangn.dangunmarket.domain.post.controller.dto.PostToUpdateApiResponse;
 import com.daangn.dangunmarket.domain.post.controller.mapper.PostApiMapper;
 import com.daangn.dangunmarket.domain.post.facade.PostFacade;
 import com.daangn.dangunmarket.domain.post.facade.dto.PostFindResponseParam;
 import com.daangn.dangunmarket.domain.post.facade.dto.PostGetResponseParams;
 import com.daangn.dangunmarket.domain.post.facade.dto.PostSearchResponseParams;
 import com.daangn.dangunmarket.domain.post.facade.dto.PostToUpdateResponseParam;
-
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -40,7 +40,7 @@ public class PostController {
     private final PostFacade postFacade;
     private final PostApiMapper mapper;
 
-    public PostController(PostFacade postFacade, PostApiMapper mapper ) {
+    public PostController(PostFacade postFacade, PostApiMapper mapper) {
         this.postFacade = postFacade;
         this.mapper = mapper;
     }
@@ -48,10 +48,9 @@ public class PostController {
     /**
      * 게시글 등록
      */
-    @PostMapping(
-            consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping()
     public ResponseEntity<PostCreateApiResponse> createProduct(
-            @RequestBody @Valid PostCreateApiRequest request,
+            @ModelAttribute @Valid PostCreateApiRequest request,
             Authentication authentication
     ) {
         CustomUser customUser = (CustomUser) authentication.getPrincipal();
@@ -125,6 +124,24 @@ public class PostController {
                 .status(HttpStatus.OK)
                 .body(responses);
     }
+
+    /*
+     * 게시글 삭제
+     */
+    @DeleteMapping("/{postId}")
+    public ResponseEntity<PostDeleteApiResponse> deletePost(
+            @PathVariable Long postId,
+            Authentication authentication
+    ) {
+        CustomUser customUser = (CustomUser) authentication.getPrincipal();
+
+        Long deletedPostId = postFacade.deletePost(customUser.memberId(), postId);
+        PostDeleteApiResponse response = mapper.toPostDeleteApiResponse(deletedPostId);
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(response);
+    }
+
 
     private static URI createURI(Long productId) {
         return ServletUriComponentsBuilder

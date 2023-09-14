@@ -3,7 +3,19 @@ package com.daangn.dangunmarket.domain.post.model;
 import com.daangn.dangunmarket.domain.post.model.vo.Price;
 import com.daangn.dangunmarket.domain.post.model.vo.Title;
 import com.daangn.dangunmarket.global.entity.BaseEntity;
-import jakarta.persistence.*;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Embedded;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
+import jakarta.persistence.Table;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -33,7 +45,7 @@ public class Post extends BaseEntity {
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST, orphanRemoval = true)
     private LocationPreference localPreference;
 
-    @OneToMany(mappedBy = "post", fetch = FetchType.LAZY, cascade = CascadeType.PERSIST, orphanRemoval = true)
+    @OneToMany(mappedBy = "post", fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
     private List<PostImage> postImageList = new ArrayList<>();
 
     @OneToOne(fetch = FetchType.LAZY)
@@ -107,6 +119,15 @@ public class Post extends BaseEntity {
 
     public void cancelLike() {
         likeCount -= 1;
+    }
+
+    public void deletePost() {
+        postImageList.stream()
+                .forEach(PostImage::deletePostImage); //이미지 상태 변경
+        if (localPreference != null) {
+            localPreference.deleteLocationPreference(); //선호 장소 상태 변경
+        }
+        isDeleted = true; //post 상태 변경
     }
 
 }
