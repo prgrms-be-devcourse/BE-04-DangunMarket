@@ -3,21 +3,20 @@ package com.daangn.dangunmarket.domain.post.service;
 import com.amazonaws.services.kms.model.NotFoundException;
 import com.daangn.dangunmarket.domain.post.exception.UnauthorizedAccessException;
 import com.daangn.dangunmarket.domain.post.model.Post;
-import com.daangn.dangunmarket.domain.post.model.PostImage;
 import com.daangn.dangunmarket.domain.post.repository.dto.PostDto;
 import com.daangn.dangunmarket.domain.post.model.vo.PostEditor;
 import com.daangn.dangunmarket.domain.post.repository.post.PostRepository;
 import com.daangn.dangunmarket.domain.post.service.dto.*;
 import com.daangn.dangunmarket.domain.post.service.mapper.PostDtoMapper;
+import com.daangn.dangunmarket.domain.post.service.dto.PostGetResponses;
+import com.daangn.dangunmarket.domain.post.service.dto.PostSearchConditionRequest;
+import com.daangn.dangunmarket.domain.post.service.dto.PostSearchResponses;
 import com.daangn.dangunmarket.domain.post.service.mapper.PostMapper;
 import com.daangn.dangunmarket.global.exception.EntityNotFoundException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import static com.daangn.dangunmarket.global.response.ErrorCode.NOT_FOUND_POST_ENTITY;
 import static com.daangn.dangunmarket.global.response.ErrorCode.POST_NOT_CREATED_BY_USER;
@@ -70,6 +69,7 @@ public class PostService {
         return responses;
     }
 
+
     @Transactional
     public Long updatePost(PostUpdateRequest request) {
         Post postToUpdate = postRepository.findById(request.postId())
@@ -80,6 +80,14 @@ public class PostService {
 
         postRepository.save(postToUpdate);
         return request.postId();
+    }
+
+    public PostSearchResponses searchPosts(Long areaId, PostSearchConditionRequest searchCondition) {
+        Page<PostDto> postDtoPages = postRepository.getPostsByConditions(areaId, searchCondition);
+
+        PostSearchResponses responses = PostSearchResponses.from(postDtoPages);
+        return responses;
+
     }
 
 }

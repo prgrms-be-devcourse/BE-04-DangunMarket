@@ -4,21 +4,19 @@ import com.daangn.dangunmarket.domain.post.repository.dto.PostDto;
 import org.springframework.data.domain.Page;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
-public record PostGetResponses(
-        List<PostGetResponse> contents,
+public record PostSearchResponses(
+        List<PostSearchResponse> contents,
         int totalPages,
         long totalElements,
         int size,
         int page
 ) {
 
-    public static PostGetResponses from(Page<PostDto> postDtos) {
-
-        List<PostGetResponse> posts = postDtos.stream()
+    public static PostSearchResponses from(Page<PostDto> postDtos) {
+        List<PostSearchResponse> posts = postDtos.stream()
                 .map(
-                        dto -> new PostGetResponse(
+                        dto -> new PostSearchResponse(
                                 dto.post().getId(),
                                 dto.post().getTitle(),
                                 dto.post().getTitle(),
@@ -33,7 +31,7 @@ public record PostGetResponses(
                 )
                 .toList();
 
-        return new PostGetResponses(posts,
+        return new PostSearchResponses(posts,
                 postDtos.getTotalPages(),
                 postDtos.getTotalElements(),
                 postDtos.getSize(),
