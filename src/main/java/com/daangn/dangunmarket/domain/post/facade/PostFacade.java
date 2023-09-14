@@ -143,7 +143,7 @@ public class PostFacade {
         Long areaId = areaService.findAreaIdByPolygon(point);
 
         List<PostImage> postImages = saveImagesFromRequest(request.files());
-        postImageService.editImages(request.postId(), postImages).forEach(r -> s3Uploader.deleteImage(r.getUrl()));
+        postImageService.editImages(request.postId(), postImages, request.files());
 
         Category findCategory = categoryService.findById(request.categoryId());
 
