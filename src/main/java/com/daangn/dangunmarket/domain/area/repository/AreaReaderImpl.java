@@ -29,4 +29,9 @@ public class AreaReaderImpl implements AreaReader {
         return area.getId();
     }
 
+    @Override
+    public Area save(Area area) {
+        return areaJpaRepository.save(area);
+    }
+
 }

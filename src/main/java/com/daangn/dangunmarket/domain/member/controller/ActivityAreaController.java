@@ -1,15 +1,14 @@
 package com.daangn.dangunmarket.domain.member.controller;
 
-import com.daangn.dangunmarket.domain.auth.jwt.AuthTokenProvider;
 import com.daangn.dangunmarket.domain.auth.jwt.CustomUser;
 import com.daangn.dangunmarket.domain.member.controller.dto.ActivityAreaCreateApiRequest;
 import com.daangn.dangunmarket.domain.member.controller.dto.ActivityAreaCreateApiResponse;
+import com.daangn.dangunmarket.domain.member.controller.dto.ActivityAreaIsVerifiedApiRequest;
 import com.daangn.dangunmarket.domain.member.controller.dto.ActivityAreaIsVerifiedApiResponse;
 import com.daangn.dangunmarket.domain.member.controller.mapper.ActivityAreaApiMapper;
 import com.daangn.dangunmarket.domain.member.facade.ActivityAreaFacade;
 import com.daangn.dangunmarket.domain.member.facade.dto.ActivityAreaCreateRequestParam;
-import com.daangn.dangunmarket.domain.member.facade.dto.ActivityAreaCreateResponseParam;
-import com.daangn.dangunmarket.domain.member.service.dto.ActivityAreaCreateResponse;
+import com.daangn.dangunmarket.domain.member.facade.dto.ActivityAreaIsVerifiedRequestParam;
 import jakarta.validation.Valid;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -52,9 +51,11 @@ public class ActivityAreaController {
     }
 
     @GetMapping
-    public ResponseEntity<ActivityAreaIsVerifiedApiResponse> isVerifiedActivityArea(@RequestParam Double latitude, @RequestParam Double longitude, Authentication authentication) {
+    public ResponseEntity<ActivityAreaIsVerifiedApiResponse> isVerifiedActivityArea(@ModelAttribute ActivityAreaIsVerifiedApiRequest request, Authentication authentication) {
         CustomUser customUser = (CustomUser) authentication.getPrincipal();
-        boolean isVerified = activityAreaFacade.isVerifiedActivityArea(longitude, latitude, customUser.memberId());
+
+        ActivityAreaIsVerifiedRequestParam requestParam = activityAreaApiMapper.toActivityAreaIsVerifiedRequestParam(request);
+        boolean isVerified = activityAreaFacade.isVerifiedActivityArea(requestParam, customUser.memberId());
 
         ActivityAreaIsVerifiedApiResponse activityAreaIsVerifiedApiResponse = activityAreaApiMapper.toActivityAreaIsVerifiedApiResponse(isVerified);
         return ResponseEntity.ok(activityAreaIsVerifiedApiResponse);
