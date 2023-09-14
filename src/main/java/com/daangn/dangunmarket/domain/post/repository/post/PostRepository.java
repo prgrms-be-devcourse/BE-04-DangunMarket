@@ -2,6 +2,7 @@ package com.daangn.dangunmarket.domain.post.repository.post;
 
 import com.daangn.dangunmarket.domain.post.model.Post;
 import com.daangn.dangunmarket.domain.post.repository.dto.PostDto;
+import com.daangn.dangunmarket.domain.post.service.dto.PostSearchConditionRequest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -14,5 +15,7 @@ public interface PostRepository {
     Optional<Post> findById(Long productId);
 
     Page<PostDto> getPostsSimple(Long areaId, Pageable pageable);
+
+    Page<PostDto> getPostsByConditions(Long areaId, PostSearchConditionRequest conditions);
 
 }

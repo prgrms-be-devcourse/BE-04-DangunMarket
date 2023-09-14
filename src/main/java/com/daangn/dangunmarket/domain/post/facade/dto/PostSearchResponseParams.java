@@ -4,7 +4,7 @@ import com.daangn.dangunmarket.domain.post.service.dto.PostGetResponse;
 
 import java.util.List;
 
-public record PostsGetResponseParam(
+public record PostSearchResponseParams(
         List<PostGetResponse> contents,
         String userAreaName,
         int totalPages,
