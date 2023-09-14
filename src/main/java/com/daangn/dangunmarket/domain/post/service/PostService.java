@@ -1,7 +1,9 @@
 package com.daangn.dangunmarket.domain.post.service;
 
+import com.amazonaws.services.kms.model.NotFoundException;
 import com.daangn.dangunmarket.domain.post.exception.UnauthorizedAccessException;
 import com.daangn.dangunmarket.domain.post.model.Post;
+import com.daangn.dangunmarket.domain.post.model.PostImage;
 import com.daangn.dangunmarket.domain.post.repository.dto.PostDto;
 import com.daangn.dangunmarket.domain.post.model.vo.PostEditor;
 import com.daangn.dangunmarket.domain.post.repository.post.PostRepository;
@@ -13,6 +15,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static com.daangn.dangunmarket.global.response.ErrorCode.NOT_FOUND_POST_ENTITY;
 import static com.daangn.dangunmarket.global.response.ErrorCode.POST_NOT_CREATED_BY_USER;
@@ -67,14 +72,14 @@ public class PostService {
 
     @Transactional
     public Long updatePost(PostUpdateRequest request) {
-        Post post = postRepository.findById(request.postId())
-                .orElseThrow(() -> new EntityNotFoundException(NOT_FOUND_POST_ENTITY));
+        Post postToUpdate = postRepository.findById(request.postId())
+                .orElseThrow(() -> new NotFoundException("해당 게시글이 존재하지 않습니다."));
 
         PostEditor postEditor = PostEditor.toPostEditor(request);
-        post.edit(postEditor);
+        postToUpdate.edit(postEditor);
 
+        postRepository.save(postToUpdate);
         return request.postId();
     }
-
 
 }
