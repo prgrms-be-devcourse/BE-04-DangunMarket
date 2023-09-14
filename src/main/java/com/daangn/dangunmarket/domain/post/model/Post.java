@@ -75,10 +75,10 @@ public class Post extends BaseEntity {
         Assert.notNull(likeCount, "likeCount는 null값이 들어올 수 없습니다.");
         Assert.notNull(postImageList, "postImageList는 null값이 들어올 수 없습니다.");
 
+        postImageList.forEach(this::addPostImage);
         this.memberId = memberId;
         this.areaId = areaId;
         this.localPreference = localPreference;
-        this.postImageList = postImageList;
         this.category = category;
         this.tradeStatus = tradeStatus;
         this.title = title;
