@@ -1,27 +1,20 @@
 package com.daangn.dangunmarket.domain.post.controller.mapper;
 
-<<<<<<< HEAD
 import com.daangn.dangunmarket.domain.post.controller.dto.*;
-=======
 import com.daangn.dangunmarket.domain.post.controller.dto.PostCreateApiRequest;
 import com.daangn.dangunmarket.domain.post.controller.dto.PostGetApiResponses;
 import com.daangn.dangunmarket.domain.post.controller.dto.PostLikeApiResponse;
 import com.daangn.dangunmarket.domain.post.controller.dto.PostSearchApiRequest;
 import com.daangn.dangunmarket.domain.post.controller.dto.PostSearchApiResponses;
 import com.daangn.dangunmarket.domain.post.controller.dto.PostToUpdateApiResponse;
->>>>>>> 3e76499b5ecc0d8775fbdc41488435743af76c10
 import com.daangn.dangunmarket.domain.post.facade.dto.PostCreateRequestParam;
 import com.daangn.dangunmarket.domain.post.facade.dto.PostGetResponseParams;
 import com.daangn.dangunmarket.domain.post.facade.dto.PostSearchRequestParam;
 import com.daangn.dangunmarket.domain.post.facade.dto.PostSearchResponseParams;
 import com.daangn.dangunmarket.domain.post.facade.dto.PostToUpdateResponseParam;
-<<<<<<< HEAD
 import com.daangn.dangunmarket.domain.post.facade.dto.PostUpdateRequestParam;
-import com.daangn.dangunmarket.domain.post.facade.dto.PostsGetResponseParam;
-=======
-
->>>>>>> 3e76499b5ecc0d8775fbdc41488435743af76c10
 import com.daangn.dangunmarket.domain.post.service.dto.PostLikeResponse;
+
 import org.mapstruct.InjectionStrategy;
 import org.mapstruct.Mapper;
 import org.springframework.data.domain.Pageable;
