@@ -14,13 +14,13 @@ import static com.daangn.dangunmarket.global.response.ErrorCode.NOT_FOUND_AREA_E
 @Service
 public class AreaService {
 
-    private AreaReader areaReader;
+    private final AreaReader areaReader;
 
     public AreaService(AreaReader areaReader) {
         this.areaReader = areaReader;
     }
 
-    public AreaResponse findById(Long areaId){
+    public AreaResponse findById(Long areaId) {
         Area area = areaReader.findById(areaId)
                 .orElseThrow(() -> new EntityNotFoundException(NOT_FOUND_AREA_ENTITY));
 
@@ -29,6 +29,11 @@ public class AreaService {
 
     public Long findAreaIdByPolygon(Point point) {
         return areaReader.findAreaIdByPolygon(point);
+    }
+
+    @Transactional
+    public AreaResponse save(Area area) {
+        return AreaResponse.of(areaReader.save(area));
     }
 
 }

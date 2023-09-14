@@ -8,7 +8,7 @@ public record LikedPostFindResponseList(Slice<LikedPostFindResponse> likedPosts)
     public static LikedPostFindResponseList from(Slice<JoinedPostWithArea> joinedWithAreas) {
         Slice<LikedPostFindResponse> mapResponse = joinedWithAreas.map(e -> new LikedPostFindResponse(
                 e.post().getTitle(),
-                e.post().getPostImageList().get(0).getUrl(),
+                e.post().getPostImages().get(0).getUrl(),
                 e.area().getName(),
                 e.post().getPrice(),
                 e.post().getLikeCount()));

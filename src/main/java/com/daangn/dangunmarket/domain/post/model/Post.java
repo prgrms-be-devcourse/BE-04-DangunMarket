@@ -59,7 +59,7 @@ public class Post extends BaseEntity {
     @Column(nullable = false)
     private boolean isOfferAllowed;
 
-    @Column(updatable = false, name = "refreshed_at", columnDefinition = "TIMESTAMP")
+    @Column(name = "refreshed_at", columnDefinition = "TIMESTAMP")
     private LocalDateTime refreshedAt;
 
     @Column(nullable = false)
@@ -89,7 +89,7 @@ public class Post extends BaseEntity {
         this.likeCount = likeCount;
     }
 
-    public List<PostImage> getPostImageList() {
+    public List<PostImage> getPostImages() {
         return postImages.getPostImageList();
     }
 

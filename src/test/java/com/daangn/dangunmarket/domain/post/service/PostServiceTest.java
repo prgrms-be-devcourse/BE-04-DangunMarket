@@ -8,6 +8,7 @@ import com.daangn.dangunmarket.domain.post.model.vo.Price;
 import com.daangn.dangunmarket.domain.post.model.vo.Title;
 import com.daangn.dangunmarket.domain.post.repository.post.PostRepository;
 import com.daangn.dangunmarket.domain.post.service.dto.PostUpdateStatusRequest;
+import com.daangn.dangunmarket.domain.post.service.mapper.PostDtoMapper;
 import com.daangn.dangunmarket.domain.post.service.mapper.PostMapper;
 import com.daangn.dangunmarket.global.GeometryTypeFactory;
 import com.daangn.dangunmarket.global.TimeGenerator;
@@ -40,6 +41,9 @@ class PostServiceTest {
     private PostRepository postRepository;
 
     @Autowired
+    private PostDtoMapper postDtoMapper;
+
+    @Autowired
     private PostMapper mapper;
 
     @MockBean
@@ -50,7 +54,7 @@ class PostServiceTest {
 
     @BeforeEach
     void setup() {
-        postService = new PostService(postRepository, mapper, timeGenerator);
+        postService = new PostService(postRepository, postDtoMapper, mapper, timeGenerator);
 
         setupData();
     }
