@@ -95,6 +95,13 @@ public class Post extends BaseEntity {
         postImage.changePost(this);
     }
 
+    public void removePostImage(PostImage postImage) {
+        postImageList.remove(postImage);
+        postImage.changeIsDeleted(true);
+        postImage.removePost();
+
+    }
+
     public String getTitle() {
         return title.getTitle();
     }
