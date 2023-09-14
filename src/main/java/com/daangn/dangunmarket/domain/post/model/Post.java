@@ -35,7 +35,7 @@ public class Post extends BaseEntity {
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST, orphanRemoval = true)
     private LocationPreference localPreference;
 
-    @OneToMany(mappedBy = "post", fetch = FetchType.LAZY, cascade = CascadeType.PERSIST, orphanRemoval = true)
+    @OneToMany(mappedBy = "post", fetch = FetchType.LAZY, cascade = CascadeType.PERSIST) // ORPANREMOVAL TRUE
     private List<PostImage> postImageList = new ArrayList<>();
 
     @OneToOne(fetch = FetchType.LAZY)
