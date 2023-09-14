@@ -27,7 +27,7 @@ public class ActivityArea {
     @Column(name = "id")
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "members_id", nullable = false)
     private Member member;
 

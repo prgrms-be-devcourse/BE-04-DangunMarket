@@ -1,6 +1,7 @@
 package com.daangn.dangunmarket.domain.post.controller;
 
 import com.daangn.dangunmarket.domain.auth.jwt.CustomUser;
+import com.daangn.dangunmarket.domain.post.controller.dto.*;
 import com.daangn.dangunmarket.domain.post.controller.dto.PostCreateApiRequest;
 import com.daangn.dangunmarket.domain.post.controller.dto.PostCreateApiResponse;
 import com.daangn.dangunmarket.domain.post.controller.dto.PostFindApiResponse;
@@ -14,13 +15,14 @@ import com.daangn.dangunmarket.domain.post.facade.dto.PostFindResponseParam;
 import com.daangn.dangunmarket.domain.post.facade.dto.PostGetResponseParams;
 import com.daangn.dangunmarket.domain.post.facade.dto.PostSearchResponseParams;
 import com.daangn.dangunmarket.domain.post.facade.dto.PostToUpdateResponseParam;
-
+import com.daangn.dangunmarket.domain.post.facade.dto.PostUpdateRequestParam;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -40,7 +42,7 @@ public class PostController {
     private final PostFacade postFacade;
     private final PostApiMapper mapper;
 
-    public PostController(PostFacade postFacade, PostApiMapper mapper ) {
+    public PostController(PostFacade postFacade, PostApiMapper mapper) {
         this.postFacade = postFacade;
         this.mapper = mapper;
     }
@@ -102,6 +104,17 @@ public class PostController {
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(responses);
+    }
+
+    @PutMapping
+    public ResponseEntity<PostUpdateApiResponse> updatePost(@RequestBody @Valid PostUpdateApiRequest postUpdateApiRequest) {
+        PostUpdateRequestParam postUpdateRequestParam = mapper.toPostUpdateRequestParam(postUpdateApiRequest);
+        Long postId = postFacade.updatePost(postUpdateRequestParam);
+        PostUpdateApiResponse postUpdateApiResponse = mapper.toPostUpdateApiResponse(postId);
+
+        URI uri = createURI(postId);
+
+        return ResponseEntity.created(uri).body(postUpdateApiResponse);
     }
 
     /**

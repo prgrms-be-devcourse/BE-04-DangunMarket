@@ -1,12 +1,12 @@
 package com.daangn.dangunmarket.domain.post.service;
 
+import com.amazonaws.services.kms.model.NotFoundException;
 import com.daangn.dangunmarket.domain.post.exception.UnauthorizedAccessException;
 import com.daangn.dangunmarket.domain.post.model.Post;
 import com.daangn.dangunmarket.domain.post.repository.dto.PostDto;
+import com.daangn.dangunmarket.domain.post.model.vo.PostEditor;
 import com.daangn.dangunmarket.domain.post.repository.post.PostRepository;
-import com.daangn.dangunmarket.domain.post.service.dto.PostCreateRequest;
-import com.daangn.dangunmarket.domain.post.service.dto.PostFindResponse;
-import com.daangn.dangunmarket.domain.post.service.dto.PostToUpdateResponse;
+import com.daangn.dangunmarket.domain.post.service.dto.*;
 import com.daangn.dangunmarket.domain.post.service.mapper.PostDtoMapper;
 import com.daangn.dangunmarket.domain.post.service.dto.PostGetResponses;
 import com.daangn.dangunmarket.domain.post.service.dto.PostSearchConditionRequest;
@@ -67,6 +67,20 @@ public class PostService {
 
         PostGetResponses responses = PostGetResponses.from(postDtoPages);
         return responses;
+    }
+
+
+    @Transactional
+    public Long updatePost(PostUpdateRequest request) {
+        Post postToUpdate = postRepository.findById(request.postId())
+                .orElseThrow(() -> new NotFoundException("해당 게시글이 존재하지 않습니다."));
+
+        PostEditor postEditor = PostEditor.toPostEditor(request);
+        postToUpdate.addPostImages(request.postImages());
+        postToUpdate.edit(postEditor);
+
+        postRepository.save(postToUpdate);
+        return request.postId();
     }
 
     public PostSearchResponses searchPosts(Long areaId, PostSearchConditionRequest searchCondition) {
