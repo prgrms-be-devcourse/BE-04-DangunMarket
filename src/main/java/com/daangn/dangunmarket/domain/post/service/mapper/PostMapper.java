@@ -17,7 +17,7 @@ public class PostMapper {
                 .memberId(request.memberId())
                 .areaId(request.areaId())
                 .localPreference(request.locationPreference())
-                .postImageList(request.postImages())
+                .postImages(request.postImages())
                 .category(request.category())
                 .tradeStatus(TradeStatus.IN_PROGRESS)
                 .title(new Title(request.title()))

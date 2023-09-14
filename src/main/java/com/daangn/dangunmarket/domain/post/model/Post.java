@@ -1,6 +1,7 @@
 package com.daangn.dangunmarket.domain.post.model;
 
 import com.daangn.dangunmarket.domain.post.exception.TooEarlyToRefreshException;
+import com.daangn.dangunmarket.domain.post.model.vo.PostImages;
 import com.daangn.dangunmarket.domain.post.model.vo.Price;
 import com.daangn.dangunmarket.domain.post.model.vo.Title;
 import com.daangn.dangunmarket.global.entity.BaseEntity;
@@ -13,7 +14,6 @@ import org.springframework.util.Assert;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -37,8 +37,8 @@ public class Post extends BaseEntity {
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST, orphanRemoval = true)
     private LocationPreference localPreference;
 
-    @OneToMany(mappedBy = "post", fetch = FetchType.LAZY, cascade = CascadeType.PERSIST, orphanRemoval = true)
-    private List<PostImage> postImageList = new ArrayList<>();
+    @Embedded
+    private PostImages postImages = new PostImages();
 
     @OneToOne(fetch = FetchType.LAZY)
     private Category category;
@@ -66,16 +66,16 @@ public class Post extends BaseEntity {
     private Integer likeCount;
 
     @Builder
-    public Post(Long memberId, Long areaId, LocationPreference localPreference, List<PostImage> postImageList, Category category, TradeStatus tradeStatus, Title title, String content, Price price, boolean isOfferAllowed, LocalDateTime refreshedAt, Integer likeCount) {
+    public Post(Long memberId, Long areaId, LocationPreference localPreference, List<PostImage> postImages, Category category, TradeStatus tradeStatus, Title title, String content, Price price, boolean isOfferAllowed, LocalDateTime refreshedAt, Integer likeCount) {
         Assert.notNull(memberId, "memberId는 null값이 들어올 수 없습니다.");
         Assert.notNull(areaId, "areaId는 null값이 들어올 수 없습니다.");
         Assert.notNull(tradeStatus, "tradeStatus는 null값이 들어올 수 없습니다.");
         Assert.notNull(title, "title은 null값이 들어올 수 없습니다.");
         Assert.notNull(content, "content는 null값이 들어올 수 없습니다.");
         Assert.notNull(likeCount, "likeCount는 null값이 들어올 수 없습니다.");
-        Assert.notNull(postImageList, "postImageList는 null값이 들어올 수 없습니다.");
+        Assert.notNull(postImages, "postImages는 null값이 들어올 수 없습니다.");
 
-        postImageList.forEach(this::addPostImage);
+        postImages.forEach(this::addPostImage);
         this.memberId = memberId;
         this.areaId = areaId;
         this.localPreference = localPreference;
@@ -90,11 +90,11 @@ public class Post extends BaseEntity {
     }
 
     public List<PostImage> getPostImageList() {
-        return postImageList;
+        return postImages.getPostImageList();
     }
 
     public void addPostImage(PostImage postImage) {
-        this.postImageList.add(postImage);
+        postImages.addPostImage(postImage);
         postImage.changePost(this);
     }
 
@@ -141,7 +141,6 @@ public class Post extends BaseEntity {
                     availableRefreshDays.minus(betweenTime)
             );
         }
-
     }
 
 }

@@ -27,10 +27,13 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
+import java.util.List;
 
 @RestController
 @RequestMapping(value = "/posts",
@@ -47,13 +50,14 @@ public class PostController {
         this.mapper = mapper;
     }
 
-    @PostMapping
+    @PostMapping(consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
     public ResponseEntity<PostCreateApiResponse> createProduct(
-            @ModelAttribute @Valid PostCreateApiRequest request,
+            @RequestPart List<MultipartFile> files,
+            @RequestPart @Valid PostCreateApiRequest request,
             Authentication authentication
     ) {
         CustomUser customUser = (CustomUser) authentication.getPrincipal();
-        Long postId = postFacade.createPost(mapper.toPostCreateRequestParam(request, customUser.memberId()));
+        Long postId = postFacade.createPost(mapper.toPostCreateRequestParam(request, files, customUser.memberId()));
         PostCreateApiResponse response = PostCreateApiResponse.from(postId);
 
         URI uri = createURI(postId);
