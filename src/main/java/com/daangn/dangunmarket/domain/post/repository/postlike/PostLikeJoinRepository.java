@@ -23,7 +23,7 @@ public class PostLikeJoinRepository {
         this.queryFactory = queryFactory;
     }
 
-    public Slice<JoinedWithArea> findDetailsByMemberId(Long memberId, Pageable pageable){
+    public Slice<JoinedWithArea> findDetailsByMemberId(Long memberId, Pageable pageable) {
         int pageSize = pageable.getPageSize();
 
         List<JoinedWithArea> contents = queryFactory
@@ -40,7 +40,7 @@ public class PostLikeJoinRepository {
                 .fetch();
 
         boolean hasNext = false;
-        if (contents.size() > pageSize){
+        if (contents.size() > pageSize) {
             contents.remove(pageSize);
             hasNext = true;
         }

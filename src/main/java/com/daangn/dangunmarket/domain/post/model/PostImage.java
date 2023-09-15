@@ -38,6 +38,7 @@ public class PostImage extends BaseEntity {
 
     public PostImage(String url, String fileName) {
         Assert.notNull(url, "url은 null값이 들어올 수 없습니다.");
+        Assert.notNull(fileName, "fileName은 null값이 들어올 수 없습니다.");
 
         this.fileName = fileName;
         this.url = url;
@@ -52,6 +53,12 @@ public class PostImage extends BaseEntity {
 
     public void deletePostImage() {
         isDeleted = true;
+    }
+
+    public void removePost() {
+        if (this.post != null) {
+            this.post = null;
+        }
     }
 
 }

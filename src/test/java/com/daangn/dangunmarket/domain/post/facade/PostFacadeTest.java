@@ -1,23 +1,20 @@
 package com.daangn.dangunmarket.domain.post.facade;
 
+import com.amazonaws.services.kms.model.NotFoundException;
+import com.daangn.dangunmarket.domain.DataInitializerFactory;
 import com.daangn.dangunmarket.domain.area.service.AreaService;
 import com.daangn.dangunmarket.domain.area.service.dto.AreaResponse;
 import com.daangn.dangunmarket.domain.member.model.Member;
-import com.daangn.dangunmarket.domain.member.model.NickName;
-import com.daangn.dangunmarket.domain.member.repository.MemberJpaRepository;
 import com.daangn.dangunmarket.domain.member.service.MemberService;
 import com.daangn.dangunmarket.domain.post.exception.UnauthorizedAccessException;
 import com.daangn.dangunmarket.domain.post.facade.dto.PostCreateRequestParam;
 import com.daangn.dangunmarket.domain.post.facade.dto.PostFindResponseParam;
 import com.daangn.dangunmarket.domain.post.facade.dto.PostToUpdateResponseParam;
-import com.daangn.dangunmarket.domain.post.facade.mpper.PostParamDtoMapper;
-import com.daangn.dangunmarket.domain.post.facade.mpper.PostParamMapper;
+import com.daangn.dangunmarket.domain.post.facade.dto.PostUpdateRequestParam;
 import com.daangn.dangunmarket.domain.post.model.Category;
 import com.daangn.dangunmarket.domain.post.model.Post;
 import com.daangn.dangunmarket.domain.post.repository.category.CategoryRepository;
 import com.daangn.dangunmarket.domain.post.repository.post.PostRepository;
-import com.daangn.dangunmarket.domain.post.service.CategoryService;
-import com.daangn.dangunmarket.domain.post.service.PostService;
 import com.daangn.dangunmarket.global.aws.dto.ImageInfo;
 import com.daangn.dangunmarket.global.aws.s3.S3Uploader;
 import com.daangn.dangunmarket.global.exception.EntityNotFoundException;
@@ -28,17 +25,12 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
-import static com.daangn.dangunmarket.domain.member.model.MemberProvider.GOOGLE;
-import static com.daangn.dangunmarket.domain.member.model.RoleType.USER;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
@@ -49,10 +41,8 @@ import static org.mockito.BDDMockito.given;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
 class PostFacadeTest {
 
-    private PostFacade postFacade;
-
     @Autowired
-    private PostService postService;
+    private PostFacade postFacade;
 
     @Autowired
     private MemberService memberService;
@@ -60,68 +50,48 @@ class PostFacadeTest {
     @MockBean
     private AreaService areaService;
 
-    @Autowired
-    private CategoryService categoryService;
-
     @MockBean
     private S3Uploader s3Uploader;
-
-    @Autowired
-    private PostParamMapper mapper;
 
     @Autowired
     private PostRepository postRepository;
 
     @Autowired
-    private MemberJpaRepository memberJpaRepository;
-
-    @Autowired
     private CategoryRepository categoryRepository;
 
-    @Autowired
-    private PostParamDtoMapper postParamDtoMapper;
+    private Category setUpCategory;
 
     private Long setupProductId;
 
-    private Category setupCategory;
+    private Long setUpMemberId;
 
     private Long setupMemberId;
 
     @BeforeEach
     void setup() {
-        postFacade = new PostFacade(
-                postService,
-                memberService,
-                areaService,
-                categoryService,
-                s3Uploader,
-                mapper, postParamDtoMapper);
-
         given(s3Uploader.saveImages(any())).willReturn(List.of(new ImageInfo("z", "zname"), new ImageInfo("s", "sname")));
-
         dataSetup();
     }
 
     @Test
-    @DisplayName("product를 저장 후 저장된 product불러와 필드값들을 확인한다.")
+    @DisplayName("product를 저장 후 저장된 product 불러와 필드값들을 확인한다.")
     void createProduct_correctRequest_Long() {
         //given
-        given(s3Uploader.saveImages(any())).willReturn(List.of(new ImageInfo("a", "zname"), new ImageInfo("b", "sname"), new ImageInfo("c", "sname")));
-        List<MultipartFile> mockMultipartFiles = List.of(new MockMultipartFile("first", (byte[]) null), new MockMultipartFile("second", (byte[]) null));
-        PostCreateRequestParam requestParam = new PostCreateRequestParam(setupMemberId, 2L, 37.5297, 126.8876, "seoul", mockMultipartFiles, setupCategory.getId(), "firstTile", "firstContent", 100L, true, LocalDateTime.now());
+        PostCreateRequestParam postCreateRequestParam = DataInitializerFactory.getPostCreateRequestParams(setupProductId, setUpCategory.getId()).get(1);
 
         //when
-        Long productId = postFacade.createPost(requestParam);
+        Long productId = postFacade.createPost(postCreateRequestParam);
 
         //then
         Post post = postRepository.findById(productId).orElseThrow();
-        assertThat(post.getMemberId()).isEqualTo(setupMemberId);
-        assertThat(post.getAreaId()).isEqualTo(2l);
-        assertThat(post.getLocalPreference().getAlias()).isEqualTo("seoul");
-        assertThat(post.getPostImageList().size()).isEqualTo(3);
-        assertThat(post.getTitle()).isEqualTo("firstTile");
-        assertThat(post.getContent()).isEqualTo("firstContent");
-        assertThat(post.getPrice()).isEqualTo(100L);
+
+        assertThat(post.getMemberId()).isEqualTo(postCreateRequestParam.memberId());
+        assertThat(post.getAreaId()).isEqualTo(postCreateRequestParam.areaId());
+        assertThat(post.getLocalPreference().getAlias()).isEqualTo(postCreateRequestParam.alias());
+        assertThat(post.getPostImageList().size()).isEqualTo(postCreateRequestParam.files().size());
+        assertThat(post.getTitle()).isEqualTo(postCreateRequestParam.title());
+        assertThat(post.getContent()).isEqualTo(postCreateRequestParam.content());
+        assertThat(post.getPrice()).isEqualTo(postCreateRequestParam.price());
     }
 
     @Test
@@ -151,48 +121,59 @@ class PostFacadeTest {
     @DisplayName("게시글을 수정하기 위해서 기존에 작성한 글에 대한 정보를 제대로 불러오는지 확인한다.")
     void findPostInfoToUpdate_createdPost_equals() {
         //given
-        given(s3Uploader.saveImages(any())).willReturn(List.of(new ImageInfo("a", "zname"), new ImageInfo("b", "sname"), new ImageInfo("c", "sname")));
-        List<MultipartFile> mockMultipartFiles = List.of(new MockMultipartFile("first", (byte[]) null), new MockMultipartFile("second", (byte[]) null));
-        PostCreateRequestParam requestParam = new PostCreateRequestParam(1L, 2L, 37.5297, 126.8876, "seoul", mockMultipartFiles, setupCategory.getId(), "firstTile", "firstContent", 100L, true, LocalDateTime.now());
+        PostCreateRequestParam postCreateRequestParam = DataInitializerFactory.getPostCreateRequestParams(setUpMemberId, setUpCategory.getId()).get(1);
 
-        Long productId = postFacade.createPost(requestParam);
+        Long productId = postFacade.createPost(postCreateRequestParam);
 
         //when
-        PostToUpdateResponseParam postInfoToUpdate = postFacade.findPostInfoToUpdateById(1L, productId);
+        PostToUpdateResponseParam postInfoToUpdate = postFacade.findPostInfoToUpdateById(setUpMemberId, productId);
 
         //then
-        assertThat(postInfoToUpdate.postImages().size()).isEqualTo(3);
-        assertThat(postInfoToUpdate.locationPreferenceAlias()).isEqualTo("seoul");
-        assertThat(postInfoToUpdate.title()).isEqualTo("firstTile");
-        assertThat(postInfoToUpdate.content()).isEqualTo("firstContent");
-        assertThat(postInfoToUpdate.price()).isEqualTo(100L);
+        assertThat(postInfoToUpdate.postImages().size()).isEqualTo(postCreateRequestParam.files().size());
+        assertThat(postInfoToUpdate.locationPreferenceAlias()).isEqualTo(postCreateRequestParam.alias());
+        assertThat(postInfoToUpdate.title()).isEqualTo(postCreateRequestParam.title());
+        assertThat(postInfoToUpdate.content()).isEqualTo(postCreateRequestParam.content());
+        assertThat(postInfoToUpdate.price()).isEqualTo(postCreateRequestParam.price());
     }
 
     @Test
     @DisplayName("게시글 수정을 요청한 회원과 게시글 작성자와 다른 경우 예외를 발생시킨다.")
     void findPostInfoToUpdate_notWriter_throwException() {
         //given
-        given(s3Uploader.saveImages(any())).willReturn(List.of(new ImageInfo("a", "zname"), new ImageInfo("b", "sname"), new ImageInfo("c", "sname")));
-        List<MultipartFile> mockMultipartFiles = List.of(new MockMultipartFile("first", (byte[]) null), new MockMultipartFile("second", (byte[]) null));
-        PostCreateRequestParam requestParam = new PostCreateRequestParam(1L, 2L, 37.5297, 126.8876, "seoul", mockMultipartFiles, setupCategory.getId(), "firstTile", "firstContent", 100L, true, LocalDateTime.now());
-
-        Long productId = postFacade.createPost(requestParam);
+        PostCreateRequestParam postCreateRequestParam = DataInitializerFactory.getPostCreateRequestParams(setUpMemberId, setUpCategory.getId()).get(1);
+        Long productId = postFacade.createPost(postCreateRequestParam);
 
         //when_then
         assertThrows(UnauthorizedAccessException.class, () -> {
-            postFacade.findPostInfoToUpdateById(2L, productId);
+            postFacade.findPostInfoToUpdateById(setUpMemberId + 1, productId);
         });
+    }
+
+    @Test
+    @DisplayName("")
+    void updatePost_response_equals() {
+        //given
+        List<PostCreateRequestParam> postCreateRequestParams = DataInitializerFactory.getPostCreateRequestParams(setUpMemberId, setUpCategory.getId());
+        Long postId = postFacade.createPost(postCreateRequestParams.get(0));
+        PostUpdateRequestParam postUpdateRequestParam = DataInitializerFactory.postUpdateRequestParam(postId, setUpCategory.getId());
+
+        //when
+        postFacade.updatePost(postUpdateRequestParam);
+        Post updatedPost = postRepository.findById(postId).orElseThrow(() -> new NotFoundException("해당 게시글이 없습니다."));
+
+        //then
+        assertThat(updatedPost.getId()).isEqualTo(postId);
+        assertThat(updatedPost.getTitle()).isEqualTo(postUpdateRequestParam.title());
+        assertThat(updatedPost.getContent()).isEqualTo(postUpdateRequestParam.content());
     }
 
     @Test
     @DisplayName("게시글을 작성한 유저가 게시글 삭제 요청 시 게시글을 성공적으로 삭제한다.")
     void deletePost_MemberIdAndPostID_Success() {
         //given
-        Long memberId = 1L;
-        given(s3Uploader.saveImages(any())).willReturn(List.of(new ImageInfo("a", "zname"), new ImageInfo("b", "sname"), new ImageInfo("c", "sname")));
-        List<MultipartFile> mockMultipartFiles = List.of(new MockMultipartFile("first", (byte[]) null), new MockMultipartFile("second", (byte[]) null));
-        PostCreateRequestParam requestParam = new PostCreateRequestParam(memberId, 2L, 37.5297, 126.8876, "seoul", mockMultipartFiles, setupCategory.getId(), "firstTile", "firstContent", 100L, true, LocalDateTime.now());
-        Long postId = postFacade.createPost(requestParam);
+        PostCreateRequestParam postCreateRequestParam = DataInitializerFactory.getPostCreateRequestParams(setUpMemberId, setUpCategory.getId()).get(1);
+        Long postId = postFacade.createPost(postCreateRequestParam);
+        Long memberId = postCreateRequestParam.memberId();
 
         //when
         Long deletePostId = postFacade.deletePost(memberId, postId);
@@ -208,11 +189,9 @@ class PostFacadeTest {
     @DisplayName("게시글을 삭제 권한이 없는 유저가 게시글 삭제 요청시 예외가 발생한다. ")
     void deletePost_MemberIdAndPostID_Throw() {
         //given
-        Long memberId = 1L;
-        given(s3Uploader.saveImages(any())).willReturn(List.of(new ImageInfo("a", "zname"), new ImageInfo("b", "sname"), new ImageInfo("c", "sname")));
-        List<MultipartFile> mockMultipartFiles = List.of(new MockMultipartFile("first", (byte[]) null), new MockMultipartFile("second", (byte[]) null));
-        PostCreateRequestParam requestParam = new PostCreateRequestParam(memberId, 2L, 37.5297, 126.8876, "seoul", mockMultipartFiles, setupCategory.getId(), "firstTile", "firstContent", 100L, true, LocalDateTime.now());
-        Long postId = postFacade.createPost(requestParam);
+        PostCreateRequestParam postCreateRequestParam = DataInitializerFactory.getPostCreateRequestParams(setUpMemberId, setUpCategory.getId()).get(1);
+        Long postId = postFacade.createPost(postCreateRequestParam);
+        Long memberId = postCreateRequestParam.memberId();
 
         //when
         Long strangeMemberId = 5L;
@@ -225,21 +204,11 @@ class PostFacadeTest {
      * Member, Category, Product을 미리 setup함.
      */
     private void dataSetup() {
-        Member setupMember = Member.builder()
-                .roleType(USER)
-                .memberProvider(GOOGLE)
-                .socialId("member2 socialId")
-                .nickName(new NickName("james"))
-                .reviewScore(35)
-                .build();
-        setupMemberId = memberJpaRepository.save(setupMember).getId();
+        Member setupMember = DataInitializerFactory.member();
+        setUpMemberId = memberService.save(setupMember).id();
+        setUpCategory = categoryRepository.save(DataInitializerFactory.category());
+        setupProductId = postFacade.createPost(DataInitializerFactory.getPostCreateRequestParams(setUpMemberId, setUpCategory.getId()).get(0));
 
-        Category setupCategory = new Category("전자기기", null, 1L, new ArrayList<>());
-        this.setupCategory = categoryRepository.save(setupCategory);
-
-        List<MultipartFile> mockMultipartFiles = List.of(new MockMultipartFile("third", (byte[]) null), new MockMultipartFile("four", (byte[]) null));
-        PostCreateRequestParam requestParam = new PostCreateRequestParam(setupMemberId, 1L, 53.5297, 126.8876, "네이버 그린 팩토리", mockMultipartFiles, this.setupCategory.getId(), "SetupTile", "SetupContent", 200L, true, LocalDateTime.now());
-        setupProductId = postFacade.createPost(requestParam);
     }
 
 }

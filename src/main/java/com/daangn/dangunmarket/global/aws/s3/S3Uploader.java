@@ -11,7 +11,9 @@ public interface S3Uploader {
 
     ImageInfo saveImage(MultipartFile multipartFile);
 
-    void deleteImage(String fileName);
+    void deleteImage2(String fileName);
 
     void deleteImages(List<String> fileNames);
+
+    void deleteImage(String url);
 }

@@ -1,5 +1,6 @@
 package com.daangn.dangunmarket.domain.post.model;
 
+import com.daangn.dangunmarket.domain.post.model.vo.PostEditor;
 import com.daangn.dangunmarket.domain.post.model.vo.Price;
 import com.daangn.dangunmarket.domain.post.model.vo.Title;
 import com.daangn.dangunmarket.global.entity.BaseEntity;
@@ -45,7 +46,7 @@ public class Post extends BaseEntity {
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST, orphanRemoval = true)
     private LocationPreference localPreference;
 
-    @OneToMany(mappedBy = "post", fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
+    @OneToMany(mappedBy = "post", fetch = FetchType.LAZY, cascade = CascadeType.PERSIST) // ORPANREMOVAL TRUE
     private List<PostImage> postImageList = new ArrayList<>();
 
     @OneToOne(fetch = FetchType.LAZY)
@@ -100,9 +101,17 @@ public class Post extends BaseEntity {
         return postImageList;
     }
 
-    public void addPostImage(PostImage postImage) {
-        this.postImageList.add(postImage);
-        postImage.changePost(this);
+    public void addPostImages(List<PostImage> postImages) {
+        for (PostImage postImage : postImages) {
+            this.postImageList.add(postImage);
+            postImage.changePost(this);
+        }
+    }
+
+    public void removePostImage(PostImage postImage) {
+        postImageList.remove(postImage);
+        postImage.changeIsDeleted(true);
+        postImage.removePost();
     }
 
     public String getTitle() {
@@ -128,6 +137,17 @@ public class Post extends BaseEntity {
             localPreference.deleteLocationPreference(); //선호 장소 상태 변경
         }
         isDeleted = true; //post 상태 변경
+    }
+
+    public void edit(PostEditor postEditor) {
+        areaId = postEditor.areaId();
+        localPreference = postEditor.locationPreference();
+        postImageList = postEditor.postImages();
+        category = postEditor.category();
+        title = new Title(postEditor.title());
+        content = postEditor.content();
+        price = new Price(postEditor.price());
+        isOfferAllowed = postEditor.isOfferAllowed();
     }
 
 }

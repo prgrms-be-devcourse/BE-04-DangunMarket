@@ -18,6 +18,14 @@ public class BaseEntity extends BaseTimeEntity {
         isDeleted = false;
     }
 
+    public boolean getIsDeleted() {
+        return isDeleted;
+    }
+
+    public void changeIsDeleted(boolean isDeleted) {
+        this.isDeleted = isDeleted;
+    }
+
 }
 
 
