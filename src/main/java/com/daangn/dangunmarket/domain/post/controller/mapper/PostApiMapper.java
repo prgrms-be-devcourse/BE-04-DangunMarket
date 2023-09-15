@@ -1,5 +1,7 @@
 package com.daangn.dangunmarket.domain.post.controller.mapper;
 
+import com.daangn.dangunmarket.domain.post.controller.dto.PostUpdateApiRequest;
+import com.daangn.dangunmarket.domain.post.controller.dto.PostUpdateApiResponse;
 import com.daangn.dangunmarket.domain.post.controller.dto.post.PostGetApiResponses;
 import com.daangn.dangunmarket.domain.post.controller.dto.post.PostSearchApiRequest;
 import com.daangn.dangunmarket.domain.post.controller.dto.post.PostSearchApiResponses;
@@ -12,8 +14,9 @@ import com.daangn.dangunmarket.domain.post.facade.dto.PostGetResponseParams;
 import com.daangn.dangunmarket.domain.post.facade.dto.PostSearchRequestParam;
 import com.daangn.dangunmarket.domain.post.facade.dto.PostSearchResponseParams;
 import com.daangn.dangunmarket.domain.post.facade.dto.PostToUpdateResponseParam;
-
+import com.daangn.dangunmarket.domain.post.facade.dto.PostUpdateRequestParam;
 import com.daangn.dangunmarket.domain.post.service.dto.PostLikeResponse;
+
 import com.daangn.dangunmarket.domain.post.service.dto.PostUpdateStatusRequest;
 import org.mapstruct.InjectionStrategy;
 import org.mapstruct.Mapper;
@@ -40,5 +43,9 @@ public interface PostApiMapper {
     PostSearchApiResponses toPostSearchApiResponses(PostSearchResponseParams responseParams);
 
     PostToUpdateApiResponse toPostToUpdateApiResponse(PostToUpdateResponseParam postToUpdateResponseParam);
+
+    PostUpdateRequestParam toPostUpdateRequestParam(PostUpdateApiRequest postUpdateApiRequest);
+
+    PostUpdateApiResponse toPostUpdateApiResponse(Long postId);
 
 }

@@ -9,7 +9,7 @@ import java.util.Optional;
 
 public interface PostJpaRepository extends JpaRepository<Post, Long> {
 
-    @Query("select p from Post p join fetch p.localPreference where p.isDeleted = false and p.id = :id")
+    @Query("SELECT p FROM Post p JOIN FETCH p.localPreference lp WHERE p.isDeleted = false AND p.id = :id")
     Optional<Post> findById(@Param(value = "id") Long id);
 
 }

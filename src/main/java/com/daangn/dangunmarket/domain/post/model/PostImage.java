@@ -1,5 +1,6 @@
 package com.daangn.dangunmarket.domain.post.model;
 
+import com.daangn.dangunmarket.global.entity.BaseEntity;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -11,7 +12,7 @@ import org.springframework.util.Assert;
 @Entity
 @Table(name = "post_images")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class PostImage {
+public class PostImage extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -35,6 +36,12 @@ public class PostImage {
             this.post.getPostImages().remove(this);
         }
         this.post = post;
+    }
+
+    public void removePost() {
+        if (this.post != null) {
+            this.post = null;
+        }
     }
 
 }

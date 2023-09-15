@@ -2,6 +2,7 @@ package com.daangn.dangunmarket.domain.post.model;
 
 import com.daangn.dangunmarket.domain.post.exception.TooEarlyToRefreshException;
 import com.daangn.dangunmarket.domain.post.model.vo.PostImages;
+import com.daangn.dangunmarket.domain.post.model.vo.PostEditor;
 import com.daangn.dangunmarket.domain.post.model.vo.Price;
 import com.daangn.dangunmarket.domain.post.model.vo.Title;
 import com.daangn.dangunmarket.global.entity.BaseEntity;
@@ -94,8 +95,21 @@ public class Post extends BaseEntity {
     }
 
     public void addPostImage(PostImage postImage) {
-        postImages.addPostImage(postImage);
+        this.postImages.addPostImage(postImage);
         postImage.changePost(this);
+    }
+
+    public void addPostImages(List<PostImage> postImages) {
+        for (PostImage postImage : postImages) {
+            this.addPostImage(postImage);
+            postImage.changePost(this);
+        }
+    }
+
+    public void removePostImage(PostImage postImage) {
+        postImages.removePostImage(postImage);
+        postImage.changeIsDeleted(true);
+        postImage.removePost();
     }
 
     public String getTitle() {
@@ -120,7 +134,7 @@ public class Post extends BaseEntity {
         this.tradeStatus = tradeStatus;
     }
 
-    public boolean isNotOwner(Long memberId){
+    public boolean isNotOwner(Long memberId) {
         return !Objects.equals(this.memberId, memberId);
     }
 
@@ -141,6 +155,16 @@ public class Post extends BaseEntity {
                     availableRefreshDays.minus(betweenTime)
             );
         }
+    }
+
+    public void edit(PostEditor postEditor) {
+        areaId = postEditor.areaId();
+        localPreference = postEditor.locationPreference();
+        category = postEditor.category();
+        title = new Title(postEditor.title());
+        content = postEditor.content();
+        price = new Price(postEditor.price());
+        isOfferAllowed = postEditor.isOfferAllowed();
     }
 
 }

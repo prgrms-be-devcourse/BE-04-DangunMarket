@@ -15,7 +15,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
-
 @RestController
 @RequestMapping(value = "/post-likes",
         produces = MediaType.APPLICATION_JSON_VALUE
@@ -76,7 +75,7 @@ public class PostLikeController {
     @GetMapping
     public ResponseEntity<LikedPostFindApiResponseList> findLikedPosts(
             Authentication authentication,
-            Pageable pageable){
+            Pageable pageable) {
         CustomUser customUser = (CustomUser) authentication.getPrincipal();
 
         LikedPostFindResponseList response = postLikeService.findByMemberId(customUser.memberId(), pageable);

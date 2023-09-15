@@ -9,4 +9,6 @@ public interface S3Uploader {
     List<String> saveImages(List<MultipartFile> multipartFiles);
     String saveImage(MultipartFile multipartFile);
 
+    void deleteImage(String imageUrl);
+
 }

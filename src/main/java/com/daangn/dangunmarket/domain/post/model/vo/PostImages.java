@@ -30,4 +30,7 @@ public class PostImages {
         this.postImageList.add(postImage);
     }
 
+    public void removePostImage(PostImage postImage) {
+        this.postImageList.remove(postImage);
+    }
 }

@@ -1,6 +1,8 @@
 package com.daangn.dangunmarket.domain.post.controller;
 
 import com.daangn.dangunmarket.domain.auth.jwt.CustomUser;
+import com.daangn.dangunmarket.domain.post.controller.dto.PostUpdateApiRequest;
+import com.daangn.dangunmarket.domain.post.controller.dto.PostUpdateApiResponse;
 import com.daangn.dangunmarket.domain.post.controller.dto.post.PostCreateApiRequest;
 import com.daangn.dangunmarket.domain.post.controller.dto.post.PostCreateApiResponse;
 import com.daangn.dangunmarket.domain.post.controller.dto.post.PostFindApiResponse;
@@ -23,6 +25,7 @@ import com.daangn.dangunmarket.domain.post.facade.dto.PostToUpdateResponseParam;
 
 import com.daangn.dangunmarket.domain.post.service.PostService;
 
+import com.daangn.dangunmarket.domain.post.facade.dto.PostUpdateRequestParam;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -35,6 +38,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestPart;
@@ -92,7 +96,7 @@ public class PostController {
     @PatchMapping("/{postId}")
     public ResponseEntity<PostUpdateStatusApiResponse> changeStatus(
             @PathVariable Long postId,
-            @RequestBody PostUpdateStatusApiRequest request){
+            @RequestBody PostUpdateStatusApiRequest request) {
 
         Long responsePostId = postService.changeStatus(mapper.toPostUpdateStatusRequest(request, postId));
         PostUpdateStatusApiResponse apiResponse = PostUpdateStatusApiResponse.from(responsePostId);
@@ -104,7 +108,7 @@ public class PostController {
     public ResponseEntity<PostRefreshApiResponse> refreshPostTime(
             @PathVariable Long postId,
             Authentication authentication
-            ){
+    ) {
 
         CustomUser customUser = (CustomUser) authentication.getPrincipal();
         PostRefreshApiResponse apiResponse = PostRefreshApiResponse.from(
@@ -115,11 +119,11 @@ public class PostController {
     }
 
     /**
-     *  [Exception] 커스텀 예외 - TooEarlyToRefreshException
-     *  해당 예외는 클라이언트에게 유저가 refresh 가능한 남은 시간을 알려주는 응답이다.
+     * [Exception] 커스텀 예외 - TooEarlyToRefreshException
+     * 해당 예외는 클라이언트에게 유저가 refresh 가능한 남은 시간을 알려주는 응답이다.
      */
     @ExceptionHandler(TooEarlyToRefreshException.class)
-    public ResponseEntity<TooEarlyToRefreshResponse> handleTooEarlyToRefreshException(TooEarlyToRefreshException e){
+    public ResponseEntity<TooEarlyToRefreshResponse> handleTooEarlyToRefreshException(TooEarlyToRefreshException e) {
         TooEarlyToRefreshResponse response = TooEarlyToRefreshResponse.of(
                 e.getRemainingDays(),
                 e.getRemainingHours(),
@@ -156,6 +160,17 @@ public class PostController {
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(responses);
+    }
+
+    @PutMapping
+    public ResponseEntity<PostUpdateApiResponse> updatePost(@RequestBody @Valid PostUpdateApiRequest postUpdateApiRequest) {
+        PostUpdateRequestParam postUpdateRequestParam = mapper.toPostUpdateRequestParam(postUpdateApiRequest);
+        Long postId = postFacade.updatePost(postUpdateRequestParam);
+        PostUpdateApiResponse postUpdateApiResponse = mapper.toPostUpdateApiResponse(postId);
+
+        URI uri = createURI(postId);
+
+        return ResponseEntity.created(uri).body(postUpdateApiResponse);
     }
 
     /**
