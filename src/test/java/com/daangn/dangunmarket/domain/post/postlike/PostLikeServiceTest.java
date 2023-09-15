@@ -4,6 +4,7 @@ import com.daangn.dangunmarket.domain.member.model.Member;
 import com.daangn.dangunmarket.domain.member.model.NickName;
 import com.daangn.dangunmarket.domain.member.repository.MemberJpaRepository;
 import com.daangn.dangunmarket.domain.post.model.Category;
+import com.daangn.dangunmarket.domain.post.model.LocationPreference;
 import com.daangn.dangunmarket.domain.post.model.Post;
 import com.daangn.dangunmarket.domain.post.model.PostImage;
 import com.daangn.dangunmarket.domain.post.model.TradeStatus;
@@ -12,6 +13,7 @@ import com.daangn.dangunmarket.domain.post.model.vo.Title;
 import com.daangn.dangunmarket.domain.post.repository.category.CategoryRepository;
 import com.daangn.dangunmarket.domain.post.repository.post.PostRepository;
 import com.daangn.dangunmarket.domain.post.service.PostLikeService;
+import com.daangn.dangunmarket.global.GeometryTypeFactory;
 import com.daangn.dangunmarket.global.exception.EntityNotFoundException;
 import com.daangn.dangunmarket.global.exception.InvalidPostLikeException;
 import com.daangn.dangunmarket.global.response.ErrorCode;
@@ -20,6 +22,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.locationtech.jts.geom.Point;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
@@ -119,11 +122,12 @@ public class PostLikeServiceTest {
 
         Category category1 = categoryRepository.save(new Category("중고서적", null, 1L, null));
 
+        Point point = GeometryTypeFactory.createPoint(35.85, 15.95);
         post = Post.builder()
                 .memberId(2L)
                 .areaId(1L)
-                .localPreference(null)
-                .postImageList(List.of(new PostImage("abc"), new PostImage("123")))
+                .localPreference(new LocationPreference(point, "test alias"))
+                .postImages(List.of(new PostImage("abc"), new PostImage("123")))
                 .category(category1)
                 .tradeStatus(TradeStatus.IN_PROGRESS)
                 .title(new Title("제목"))

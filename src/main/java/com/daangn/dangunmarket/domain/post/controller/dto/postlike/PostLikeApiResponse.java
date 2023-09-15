@@ -1,4 +1,4 @@
-package com.daangn.dangunmarket.domain.post.controller.dto;
+package com.daangn.dangunmarket.domain.post.controller.dto.postlike;
 
 public record PostLikeApiResponse(
         int likeCount,
@@ -10,4 +10,5 @@ public record PostLikeApiResponse(
                 isLiked
         );
     }
+
 }

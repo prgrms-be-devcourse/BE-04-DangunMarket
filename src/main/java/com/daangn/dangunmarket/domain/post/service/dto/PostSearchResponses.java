@@ -25,7 +25,7 @@ public record PostSearchResponses(
                                 dto.post().getPrice(),
                                 dto.post().getLikeCount(),
                                 dto.post().getTradeStatus(),
-                                dto.post().getPostImageList().isEmpty() ? null : dto.post().getPostImageList().get(0).getUrl(),
+                                dto.post().getPostImages().isEmpty() ? null : dto.post().getPostImages().get(0).getUrl(),
                                 dto.areaName()
                         )
                 )

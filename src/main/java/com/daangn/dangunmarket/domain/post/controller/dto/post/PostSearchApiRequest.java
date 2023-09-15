@@ -1,4 +1,4 @@
-package com.daangn.dangunmarket.domain.post.controller.dto;
+package com.daangn.dangunmarket.domain.post.controller.dto.post;
 
 public record PostSearchApiRequest(
         Integer category,

@@ -30,7 +30,7 @@ public record PostFindResponse(
                 post.getMemberId(),
                 post.getAreaId(),
                 post.getLocalPreference(),
-                post.getPostImageList(),
+                post.getPostImages(),
                 post.getCategory(),
                 post.getTradeStatus(),
                 post.getTitle(),

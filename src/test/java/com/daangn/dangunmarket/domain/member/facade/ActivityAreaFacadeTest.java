@@ -62,7 +62,7 @@ public class ActivityAreaFacadeTest {
 
     @Test
     @DisplayName("위도, 경도를 받아 저장한 활동 지역에 회원의 정보가 제대로 저장되었음을 확인한다.")
-    public void createActivityArea_returnActivityArea_equalsSavedActivityArea() {
+    void createActivityArea_returnActivityArea_equalsSavedActivityArea() {
         //when
         activityId = activityAreaFacade.createActivityArea(activityAreaCreateRequestParam, saveMember.id());
         findActivityArea = activityAreaService.findByActivityId(activityId);

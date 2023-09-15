@@ -33,7 +33,7 @@ public class PostImage extends BaseEntity {
 
     public void changePost(Post post) {
         if (this.post != null) {
-            this.post.getPostImageList().remove(this);
+            this.post.getPostImages().remove(this);
         }
         this.post = post;
     }

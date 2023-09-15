@@ -16,6 +16,7 @@ import com.daangn.dangunmarket.domain.post.model.Post;
 import com.daangn.dangunmarket.domain.post.repository.category.CategoryRepository;
 import com.daangn.dangunmarket.domain.post.repository.post.PostRepository;
 import com.daangn.dangunmarket.global.aws.s3.S3Uploader;
+import com.daangn.dangunmarket.global.exception.EntityNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -31,6 +32,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.catchException;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
@@ -87,7 +89,7 @@ class PostFacadeTest {
         assertThat(post.getMemberId()).isEqualTo(postCreateRequestParam.memberId());
         assertThat(post.getAreaId()).isEqualTo(postCreateRequestParam.areaId());
         assertThat(post.getLocalPreference().getAlias()).isEqualTo(postCreateRequestParam.alias());
-        assertThat(post.getPostImageList().size()).isEqualTo(postCreateRequestParam.files().size());
+        assertThat(post.getPostImages().size()).isEqualTo(postCreateRequestParam.files().size());
         assertThat(post.getTitle()).isEqualTo(postCreateRequestParam.title());
         assertThat(post.getContent()).isEqualTo(postCreateRequestParam.content());
         assertThat(post.getPrice()).isEqualTo(postCreateRequestParam.price());
@@ -114,6 +116,16 @@ class PostFacadeTest {
         assertThat(responseParam.memberName()).isEqualTo("james");
         assertThat(responseParam.urls().size()).isEqualTo(2);
         assertThat(responseParam.likeCount()).isEqualTo(0);
+    }
+
+    @Test
+    @DisplayName("올바르지 않은 PostId로 조회 시 EntityNotFoundException가 발생하는 것을 확인한다.")
+    void findById_inCorrectProductId_EntityNotFoundException(){
+        //when
+        Exception exception = catchException(() -> postFacade.findById(50L));
+
+        //when
+        assertThat(exception).isInstanceOf(EntityNotFoundException.class);
     }
 
     @Test

@@ -27,7 +27,7 @@ public class PostImageService {
     //urls에는 기존 혹은 삭제만 확인한다.
     public void removeImages(Long postId, List<String> urls) {
         Post postToEdit = postRepository.findById(postId).orElseThrow(() -> new NotFoundException("해당 게시글이 존재하지 않습니다."));
-        List<PostImage> existingPostImages = postToEdit.getPostImageList();
+        List<PostImage> existingPostImages = postToEdit.getPostImages();
 
         List<PostImage> postImagesToRemove = existingPostImages.stream().filter(u -> !urls.contains(u.getUrl())).toList();
         postImagesToRemove.forEach(r -> {

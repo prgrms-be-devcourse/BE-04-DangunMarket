@@ -71,7 +71,8 @@ public class ActivityAreaService {
 
    @Transactional
    public boolean isVerifiedActivityArea(Long memberId, Long areaId) {
-       ActivityArea activityArea = activityAreaRepository.findActivityAreaByMemberIdAndEmdAreaId(memberId, areaId).orElseThrow(()-> new NotFoundException("사용자의 위도 경도는 등록된 활동 지역이 아닙니다."));
+       ActivityArea activityArea = activityAreaRepository.findActivityAreaByMemberIdAndEmdAreaId(memberId, areaId)
+               .orElseThrow(()-> new NotFoundException("사용자의 위도 경도는 등록된 활동 지역이 아닙니다."));
 
        activityArea.authorizedActivityArea();
        activityAreaRepository.save(activityArea);

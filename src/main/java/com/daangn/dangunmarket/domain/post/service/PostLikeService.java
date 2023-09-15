@@ -4,7 +4,7 @@ import com.daangn.dangunmarket.domain.post.model.Post;
 import com.daangn.dangunmarket.domain.post.model.PostLike;
 import com.daangn.dangunmarket.domain.post.repository.post.PostRepository;
 import com.daangn.dangunmarket.domain.post.repository.postlike.PostLikeRepository;
-import com.daangn.dangunmarket.domain.post.repository.postlike.dto.JoinedWithArea;
+import com.daangn.dangunmarket.domain.post.repository.postlike.dto.JoinedPostWithArea;
 import com.daangn.dangunmarket.domain.post.service.dto.LikedPostFindResponseList;
 import com.daangn.dangunmarket.domain.post.service.dto.PostLikeResponse;
 import com.daangn.dangunmarket.global.exception.EntityNotFoundException;
@@ -64,7 +64,7 @@ public class PostLikeService {
     }
 
     public LikedPostFindResponseList findByMemberId(Long memberId, Pageable pageable) {
-        Slice<JoinedWithArea> responseList = postLikeRepository.findByMemberId(memberId, pageable);
+        Slice<JoinedPostWithArea> responseList = postLikeRepository.findByMemberId(memberId, pageable);
         return LikedPostFindResponseList.from(responseList);
     }
 

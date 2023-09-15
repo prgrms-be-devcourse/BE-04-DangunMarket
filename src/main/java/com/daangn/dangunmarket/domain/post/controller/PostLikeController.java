@@ -1,19 +1,19 @@
 package com.daangn.dangunmarket.domain.post.controller;
 
 import com.daangn.dangunmarket.domain.auth.jwt.CustomUser;
-import com.daangn.dangunmarket.domain.post.controller.dto.LikedPostFindApiResponseList;
-import com.daangn.dangunmarket.domain.post.controller.dto.PostLikeApiResponse;
+import com.daangn.dangunmarket.domain.post.controller.dto.postlike.LikedPostFindApiResponseList;
+import com.daangn.dangunmarket.domain.post.controller.dto.postlike.PostLikeApiResponse;
 import com.daangn.dangunmarket.domain.post.controller.mapper.PostApiMapper;
 import com.daangn.dangunmarket.domain.post.service.PostLikeService;
 import com.daangn.dangunmarket.domain.post.service.dto.LikedPostFindResponseList;
 import com.daangn.dangunmarket.domain.post.service.dto.PostLikeResponse;
+
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
-
 
 @RestController
 @RequestMapping(value = "/post-likes",
@@ -75,7 +75,7 @@ public class PostLikeController {
     @GetMapping
     public ResponseEntity<LikedPostFindApiResponseList> findLikedPosts(
             Authentication authentication,
-            Pageable pageable){
+            Pageable pageable) {
         CustomUser customUser = (CustomUser) authentication.getPrincipal();
 
         LikedPostFindResponseList response = postLikeService.findByMemberId(customUser.memberId(), pageable);

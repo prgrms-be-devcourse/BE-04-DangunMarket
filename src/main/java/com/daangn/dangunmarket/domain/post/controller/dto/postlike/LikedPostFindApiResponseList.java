@@ -1,4 +1,4 @@
-package com.daangn.dangunmarket.domain.post.controller.dto;
+package com.daangn.dangunmarket.domain.post.controller.dto.postlike;
 
 import com.daangn.dangunmarket.domain.post.service.dto.LikedPostFindResponseList;
 import org.springframework.data.domain.Slice;
