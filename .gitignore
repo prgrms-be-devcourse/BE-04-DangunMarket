@@ -3,6 +3,7 @@ application.yml
 application-test.yml
 *.yml
 
+src/main/generated
 HELP.md
 .gradle
 build/
