@@ -34,7 +34,7 @@ public class Post extends BaseEntity {
     @Column(nullable = false)
     private Long areaId;
 
-    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST, orphanRemoval = true)
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
     private LocationPreference localPreference;
 
     @Embedded
@@ -73,7 +73,7 @@ public class Post extends BaseEntity {
         Assert.notNull(title, "title은 null값이 들어올 수 없습니다.");
         Assert.notNull(content, "content는 null값이 들어올 수 없습니다.");
         Assert.notNull(likeCount, "likeCount는 null값이 들어올 수 없습니다.");
-        Assert.notNull(postImages, "postImages는 null값이 들어올 수 없습니다.");
+        Assert.notNull(postImages, "postImages는 null값이 들어올 수 없습니다.(postImage가 0이면 빈 List라도 넣어주세요.)");
 
         postImages.forEach(this::addPostImage);
         this.memberId = memberId;

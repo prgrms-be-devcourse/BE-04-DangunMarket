@@ -18,7 +18,7 @@ import java.util.List;
 public class PostImages {
     private static final int MAX_IMAGE_COUNT = 3;
 
-    @OneToMany(mappedBy = "post", fetch = FetchType.LAZY, cascade = CascadeType.PERSIST, orphanRemoval = true)
+    @OneToMany(mappedBy = "post", fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
     private List<PostImage> postImageList = new ArrayList<>();
 
     public void addPostImage(PostImage postImage) {
