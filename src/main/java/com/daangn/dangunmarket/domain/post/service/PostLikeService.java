@@ -31,8 +31,13 @@ public class PostLikeService {
     @Transactional
     public PostLikeResponse likePost(Long memberId, Long postId) {
         Post post = postRepository
-                .findById(postId)
+                .findByIdForUpdate(postId)
                 .orElseThrow(() -> new EntityNotFoundException(NOT_FOUND_POST_ENTITY));
+
+        if (postLikeRepository.existsByMemberIdAndPostId(memberId, postId)) {
+            throw new InvalidPostLikeException(ALREADY_EXISTS_POST_LIKE);
+        }
+
         post.like();
 
         if (postLikeRepository.existsByMemberIdAndPostId(memberId, postId)) {
