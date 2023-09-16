@@ -1,6 +1,8 @@
 package com.daangn.dangunmarket.domain.post.repository.post;
 
+import com.daangn.dangunmarket.domain.area.model.QArea;
 import com.daangn.dangunmarket.domain.post.repository.dto.PostDto;
+import com.daangn.dangunmarket.domain.post.repository.dto.QPostDto;
 import com.daangn.dangunmarket.domain.post.service.dto.PostSearchConditionRequest;
 import com.querydsl.core.types.Order;
 import com.querydsl.core.types.OrderSpecifier;
