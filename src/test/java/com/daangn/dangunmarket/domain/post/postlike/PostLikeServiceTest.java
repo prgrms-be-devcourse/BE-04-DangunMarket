@@ -33,6 +33,8 @@ import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 import static com.daangn.dangunmarket.domain.member.model.MemberProvider.GOOGLE;
 import static com.daangn.dangunmarket.domain.member.model.RoleType.USER;
@@ -56,17 +58,20 @@ public class PostLikeServiceTest {
 
     private Member member1;
     private Post post;
+    private List<Member> members;
 
     @BeforeEach
     void setUp() {
         setUpData();
     }
 
+    private static final int MEMBER_COUNT = 20;
+
     @Test
     @DisplayName("좋아요를 누른 수 만큼 게시물의 좋아요 수가 증가하고, 좋아요 수랑 게시물의 좋아요 수랑 일치한다")
     void likePost_PostIdMemberId_Success() throws InterruptedException {
         //given
-        final int THREAD_NUM = 2;
+        final int THREAD_NUM = MEMBER_COUNT;
         ExecutorService executorService = Executors.newFixedThreadPool(THREAD_NUM);
         CountDownLatch latch = new CountDownLatch(THREAD_NUM);
         Long postId = postRepository.save(post).getId();
@@ -107,6 +112,18 @@ public class PostLikeServiceTest {
     }
 
     private void setUpData() {
+        this.members = IntStream.range(0, MEMBER_COUNT).mapToObj(
+                it -> {
+                    return memberJpaRepository.save(Member.builder()
+                            .memberProvider(GOOGLE)
+                            .roleType(USER)
+                            .socialId("member1 socialId")
+                            .nickName(new NickName("nickname1"))
+                            .reviewScore(34)
+                            .build());
+                }
+        ).collect(Collectors.toList());
+
         member1 = Member.builder()
                 .id(1L)
                 .roleType(USER)
