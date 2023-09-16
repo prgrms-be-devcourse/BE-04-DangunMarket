@@ -5,6 +5,7 @@ import com.daangn.dangunmarket.domain.post.repository.dto.PostDto;
 import com.daangn.dangunmarket.domain.post.service.dto.PostSearchConditionRequest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.repository.query.Param;
 
 import java.util.Optional;
 
@@ -18,4 +19,5 @@ public interface PostRepository {
 
     Page<PostDto> getPostsByConditions(Long areaId, PostSearchConditionRequest conditions);
 
+    Optional<Post> findByIdForUpdate(@Param(value = "id") Long id);
 }
