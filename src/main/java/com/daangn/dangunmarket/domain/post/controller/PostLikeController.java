@@ -72,7 +72,7 @@ public class PostLikeController {
                 .body(apiResponse);
     }
 
-    @GetMapping
+    @GetMapping("me")
     public ResponseEntity<LikedPostFindApiResponseList> findLikedPosts(
             Authentication authentication,
             Pageable pageable) {
