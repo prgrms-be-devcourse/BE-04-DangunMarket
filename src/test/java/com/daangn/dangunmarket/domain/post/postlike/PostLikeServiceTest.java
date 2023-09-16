@@ -17,9 +17,9 @@ import com.daangn.dangunmarket.global.GeometryTypeFactory;
 import com.daangn.dangunmarket.global.exception.EntityNotFoundException;
 import com.daangn.dangunmarket.global.exception.InvalidPostLikeException;
 import com.daangn.dangunmarket.global.response.ErrorCode;
+import lombok.extern.slf4j.Slf4j;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.locationtech.jts.geom.Point;
@@ -30,6 +30,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -37,8 +38,8 @@ import static com.daangn.dangunmarket.domain.member.model.MemberProvider.GOOGLE;
 import static com.daangn.dangunmarket.domain.member.model.RoleType.USER;
 
 @SpringBootTest
-@Transactional
 @ActiveProfiles("test")
+@Slf4j
 public class PostLikeServiceTest {
 
     @Autowired
@@ -54,7 +55,6 @@ public class PostLikeServiceTest {
     private PostRepository postRepository;
 
     private Member member1;
-    private Member member2;
     private Post post;
 
     @BeforeEach
@@ -63,29 +63,33 @@ public class PostLikeServiceTest {
     }
 
     @Test
-    @Disabled
-    @DisplayName("좋아요 기능 동시성 테스트")
+    @DisplayName("좋아요를 누른 수 만큼 게시물의 좋아요 수가 증가하고, 좋아요 수랑 게시물의 좋아요 수랑 일치한다")
     void likePost_PostIdMemberId_Success() throws InterruptedException {
         //given
         final int THREAD_NUM = 2;
         ExecutorService executorService = Executors.newFixedThreadPool(THREAD_NUM);
-        Long memberId1 = memberJpaRepository.save(member1).getId();
-        Long memberId2 = memberJpaRepository.save(member2).getId();
+        CountDownLatch latch = new CountDownLatch(THREAD_NUM);
         Long postId = postRepository.save(post).getId();
 
         //when
-        executorService.execute(() -> {
-            postLikeService.likePost(memberId1, postId);
-        });
-        executorService.execute(() -> {
-            postLikeService.likePost(memberId2, postId);
-        });
-        Thread.sleep(500);
+        for (Member member : this.members) {
+            executorService.execute(() -> {
+                try {
+                    postLikeService.likePost(member.getId(), postId);
+                } catch (Exception e) {
+                    log.info("예외 {}, 실패한 회원 id {}, {}", e.getClass().getName(), member.getId(), e);
+                } finally {
+                    latch.countDown();
+                }
+            });
+        }
+
+        latch.await();
 
         //then
         Post findPost = postRepository.findById(postId).orElseThrow(() -> new EntityNotFoundException(ErrorCode.NOT_FOUND_POST_ENTITY));
 
-        Assertions.assertThat(findPost.getLikeCount()).isEqualTo(1);
+        Assertions.assertThat(findPost.getLikeCount()).isEqualTo(MEMBER_COUNT);
     }
 
     @Test
@@ -104,20 +108,12 @@ public class PostLikeServiceTest {
 
     private void setUpData() {
         member1 = Member.builder()
-                .id(50L)
+                .id(1L)
                 .roleType(USER)
                 .memberProvider(GOOGLE)
                 .socialId("member1 socialId")
                 .nickName(new NickName("nickname1"))
                 .reviewScore(34)
-                .build();
-        member2 = Member.builder()
-                .id(51L)
-                .roleType(USER)
-                .memberProvider(GOOGLE)
-                .socialId("member2 socialId")
-                .nickName(new NickName("nickname2"))
-                .reviewScore(35)
                 .build();
 
         Category category1 = categoryRepository.save(new Category("중고서적", null, 1L, null));
