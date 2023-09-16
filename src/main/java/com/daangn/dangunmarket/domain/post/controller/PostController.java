@@ -1,7 +1,6 @@
 package com.daangn.dangunmarket.domain.post.controller;
 
 import com.daangn.dangunmarket.domain.auth.jwt.CustomUser;
-import com.daangn.dangunmarket.domain.post.controller.dto.PostDeleteApiResponse;
 import com.daangn.dangunmarket.domain.post.controller.dto.PostUpdateApiRequest;
 import com.daangn.dangunmarket.domain.post.controller.dto.PostUpdateApiResponse;
 import com.daangn.dangunmarket.domain.post.controller.dto.post.PostCreateApiRequest;
@@ -198,19 +197,15 @@ public class PostController {
      * 게시글 삭제
      */
     @DeleteMapping("/{postId}")
-    public ResponseEntity<PostDeleteApiResponse> deletePost(
+    public ResponseEntity<Void> deletePost(
             @PathVariable Long postId,
             Authentication authentication
     ) {
         CustomUser customUser = (CustomUser) authentication.getPrincipal();
 
-        Long deletedPostId = postFacade.deletePost(customUser.memberId(), postId);
-        PostDeleteApiResponse response = mapper.toPostDeleteApiResponse(deletedPostId);
-        return ResponseEntity
-                .status(HttpStatus.OK)
-                .body(response);
+        postFacade.deletePost(customUser.memberId(), postId);
+        return ResponseEntity.noContent().build();
     }
-
 
     private static URI createURI(Long productId) {
         return ServletUriComponentsBuilder

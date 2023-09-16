@@ -135,7 +135,7 @@ public class PostFacade {
     }
 
     @Transactional
-    public Long deletePost(Long memberId, Long postId) {
+    public void deletePost(Long memberId, Long postId) {
         PostFindResponse response = postService.findById(postId);
 
         if (!isPostCreatedByUser(response.memberId(), memberId)) {
@@ -150,9 +150,7 @@ public class PostFacade {
         s3Uploader.deleteImages(deleteFileNames);
 
         //2. 게시물 soft-delete
-        Long deletedPostId = postService.deletePost(postId);
-
-        return deletedPostId;
+        postService.deletePost(postId);
     }
 
     @Transactional
