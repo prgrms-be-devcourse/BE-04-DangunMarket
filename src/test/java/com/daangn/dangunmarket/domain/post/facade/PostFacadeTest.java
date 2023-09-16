@@ -19,7 +19,6 @@ import com.daangn.dangunmarket.global.aws.dto.ImageInfo;
 import com.daangn.dangunmarket.global.aws.s3.S3Uploader;
 import com.daangn.dangunmarket.global.exception.EntityNotFoundException;
 import org.assertj.core.api.Assertions;
-import com.daangn.dangunmarket.global.exception.EntityNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -121,7 +120,7 @@ class PostFacadeTest {
 
     @Test
     @DisplayName("올바르지 않은 PostId로 조회 시 EntityNotFoundException가 발생하는 것을 확인한다.")
-    void findById_inCorrectProductId_EntityNotFoundException(){
+    void findById_inCorrectProductId_EntityNotFoundException() {
         //when
         Exception exception = catchException(() -> postFacade.findById(50L));
 
@@ -188,10 +187,10 @@ class PostFacadeTest {
         Long memberId = postCreateRequestParam.memberId();
 
         //when
-        Long deletePostId = postFacade.deletePost(memberId, postId);
+        postFacade.deletePost(memberId, postId);
 
         //then
-        Assertions.assertThatThrownBy(() -> postFacade.findById(deletePostId))
+        Assertions.assertThatThrownBy(() -> postFacade.findById(postId))
                 .isInstanceOf(EntityNotFoundException.class);
 
     }
