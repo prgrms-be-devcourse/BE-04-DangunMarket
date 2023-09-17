@@ -121,9 +121,13 @@ public class PostService {
     }
 
     @Transactional
-    public void deletePost(Long postId) {
+    public void deletePost(Long memberId, Long postId) {
         Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new EntityNotFoundException(NOT_FOUND_POST_ENTITY));
+
+        if (post.isNotOwner(memberId)) {
+            throw new UnauthorizedAccessException(POST_NOT_CREATED_BY_USER);
+        }
 
         post.deletePost();
     }

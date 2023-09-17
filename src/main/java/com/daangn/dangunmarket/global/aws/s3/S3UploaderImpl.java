@@ -71,7 +71,7 @@ public class S3UploaderImpl implements S3Uploader {
     }
 
     @Override
-    public void deleteImage(String fileName) {
+    public void deleteImage2(String fileName) {
         try {
             amazonS3Client.deleteObject(bucket, fileName);
         } catch (AmazonServiceException e) {
