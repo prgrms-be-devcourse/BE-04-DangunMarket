@@ -35,6 +35,9 @@ dependencies {
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation "org.mockito:mockito-core:3.+"
 
+    //mongo
+    implementation 'org.springframework.boot:spring-boot-starter-data-mongodb'
+
     //aws
     implementation 'io.awspring.cloud:spring-cloud-starter-aws:2.4.4'
 

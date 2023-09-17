@@ -4,10 +4,12 @@ import com.daangn.dangunmarket.domain.member.model.Member;
 import com.daangn.dangunmarket.domain.post.model.Post;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "chat_room_infos")
+@Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class ChatRoomInfo {
 
@@ -23,16 +25,16 @@ public class ChatRoomInfo {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "chatrooms_id", referencedColumnName = "id", nullable = false)
-    private ChatRoom chatroom;
+    private ChatRoom chatRoom;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "members_id", referencedColumnName = "id", nullable = false)
     private Member member;
 
-    public ChatRoomInfo(boolean isWriter, Post post, ChatRoom chatroom, Member member) {
+    public ChatRoomInfo(boolean isWriter, Post post, ChatRoom chatRoom, Member member) {
         this.isWriter = isWriter;
         this.post = post;
-        this.chatroom = chatroom;
+        this.chatRoom = chatRoom;
         this.member = member;
     }
 
