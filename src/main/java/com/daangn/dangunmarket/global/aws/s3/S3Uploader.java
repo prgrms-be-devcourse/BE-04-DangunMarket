@@ -1,14 +1,19 @@
 package com.daangn.dangunmarket.global.aws.s3;
 
+import com.daangn.dangunmarket.global.aws.dto.ImageInfo;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
 public interface S3Uploader {
 
-    List<String> saveImages(List<MultipartFile> multipartFiles);
-    String saveImage(MultipartFile multipartFile);
+    List<ImageInfo> saveImages(List<MultipartFile> multipartFiles);
 
-    void deleteImage(String imageUrl);
+    ImageInfo saveImage(MultipartFile multipartFile);
 
+    void deleteImage2(String fileName);
+
+    void deleteImages(List<String> fileNames);
+
+    void deleteImage(String url);
 }

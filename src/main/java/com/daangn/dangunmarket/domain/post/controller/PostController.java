@@ -6,14 +6,13 @@ import com.daangn.dangunmarket.domain.post.controller.dto.PostUpdateApiResponse;
 import com.daangn.dangunmarket.domain.post.controller.dto.post.PostCreateApiRequest;
 import com.daangn.dangunmarket.domain.post.controller.dto.post.PostCreateApiResponse;
 import com.daangn.dangunmarket.domain.post.controller.dto.post.PostFindApiResponse;
-import com.daangn.dangunmarket.domain.post.controller.dto.post.PostRefreshApiResponse;
-import com.daangn.dangunmarket.domain.post.controller.dto.post.PostUpdateStatusApiRequest;
-import com.daangn.dangunmarket.domain.post.controller.dto.post.PostUpdateStatusApiResponse;
-
-import com.daangn.dangunmarket.domain.post.controller.dto.post.PostToUpdateApiResponse;
 import com.daangn.dangunmarket.domain.post.controller.dto.post.PostGetApiResponses;
+import com.daangn.dangunmarket.domain.post.controller.dto.post.PostRefreshApiResponse;
 import com.daangn.dangunmarket.domain.post.controller.dto.post.PostSearchApiRequest;
 import com.daangn.dangunmarket.domain.post.controller.dto.post.PostSearchApiResponses;
+import com.daangn.dangunmarket.domain.post.controller.dto.post.PostToUpdateApiResponse;
+import com.daangn.dangunmarket.domain.post.controller.dto.post.PostUpdateStatusApiRequest;
+import com.daangn.dangunmarket.domain.post.controller.dto.post.PostUpdateStatusApiResponse;
 import com.daangn.dangunmarket.domain.post.controller.mapper.PostApiMapper;
 import com.daangn.dangunmarket.domain.post.exception.TooEarlyToRefreshException;
 import com.daangn.dangunmarket.domain.post.exception.TooEarlyToRefreshResponse;
@@ -22,16 +21,15 @@ import com.daangn.dangunmarket.domain.post.facade.dto.PostFindResponseParam;
 import com.daangn.dangunmarket.domain.post.facade.dto.PostGetResponseParams;
 import com.daangn.dangunmarket.domain.post.facade.dto.PostSearchResponseParams;
 import com.daangn.dangunmarket.domain.post.facade.dto.PostToUpdateResponseParam;
-
-import com.daangn.dangunmarket.domain.post.service.PostService;
-
 import com.daangn.dangunmarket.domain.post.facade.dto.PostUpdateRequestParam;
+import com.daangn.dangunmarket.domain.post.service.PostService;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -193,6 +191,20 @@ public class PostController {
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(responses);
+    }
+
+    /*
+     * 게시글 삭제
+     */
+    @DeleteMapping("/{postId}")
+    public ResponseEntity<Void> deletePost(
+            @PathVariable Long postId,
+            Authentication authentication
+    ) {
+        CustomUser customUser = (CustomUser) authentication.getPrincipal();
+
+        postFacade.deletePost(customUser.memberId(), postId);
+        return ResponseEntity.noContent().build();
     }
 
     private static URI createURI(Long productId) {

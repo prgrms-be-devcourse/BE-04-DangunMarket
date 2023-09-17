@@ -1,12 +1,14 @@
 package com.daangn.dangunmarket.domain.post.controller.mapper;
 
+
+import com.daangn.dangunmarket.domain.post.controller.dto.PostDeleteApiResponse;
 import com.daangn.dangunmarket.domain.post.controller.dto.PostUpdateApiRequest;
 import com.daangn.dangunmarket.domain.post.controller.dto.PostUpdateApiResponse;
+import com.daangn.dangunmarket.domain.post.controller.dto.post.PostCreateApiRequest;
 import com.daangn.dangunmarket.domain.post.controller.dto.post.PostGetApiResponses;
 import com.daangn.dangunmarket.domain.post.controller.dto.post.PostSearchApiRequest;
 import com.daangn.dangunmarket.domain.post.controller.dto.post.PostSearchApiResponses;
 import com.daangn.dangunmarket.domain.post.controller.dto.post.PostToUpdateApiResponse;
-import com.daangn.dangunmarket.domain.post.controller.dto.post.PostCreateApiRequest;
 import com.daangn.dangunmarket.domain.post.controller.dto.post.PostUpdateStatusApiRequest;
 import com.daangn.dangunmarket.domain.post.controller.dto.postlike.PostLikeApiResponse;
 import com.daangn.dangunmarket.domain.post.facade.dto.PostCreateRequestParam;
@@ -16,12 +18,11 @@ import com.daangn.dangunmarket.domain.post.facade.dto.PostSearchResponseParams;
 import com.daangn.dangunmarket.domain.post.facade.dto.PostToUpdateResponseParam;
 import com.daangn.dangunmarket.domain.post.facade.dto.PostUpdateRequestParam;
 import com.daangn.dangunmarket.domain.post.service.dto.PostLikeResponse;
-
 import com.daangn.dangunmarket.domain.post.service.dto.PostUpdateStatusRequest;
 import org.mapstruct.InjectionStrategy;
 import org.mapstruct.Mapper;
-import org.springframework.web.multipart.MultipartFile;
 import org.springframework.data.domain.Pageable;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -43,6 +44,8 @@ public interface PostApiMapper {
     PostSearchApiResponses toPostSearchApiResponses(PostSearchResponseParams responseParams);
 
     PostToUpdateApiResponse toPostToUpdateApiResponse(PostToUpdateResponseParam postToUpdateResponseParam);
+
+    PostDeleteApiResponse toPostDeleteApiResponse(Long deletedPostId);
 
     PostUpdateRequestParam toPostUpdateRequestParam(PostUpdateApiRequest postUpdateApiRequest);
 

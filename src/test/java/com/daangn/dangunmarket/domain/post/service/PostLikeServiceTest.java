@@ -98,7 +98,7 @@ class PostLikeServiceTest {
                 2L,
                 setupArea.getId(),
                 null,
-                List.of(new PostImage("abc"), new PostImage("123"), new PostImage("45678")),
+                List.of(new PostImage("abc", "파일 이름"), new PostImage("123", "파일이름2"), new PostImage("45678", "파일이름3")),
                 null,
                 TradeStatus.IN_PROGRESS,
                 new Title("테스트 게시글 제목"),

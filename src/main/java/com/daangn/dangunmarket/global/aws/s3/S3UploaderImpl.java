@@ -4,6 +4,7 @@ import com.amazonaws.AmazonServiceException;
 import com.amazonaws.SdkClientException;
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.ObjectMetadata;
+import com.daangn.dangunmarket.global.aws.dto.ImageInfo;
 import com.daangn.dangunmarket.global.exception.ImageUploadException;
 import com.daangn.dangunmarket.global.response.ErrorCode;
 import lombok.RequiredArgsConstructor;
@@ -32,11 +33,11 @@ public class S3UploaderImpl implements S3Uploader {
 
     @Transactional
     @Override
-    public List<String> saveImages(List<MultipartFile> multipartFiles) {
-        List<String> resultList = new ArrayList<>();
+    public List<ImageInfo> saveImages(List<MultipartFile> multipartFiles) {
+        List<ImageInfo> resultList = new ArrayList<>();
 
         for (MultipartFile multipartFile : multipartFiles) {
-            String value = saveImage(multipartFile);
+            ImageInfo value = saveImage(multipartFile);
             resultList.add(value);
         }
 
@@ -45,7 +46,7 @@ public class S3UploaderImpl implements S3Uploader {
 
     @Transactional
     @Override
-    public String saveImage(MultipartFile multipartFile) {
+    public ImageInfo saveImage(MultipartFile multipartFile) {
         String originalFileName = multipartFile.getOriginalFilename();
         String changedFileName = changeFileName(originalFileName);
         try {
@@ -55,7 +56,9 @@ public class S3UploaderImpl implements S3Uploader {
 
             amazonS3Client.putObject(bucket, changedFileName, multipartFile.getInputStream(), objectMetadata);
 
-            return amazonS3Client.getUrl(bucket, changedFileName).toString();
+            String url = amazonS3Client.getUrl(bucket, changedFileName).toString();
+            return new ImageInfo(url, changedFileName);
+
         } catch (IOException e) {
             throw new ImageUploadException(ErrorCode.FAIL_TO_UPLOAD_IMAGES);
         } catch (AmazonServiceException e) {
@@ -64,6 +67,26 @@ public class S3UploaderImpl implements S3Uploader {
         } catch (SdkClientException e) {
             log.error("uploadToAWS SdkClientException filePath={}, error = {}", changedFileName, e.getMessage());
             throw new ImageUploadException(ErrorCode.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @Override
+    public void deleteImage2(String fileName) {
+        try {
+            amazonS3Client.deleteObject(bucket, fileName);
+        } catch (AmazonServiceException e) {
+            log.error("uploadToAWS AmazonServiceException filePath={}, error={}", fileName, e.getMessage());
+            throw new ImageUploadException(ErrorCode.INTERNAL_SERVER_ERROR);
+        } catch (SdkClientException e) {
+            log.error("uploadToAWS SdkClientException filePath={}, error = {}", fileName, e.getMessage());
+            throw new ImageUploadException(ErrorCode.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @Override
+    public void deleteImages(List<String> fileNames) {
+        for (String fileName : fileNames) {
+            deleteImage(fileName);
         }
     }
 
@@ -83,10 +106,10 @@ public class S3UploaderImpl implements S3Uploader {
             amazonS3Client.deleteObject(bucket, fileName);
         } catch (AmazonServiceException e) {
             log.error("deleteImage AmazonServiceException imageUrl={}, error={}", imageUrl, e.getMessage());
-           // throw new ImageDeleteException(ErrorCode.INTERNAL_SERVER_ERROR);
+            // throw new ImageDeleteException(ErrorCode.INTERNAL_SERVER_ERROR);
         } catch (SdkClientException e) {
             log.error("deleteImage SdkClientException imageUrl={}, error = {}", imageUrl, e.getMessage());
-           // throw new ImageDeleteException(ErrorCode.INTERNAL_SERVER_ERROR);
+            // throw new ImageDeleteException(ErrorCode.INTERNAL_SERVER_ERROR);
         }
     }
 

@@ -1,12 +1,23 @@
 package com.daangn.dangunmarket.domain.post.model;
 
 import com.daangn.dangunmarket.domain.post.exception.TooEarlyToRefreshException;
-import com.daangn.dangunmarket.domain.post.model.vo.PostImages;
 import com.daangn.dangunmarket.domain.post.model.vo.PostEditor;
+import com.daangn.dangunmarket.domain.post.model.vo.PostImages;
 import com.daangn.dangunmarket.domain.post.model.vo.Price;
 import com.daangn.dangunmarket.domain.post.model.vo.Title;
 import com.daangn.dangunmarket.global.entity.BaseEntity;
-import jakarta.persistence.*;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Embedded;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.OneToOne;
+import jakarta.persistence.Table;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -155,6 +166,16 @@ public class Post extends BaseEntity {
                     availableRefreshDays.minus(betweenTime)
             );
         }
+    }
+
+    public void deletePost() {
+        postImages.getPostImageList()
+                .stream()
+                .forEach(PostImage::deletePostImage); //이미지 상태 변경
+        if (localPreference != null) {
+            localPreference.deleteLocationPreference(); //선호 장소 상태 변경
+        }
+        isDeleted = true; //post 상태 변경
     }
 
     public void edit(PostEditor postEditor) {

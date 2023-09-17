@@ -3,18 +3,18 @@ package com.daangn.dangunmarket.domain.post.service;
 import com.amazonaws.services.kms.model.NotFoundException;
 import com.daangn.dangunmarket.domain.post.exception.UnauthorizedAccessException;
 import com.daangn.dangunmarket.domain.post.model.Post;
-import com.daangn.dangunmarket.domain.post.repository.dto.PostDto;
 import com.daangn.dangunmarket.domain.post.model.vo.PostEditor;
+import com.daangn.dangunmarket.domain.post.repository.dto.PostDto;
 import com.daangn.dangunmarket.domain.post.repository.post.PostRepository;
 import com.daangn.dangunmarket.domain.post.service.dto.PostCreateRequest;
 import com.daangn.dangunmarket.domain.post.service.dto.PostFindResponse;
-import com.daangn.dangunmarket.domain.post.service.dto.PostUpdateRequest;
-import com.daangn.dangunmarket.domain.post.service.dto.PostUpdateStatusRequest;
-import com.daangn.dangunmarket.domain.post.service.dto.PostToUpdateResponse;
-import com.daangn.dangunmarket.domain.post.service.mapper.PostDtoMapper;
 import com.daangn.dangunmarket.domain.post.service.dto.PostGetResponses;
 import com.daangn.dangunmarket.domain.post.service.dto.PostSearchConditionRequest;
 import com.daangn.dangunmarket.domain.post.service.dto.PostSearchResponses;
+import com.daangn.dangunmarket.domain.post.service.dto.PostToUpdateResponse;
+import com.daangn.dangunmarket.domain.post.service.dto.PostUpdateRequest;
+import com.daangn.dangunmarket.domain.post.service.dto.PostUpdateStatusRequest;
+import com.daangn.dangunmarket.domain.post.service.mapper.PostDtoMapper;
 import com.daangn.dangunmarket.domain.post.service.mapper.PostMapper;
 import com.daangn.dangunmarket.global.TimeGenerator;
 import com.daangn.dangunmarket.global.exception.EntityNotFoundException;
@@ -70,7 +70,7 @@ public class PostService {
         Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new EntityNotFoundException(NOT_FOUND_POST_ENTITY));
 
-        if (post.isNotOwner(memberId)){
+        if (post.isNotOwner(memberId)) {
             throw new IllegalStateException("해당 유저는 게시글의 주인이 아닙니다.");
         }
 
@@ -118,6 +118,18 @@ public class PostService {
 
         PostSearchResponses responses = PostSearchResponses.from(postDtoPages);
         return responses;
+    }
+
+    @Transactional
+    public void deletePost(Long memberId, Long postId) {
+        Post post = postRepository.findById(postId)
+                .orElseThrow(() -> new EntityNotFoundException(NOT_FOUND_POST_ENTITY));
+
+        if (post.isNotOwner(memberId)) {
+            throw new UnauthorizedAccessException(POST_NOT_CREATED_BY_USER);
+        }
+
+        post.deletePost();
     }
 
 }
