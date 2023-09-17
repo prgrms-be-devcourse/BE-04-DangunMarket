@@ -1,4 +1,4 @@
-package com.daangn.dangunmarket.global.exception;
+package com.daangn.dangunmarket.domain.post.exception;
 
 import com.daangn.dangunmarket.global.response.ErrorCode;
 import lombok.Getter;

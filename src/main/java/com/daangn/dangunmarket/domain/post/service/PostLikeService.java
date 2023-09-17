@@ -1,5 +1,6 @@
 package com.daangn.dangunmarket.domain.post.service;
 
+import com.daangn.dangunmarket.domain.post.exception.InvalidPostLikeException;
 import com.daangn.dangunmarket.domain.post.model.Post;
 import com.daangn.dangunmarket.domain.post.model.PostLike;
 import com.daangn.dangunmarket.domain.post.repository.post.PostRepository;
@@ -8,7 +9,6 @@ import com.daangn.dangunmarket.domain.post.repository.postlike.dto.JoinedPostWit
 import com.daangn.dangunmarket.domain.post.service.dto.LikedPostFindResponseList;
 import com.daangn.dangunmarket.domain.post.service.dto.PostLikeResponse;
 import com.daangn.dangunmarket.global.exception.EntityNotFoundException;
-import com.daangn.dangunmarket.global.exception.InvalidPostLikeException;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
