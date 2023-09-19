@@ -5,10 +5,10 @@ import org.springframework.data.domain.Slice;
 
 public record ChatRoomsFindApiResponses(Slice<ChatRoomsFindApiResponse> chatRoomsFindApiResponses) {
 
-    public static ChatRoomsFindApiResponses from(ChatRoomsFindResponses responses){
-        Slice<ChatRoomsFindApiResponse> mapResponses = responses.chatRoomsFindResponses()
+    public static ChatRoomsFindApiResponses from(ChatRoomsFindResponses responses) {
+        Slice<ChatRoomsFindApiResponse> mapResponses = responses.resposes()
                 .map(e -> new ChatRoomsFindApiResponse(
-                        e.chatRoomInfoId(),
+                        e.chatRoomId(),
                         e.otherMemberName(),
                         e.latestMessage(),
                         e.readOrNot(),

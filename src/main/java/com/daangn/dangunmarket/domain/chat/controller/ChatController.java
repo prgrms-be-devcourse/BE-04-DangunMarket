@@ -27,7 +27,7 @@ public class ChatController {
     public ResponseEntity<ChatRoomsFindApiResponses> findChatRooms(
             Pageable pageable,
             Authentication authentication
-    ){
+    ) {
         CustomUser customUser = (CustomUser) authentication.getPrincipal();
         ChatRoomsFindResponses responses = chatService.findChatRoomsByMemberId(customUser.memberId(), pageable);
 

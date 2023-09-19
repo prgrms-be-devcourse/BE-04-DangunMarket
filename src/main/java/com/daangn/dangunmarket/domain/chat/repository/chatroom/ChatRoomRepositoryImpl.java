@@ -3,7 +3,7 @@ package com.daangn.dangunmarket.domain.chat.repository.chatroom;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class ChatRoomRepositoryImpl implements ChatRoomRepository{
+public class ChatRoomRepositoryImpl implements ChatRoomRepository {
 
     private final ChatRoomJpaRepository chatRoomJpaRepository;
 

@@ -1,25 +1,32 @@
 package com.daangn.dangunmarket.domain.chat.service;
 
+import com.daangn.dangunmarket.domain.chat.model.ChatMessage;
 import com.daangn.dangunmarket.domain.chat.model.ChatRoom;
 import com.daangn.dangunmarket.domain.chat.model.ChatRoomInfo;
 import com.daangn.dangunmarket.domain.chat.repository.chatmessage.ChatMessageMongoRepository;
 import com.daangn.dangunmarket.domain.chat.repository.chatroom.ChatRoomJpaRepository;
-import com.daangn.dangunmarket.domain.chat.repository.chatroom.ChatRoomRepository;
 import com.daangn.dangunmarket.domain.chat.repository.chatroominfo.ChatRoomInfoJpaRepository;
+import com.daangn.dangunmarket.domain.chat.service.dto.ChatRoomsFindResponse;
+import com.daangn.dangunmarket.domain.chat.service.dto.ChatRoomsFindResponses;
 import com.daangn.dangunmarket.domain.member.model.Member;
 import com.daangn.dangunmarket.domain.member.model.NickName;
 import com.daangn.dangunmarket.domain.member.repository.MemberJpaRepository;
-import com.daangn.dangunmarket.domain.member.repository.MemberRepository;
+
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 import static com.daangn.dangunmarket.domain.member.model.MemberProvider.GOOGLE;
 import static com.daangn.dangunmarket.domain.member.model.RoleType.USER;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 @ActiveProfiles("test")
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
@@ -41,16 +48,56 @@ class ChatServiceTest {
     @Autowired
     private ChatMessageMongoRepository chatMessageMongoRepository;
 
+    private Member savedMember1;
+    private ChatRoom savedRoom1;
+    private ChatRoom savedRoom2;
+
+    private ChatMessage message1;
+    private ChatMessage message2;
+    private ChatMessage message3;
+    private ChatMessage message4;
+
     @BeforeEach
-    void setup(){
+    void setup() {
         dataSetup();
     }
 
-    @Test
-    void findChatRoomsByMemberId() {
-
+    @AfterEach
+    void tearDown() {
+        chatMessageMongoRepository.delete(message1);
+        chatMessageMongoRepository.delete(message2);
+        chatMessageMongoRepository.delete(message3);
+        chatMessageMongoRepository.delete(message4);
     }
 
+    @Test
+    @DisplayName("member1의 id로 해당 유저가 속한 채팅방들을 조회 후 응답값을 확인한다.")
+    void findChatRoomsByMemberId_memberId_ChatRoomsFindResponses() {
+        //when
+        ChatRoomsFindResponses responses = chatService.findChatRoomsByMemberId(
+                savedMember1.getId(),
+                PageRequest.of(0, 10)
+        );
+
+        //then
+        List<ChatRoomsFindResponse> contents = responses.resposes().getContent();
+
+        assertThat(contents.get(0).chatRoomId()).isEqualTo(1L);
+        assertThat(contents.get(0).latestMessage()).isEqualTo("방 1의 두번째 메세지");
+        assertThat(contents.get(0).otherMemberName()).isEqualTo("hany");
+        assertThat(contents.get(0).readOrNot()).isEqualTo(1);
+
+        assertThat(contents.get(1).chatRoomId()).isEqualTo(2L);
+        assertThat(contents.get(1).latestMessage()).isEqualTo("방 2의 두번째 메세지");
+        assertThat(contents.get(1).otherMemberName()).isEqualTo("mac");
+        assertThat(contents.get(1).readOrNot()).isEqualTo(0);
+    }
+
+    /**
+     * 방     :   해당 방에 참여중인 유저        :  메세지를 보낸 순서
+     * room1  : savedMember1, savedMember2   :   Member1, Member2
+     * room2  : savedMember1, savedMember3   :   Member3, Member1
+     */
     private void dataSetup() {
         Member setupMember1 = Member.builder()
                 .roleType(USER)
@@ -68,40 +115,80 @@ class ChatServiceTest {
                 .reviewScore(25)
                 .build();
 
-        Member savedMember1 = memberJpaRepository.save(setupMember1);
+        Member setupMember3 = Member.builder()
+                .roleType(USER)
+                .memberProvider(GOOGLE)
+                .socialId("member4 socialId")
+                .nickName(new NickName("mac"))
+                .reviewScore(27)
+                .build();
+
+        savedMember1 = memberJpaRepository.save(setupMember1);
         Member savedMember2 = memberJpaRepository.save(setupMember2);
+        Member savedMember3 = memberJpaRepository.save(setupMember3);
 
-        ChatRoom savedRoom1 = chatRoomJpaRepository.save(new ChatRoom());
-        ChatRoom savedRoom2 = chatRoomJpaRepository.save(new ChatRoom());
+        savedRoom1 = chatRoomJpaRepository.save(new ChatRoom());
+        savedRoom2 = chatRoomJpaRepository.save(new ChatRoom());
 
-        Long setupRoomInfoId1 = chatRoomInfoJpaRepository.save(new ChatRoomInfo(
+        chatRoomInfoJpaRepository.save(new ChatRoomInfo(
                 true,
                 1L,
                 savedRoom1,
                 savedMember1.getId()
-        )).getId();
+        ));
 
-        Long setupRoomInfoId2 = chatRoomInfoJpaRepository.save(new ChatRoomInfo(
+        chatRoomInfoJpaRepository.save(new ChatRoomInfo(
                 false,
                 1L,
                 savedRoom1,
                 savedMember2.getId()
-        )).getId();
+        ));
 
-        Long setupRoomInfoId3 = chatRoomInfoJpaRepository.save(new ChatRoomInfo(
+        chatRoomInfoJpaRepository.save(new ChatRoomInfo(
                 false,
                 2L,
                 savedRoom2,
                 savedMember1.getId()
-        )).getId();
+        ));
 
         chatRoomInfoJpaRepository.save(new ChatRoomInfo(
                 true,
                 2L,
                 savedRoom2,
-                savedMember2.getId()
+                savedMember3.getId()
         ));
 
+        message1 = chatMessageMongoRepository.save(new ChatMessage(
+                savedRoom1.getId(),
+                savedMember1.getId(),
+                "방 1의 첫번째 메세지",
+                "a",
+                1
+        ));
 
+        message2 = chatMessageMongoRepository.save(new ChatMessage(
+                savedRoom1.getId(),
+                savedMember2.getId(),
+                "방 1의 두번째 메세지",
+                "b",
+                1
+        ));
+
+        message3 = chatMessageMongoRepository.save(new ChatMessage(
+                savedRoom2.getId(),
+                savedMember3.getId(),
+                "방 2의 첫번째 메세지",
+                "a",
+                1
+        ));
+
+        message4 = chatMessageMongoRepository.save(new ChatMessage(
+                savedRoom2.getId(),
+                savedMember1.getId(),
+                "방 2의 두번째 메세지",
+                "a",
+                1
+        ));
     }
+
 }

@@ -6,7 +6,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public class ChatMessageRepositoryImpl implements ChatMessageRepository{
+public class ChatMessageRepositoryImpl implements ChatMessageRepository {
 
     private final ChatMessageMongoRepository chatMessageMongoRepository;
     private final ChatMessageQueryRepository chatMessageQueryRepository;
@@ -16,7 +16,7 @@ public class ChatMessageRepositoryImpl implements ChatMessageRepository{
         this.chatMessageQueryRepository = chatMessageQueryRepository;
     }
 
-    public List<ChatMessage> findByChatRoomIds(List<Long> chatRoomIds){
+    public List<ChatMessage> findByChatRoomIds(List<Long> chatRoomIds) {
         return chatMessageQueryRepository.findByChatRoomIds(chatRoomIds);
     }
 

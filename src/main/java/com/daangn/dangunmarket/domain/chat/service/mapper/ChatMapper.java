@@ -16,7 +16,7 @@ import java.util.Objects;
 )
 public interface ChatMapper {
 
-    default ChatRoomsFindResponses toChatRoomsFindResponses(Slice<JoinedMemberResponse> roomInfoWithMembers, List<ChatMessage> chatMessages){
+    default ChatRoomsFindResponses toChatRoomsFindResponses(Slice<JoinedMemberResponse> roomInfoWithMembers, List<ChatMessage> chatMessages) {
         Slice<ChatRoomsFindResponse> mappedResponses = roomInfoWithMembers
                 .map((roomInfoWithMember) -> {
                     Long chatRoomId = roomInfoWithMember.chatRoomInfo().getChatRoom().getId();
@@ -26,14 +26,13 @@ public interface ChatMapper {
                             .findFirst()
                             .orElseGet(() -> new ChatMessage(
                                     chatRoomId,
-                                    "",
                                     null,
                                     "",
-                                    "",
+                                    null,
                                     1));
 
                     Integer readOrNot = chatMessage.getReadOrNot();
-                    if (!Objects.equals(roomInfoWithMember.member().getId(), chatMessage.getMemberId())){
+                    if (!Objects.equals(roomInfoWithMember.member().getId(), chatMessage.getMemberId())) {
                         readOrNot = 0;
                     }
 

@@ -30,16 +30,18 @@ public class ChatRoomInfoQueryRepository {
 
         List<JoinedMemberResponse> contents = queryFactory
                 .select(new QJoinedMemberResponse(otherChatRoomInfo, member))
-                .from(chatRoomInfo)
-                .join(chatRoomInfo).on(chatRoomInfo.chatRoom.id.eq(otherChatRoomInfo.chatRoom.id))
+                .from(chatRoomInfo, otherChatRoomInfo)
                 .join(member).on(otherChatRoomInfo.memberId.eq(member.id))
-                .where(chatRoomInfo.memberId.eq(memberId), otherChatRoomInfo.memberId.ne(memberId))
+                .where(
+                        chatRoomInfo.chatRoom.eq(otherChatRoomInfo.chatRoom),
+                        chatRoomInfo.memberId.eq(memberId),
+                        otherChatRoomInfo.memberId.ne(memberId))
                 .offset(pageable.getOffset())
                 .limit(pageSize + 1)
                 .fetch();
 
         boolean hasNext = false;
-        if (contents.size() > pageSize){
+        if (contents.size() > pageSize) {
             contents.remove(pageSize);
             hasNext = true;
         }

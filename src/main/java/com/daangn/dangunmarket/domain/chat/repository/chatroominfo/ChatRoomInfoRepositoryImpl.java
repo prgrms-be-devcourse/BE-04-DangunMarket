@@ -6,7 +6,7 @@ import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class ChatRoomInfoRepositoryImpl implements ChatRoomInfoRepository{
+public class ChatRoomInfoRepositoryImpl implements ChatRoomInfoRepository {
 
     private final ChatRoomInfoJpaRepository chatRoomInfoJpaRepository;
     private final ChatRoomInfoQueryRepository chatRoomInfoQueryRepository;
@@ -17,7 +17,7 @@ public class ChatRoomInfoRepositoryImpl implements ChatRoomInfoRepository{
     }
 
     @Override
-    public Slice<JoinedMemberResponse> findMembersInSameChatRooms(Long memberId, Pageable pageable){
+    public Slice<JoinedMemberResponse> findMembersInSameChatRooms(Long memberId, Pageable pageable) {
         return chatRoomInfoQueryRepository.findMembersInSameChatRooms(memberId, pageable);
     }
 }
