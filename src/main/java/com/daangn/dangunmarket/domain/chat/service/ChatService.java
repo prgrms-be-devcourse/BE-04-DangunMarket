@@ -1,10 +1,10 @@
 package com.daangn.dangunmarket.domain.chat.service;
 
 import com.daangn.dangunmarket.domain.chat.model.ChatMessage;
-import com.daangn.dangunmarket.domain.chat.model.ChatRoomInfo;
 import com.daangn.dangunmarket.domain.chat.repository.chatmessage.ChatMessageRepository;
 import com.daangn.dangunmarket.domain.chat.repository.chatroom.ChatRoomRepository;
 import com.daangn.dangunmarket.domain.chat.repository.chatroominfo.ChatRoomInfoRepository;
+import com.daangn.dangunmarket.domain.chat.repository.chatroominfo.dto.JoinedMemberResponse;
 import com.daangn.dangunmarket.domain.chat.service.dto.ChatRoomsFindResponses;
 import com.daangn.dangunmarket.domain.chat.service.mapper.ChatMapper;
 import org.springframework.data.domain.Pageable;
@@ -19,27 +19,25 @@ import java.util.List;
 public class ChatService {
 
     private final ChatRoomInfoRepository chatRoomInfoRepository;
-    private final ChatRoomRepository chatRoomRepository;
     private final ChatMessageRepository chatMessageRepository;
     private final ChatMapper mapper;
 
     public ChatService(ChatRoomInfoRepository chatRoomInfoRepository, ChatRoomRepository chatRoomRepository, ChatMessageRepository chatMessageRepository, ChatMapper mapper) {
         this.chatRoomInfoRepository = chatRoomInfoRepository;
-        this.chatRoomRepository = chatRoomRepository;
         this.chatMessageRepository = chatMessageRepository;
         this.mapper = mapper;
     }
 
     public ChatRoomsFindResponses findChatRoomsByMemberId(Long memberId, Pageable pageable) {
-        Slice<ChatRoomInfo> responseChatRoomInfos = chatRoomInfoRepository.findMembersInSameChatRooms(memberId, pageable);
+        Slice<JoinedMemberResponse> roomInfoWithMembers = chatRoomInfoRepository.findMembersInSameChatRooms(memberId, pageable);
 
-        List<Long> chatRoomInfoIds = responseChatRoomInfos.getContent().stream()
-                .map(e -> e.getId())
+        List<Long> chatRoomInfoIds = roomInfoWithMembers.getContent().stream()
+                .map(e -> e.chatRoomInfo().getId())
                 .toList();
 
         List<ChatMessage> chatMessages = chatMessageRepository.findByChatRoomInfoIds(chatRoomInfoIds);
 
-        return mapper.toChatRoomsFindResponses(responseChatRoomInfos, chatMessages);
+        return mapper.toChatRoomsFindResponses(roomInfoWithMembers, chatMessages);
     }
 
 }

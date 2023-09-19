@@ -6,7 +6,7 @@ public record ChatRoomsFindApiResponse(
         Long chatRoomInfoId,
         String otherMemberName,
         String latestMessage,
-        boolean readOrNot,
+        Integer readOrNot,
         LocalDateTime createdAt
 ) {
 }

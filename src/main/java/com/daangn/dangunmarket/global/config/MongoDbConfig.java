@@ -11,7 +11,7 @@ import org.springframework.data.mongodb.core.mapping.MongoMappingContext;
 import org.springframework.data.mongodb.repository.config.EnableMongoRepositories;
 
 @Configuration
-@EnableMongoRepositories
+@EnableMongoRepositories("com.daangn.dangunmarket.domain.chat.repository.chatmessage")
 public class MongoDbConfig {
 
     @Bean

@@ -1,7 +1,7 @@
 package com.daangn.dangunmarket.domain.chat.service.mapper;
 
 import com.daangn.dangunmarket.domain.chat.model.ChatMessage;
-import com.daangn.dangunmarket.domain.chat.model.ChatRoomInfo;
+import com.daangn.dangunmarket.domain.chat.repository.chatroominfo.dto.JoinedMemberResponse;
 import com.daangn.dangunmarket.domain.chat.service.dto.ChatRoomsFindResponse;
 import com.daangn.dangunmarket.domain.chat.service.dto.ChatRoomsFindResponses;
 import org.mapstruct.InjectionStrategy;
@@ -16,10 +16,10 @@ import java.util.Objects;
 )
 public interface ChatMapper {
 
-    default ChatRoomsFindResponses toChatRoomsFindResponses(Slice<ChatRoomInfo> chatRoomInfos, List<ChatMessage> chatMessages){
-        Slice<ChatRoomsFindResponse> mappedResponses = chatRoomInfos
-                .map((chatRoomInfo) -> {
-                    Long chatRoomInfoId = chatRoomInfo.getId();
+    default ChatRoomsFindResponses toChatRoomsFindResponses(Slice<JoinedMemberResponse> roomInfoWithMembers, List<ChatMessage> chatMessages){
+        Slice<ChatRoomsFindResponse> mappedResponses = roomInfoWithMembers
+                .map((roomInfoWithMember) -> {
+                    Long chatRoomInfoId = roomInfoWithMember.chatRoomInfo().getId();
                     ChatMessage chatMessage = chatMessages.stream()
                             .filter(e -> Objects.equals(e.getChatRoomInfoId(), chatRoomInfoId))
                             .findFirst()
@@ -30,17 +30,17 @@ public interface ChatMapper {
                                         null,
                                         "",
                                         "",
-                                        true);
+                                        1);
                             });
 
-                    boolean readOrNot = chatMessage.isReadOrNot();
-                    if (!Objects.equals(chatRoomInfo.getMember().getId(), chatMessage.getMemberId())){
-                        readOrNot = false;
+                    Integer readOrNot = chatMessage.getReadOrNot();
+                    if (!Objects.equals(roomInfoWithMember.member().getId(), chatMessage.getMemberId())){
+                        readOrNot = 0;
                     }
 
                     return new ChatRoomsFindResponse(
                             chatRoomInfoId,
-                            chatRoomInfo.getMember().getNickName(),
+                            roomInfoWithMember.member().getNickName(),
                             chatMessage.getMessage(),
                             readOrNot,
                             chatMessage.getCreatedAt());

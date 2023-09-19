@@ -1,7 +1,9 @@
 package com.daangn.dangunmarket.domain.chat.repository.chatroominfo;
 
-import com.daangn.dangunmarket.domain.chat.model.ChatRoomInfo;
 import com.daangn.dangunmarket.domain.chat.model.QChatRoomInfo;
+import com.daangn.dangunmarket.domain.chat.repository.chatroominfo.dto.JoinedMemberResponse;
+
+import com.daangn.dangunmarket.domain.chat.repository.chatroominfo.dto.QJoinedMemberResponse;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
@@ -9,6 +11,8 @@ import org.springframework.data.domain.SliceImpl;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+
+import static com.daangn.dangunmarket.domain.member.model.QMember.member;
 
 @Repository
 public class ChatRoomInfoQueryRepository {
@@ -19,16 +23,17 @@ public class ChatRoomInfoQueryRepository {
         this.queryFactory = queryFactory;
     }
 
-    public Slice<ChatRoomInfo> findMembersInSameChatRooms(Long memberId, Pageable pageable) {
+    public Slice<JoinedMemberResponse> findMembersInSameChatRooms(Long memberId, Pageable pageable) {
         QChatRoomInfo chatRoomInfo = QChatRoomInfo.chatRoomInfo;
         QChatRoomInfo otherChatRoomInfo = new QChatRoomInfo("other");
         int pageSize = pageable.getPageSize();
 
-        List<ChatRoomInfo> contents = queryFactory
-                .selectFrom(otherChatRoomInfo)
-                .join(otherChatRoomInfo.member).fetchJoin()
-                .join(chatRoomInfo).on(chatRoomInfo.chatroom.id.eq(otherChatRoomInfo.chatroom.id))
-                .where(chatRoomInfo.member.id.eq(memberId), otherChatRoomInfo.member.id.ne(memberId))
+        List<JoinedMemberResponse> contents = queryFactory
+                .select(new QJoinedMemberResponse(otherChatRoomInfo, member))
+                .from(chatRoomInfo)
+                .join(chatRoomInfo).on(chatRoomInfo.chatRoom.id.eq(otherChatRoomInfo.chatRoom.id))
+                .join(member).on(otherChatRoomInfo.memberId.eq(member.id))
+                .where(chatRoomInfo.memberId.eq(memberId), otherChatRoomInfo.memberId.ne(memberId))
                 .offset(pageable.getOffset())
                 .limit(pageSize + 1)
                 .fetch();

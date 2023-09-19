@@ -35,13 +35,13 @@ public class ChatMessage {
     private String imgUrl;
 
     @Field("read_or_not")
-    private boolean readOrNot;
+    private Integer readOrNot;
 
     @Field("created_at")
     @CreatedDate
     private LocalDateTime createdAt;
 
-    public ChatMessage(Long chatRoomInfoId, String senderName, Long memberId, String message, String imgUrl, boolean readOrNot) {
+    public ChatMessage(Long chatRoomInfoId, String senderName, Long memberId, String message, String imgUrl, Integer readOrNot) {
         this.chatRoomInfoId = chatRoomInfoId;
         this.senderName = senderName;
         this.memberId = memberId;
