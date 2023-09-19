@@ -52,7 +52,6 @@ public class ActivityAreaFacadeTest {
 
     @BeforeEach
     void setUp() throws ParseException {
-
         member = DataInitializerFactory.member();
         saveMember = memberService.save(member);
         activityAreaCreateRequestParam = new ActivityAreaCreateRequestParam(37.575328952171, 126.96496674529);
@@ -125,7 +124,6 @@ public class ActivityAreaFacadeTest {
         List<Area> areas = DataInitializerFactory.getAreas();
         areaService.save(areas.get(0));
         areaService.save(areas.get(1));
-
     }
 
 }
