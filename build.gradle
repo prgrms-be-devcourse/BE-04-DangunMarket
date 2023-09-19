@@ -29,11 +29,16 @@ dependencies {
     implementation 'org.hibernate:hibernate-core:6.1.7.Final'
     implementation 'org.hibernate:hibernate-spatial:6.1.7.Final'
 
-    compileOnly 'org.projectlombok:lombok'
+
     runtimeOnly 'com.mysql:mysql-connector-j'
-    annotationProcessor 'org.projectlombok:lombok'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation "org.mockito:mockito-core:3.+"
+
+    //lombok
+    annotationProcessor 'org.projectlombok:lombok'
+    compileOnly 'org.projectlombok:lombok'
+    testCompileOnly 'org.projectlombok:lombok'
+    testAnnotationProcessor 'org.projectlombok:lombok'
 
     //aws
     implementation 'io.awspring.cloud:spring-cloud-starter-aws:2.4.4'

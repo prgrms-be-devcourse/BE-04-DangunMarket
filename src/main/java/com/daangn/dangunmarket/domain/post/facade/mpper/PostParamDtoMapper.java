@@ -17,12 +17,12 @@ import java.util.List;
 )
 public interface PostParamDtoMapper {
 
-    @Mapping(target = "latitude", source = "locationPreference.latitude")
-    @Mapping(target = "longitude", source = "locationPreference.longitude")
-    @Mapping(target = "locationPreferenceAlias", source = "locationPreference.alias")
-    @Mapping(target = "categoryId", source = "category.id")
-    @Mapping(target = "categoryName", source = "category.name")
-    @Mapping(target = "postImages", source = "postImages", qualifiedByName = "mapPostImages")
+    @Mapping(target = "latitude", source = "postToUpdateResponse.locationPreference.latitude")
+    @Mapping(target = "longitude", source = "postToUpdateResponse.locationPreference.longitude")
+    @Mapping(target = "locationPreferenceAlias", source = "postToUpdateResponse.locationPreference.alias")
+    @Mapping(target = "categoryId", source = "postToUpdateResponse.category.id")
+    @Mapping(target = "categoryName", source = "postToUpdateResponse.category.name")
+    @Mapping(target = "postImages", source = "postToUpdateResponse.postImages", qualifiedByName = "mapPostImages")
     PostToUpdateResponseParam toPostToUpdateResponseParam(PostToUpdateResponse postToUpdateResponse);
 
     @Named("mapPostImages")

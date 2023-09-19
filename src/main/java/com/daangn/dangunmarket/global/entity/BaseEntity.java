@@ -7,11 +7,11 @@ import jakarta.persistence.PrePersist;
 import lombok.Getter;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
+@Getter
 @MappedSuperclass
 @EntityListeners(AuditingEntityListener.class)
 public class BaseEntity extends BaseTimeEntity {
-
-    private boolean isDeleted;
+    protected boolean isDeleted;
 
     @PrePersist
     public void prePersist() {

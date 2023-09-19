@@ -13,7 +13,7 @@ import org.mapstruct.Mapping;
 )
 public interface PostDtoMapper {
 
-    @Mapping(source = "postImageList", target = "postImages")
+    @Mapping(source = "post.id", target = "postId")
     PostToUpdateResponse toPostToUpdateResponse(Post post);
 
 }

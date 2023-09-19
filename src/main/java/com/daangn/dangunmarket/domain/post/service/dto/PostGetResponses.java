@@ -4,7 +4,6 @@ import com.daangn.dangunmarket.domain.post.repository.dto.PostDto;
 import org.springframework.data.domain.Page;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 public record PostGetResponses(
         List<PostGetResponse> contents,
@@ -27,7 +26,7 @@ public record PostGetResponses(
                                 dto.post().getPrice(),
                                 dto.post().getLikeCount(),
                                 dto.post().getTradeStatus(),
-                                dto.post().getPostImageList().isEmpty() ? null : dto.post().getPostImageList().get(0).getUrl(),
+                                dto.post().getPostImages().isEmpty() ? null : dto.post().getPostImages().get(0).getUrl(),
                                 dto.areaName()
                         )
                 )

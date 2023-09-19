@@ -1,4 +1,4 @@
-package com.daangn.dangunmarket.domain.post.controller.dto;
+package com.daangn.dangunmarket.domain.post.controller.dto.post;
 
 import com.daangn.dangunmarket.domain.post.facade.dto.PostFindResponseParam;
 import com.daangn.dangunmarket.domain.post.model.TradeStatus;
@@ -12,7 +12,7 @@ public record PostFindApiResponse(
         String areaName,
         double latitude,
         double longitude,
-        String LocationPreferenceAreas,
+        String LocationPreferenceAlias,
         List<String> urls,
         Long categoryId,
         String categoryName,

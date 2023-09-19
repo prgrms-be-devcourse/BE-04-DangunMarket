@@ -1,7 +1,7 @@
 package com.daangn.dangunmarket.domain.post.repository.postlike;
 
-import com.daangn.dangunmarket.domain.post.repository.postlike.dto.JoinedWithArea;
-import com.querydsl.core.types.Projections;
+import com.daangn.dangunmarket.domain.post.repository.postlike.dto.JoinedPostWithArea;
+import com.daangn.dangunmarket.domain.post.repository.postlike.dto.QJoinedPostWithArea;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
@@ -23,14 +23,11 @@ public class PostLikeJoinRepository {
         this.queryFactory = queryFactory;
     }
 
-    public Slice<JoinedWithArea> findDetailsByMemberId(Long memberId, Pageable pageable){
+    public Slice<JoinedPostWithArea> findDetailsByMemberId(Long memberId, Pageable pageable) {
         int pageSize = pageable.getPageSize();
 
-        List<JoinedWithArea> contents = queryFactory
-                .select(Projections.fields(JoinedWithArea.class,
-                        post.as("post"),
-                        area.as("area")
-                ))
+        List<JoinedPostWithArea> contents = queryFactory
+                .select(new QJoinedPostWithArea(post, area))
                 .from(postLike)
                 .join(post)
                 .join(area).on(post.areaId.eq(area.id))
@@ -40,7 +37,7 @@ public class PostLikeJoinRepository {
                 .fetch();
 
         boolean hasNext = false;
-        if (contents.size() > pageSize){
+        if (contents.size() > pageSize) {
             contents.remove(pageSize);
             hasNext = true;
         }

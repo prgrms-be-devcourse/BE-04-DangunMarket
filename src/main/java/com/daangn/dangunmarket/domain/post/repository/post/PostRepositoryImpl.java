@@ -42,4 +42,10 @@ public class PostRepositoryImpl implements PostRepository {
         return postQueryRepository
                 .getPostsByConditions(areaId, conditions);
     }
+
+    @Override
+    public Optional<Post> findByIdForUpdate(Long id) {
+        return postJpaRepository.findByIdForUpdate(id);
+    }
+
 }

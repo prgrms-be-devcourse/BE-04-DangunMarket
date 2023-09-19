@@ -3,6 +3,7 @@ package com.daangn.dangunmarket.global.exception;
 import com.amazonaws.services.kms.model.NotFoundException;
 import com.daangn.dangunmarket.domain.auth.exception.TokenExpiredException;
 import com.daangn.dangunmarket.domain.auth.exception.TokenValidFailedException;
+import com.daangn.dangunmarket.domain.post.exception.InvalidPostLikeException;
 import com.daangn.dangunmarket.global.response.ErrorResponse;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.RequiredArgsConstructor;

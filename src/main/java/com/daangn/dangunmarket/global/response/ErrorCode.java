@@ -17,6 +17,7 @@ public enum ErrorCode {
 
     //s3 - image
     FAIL_TO_UPLOAD_IMAGES("S001", "이미지를 업로드 할 수 없습니다."),
+    FAIL_TO_DELETE_IMAGE("S002", "이미지를 삭제할 수 없습니다."),
 
     //area
     NOT_FOUND_AREA_ENTITY("A001", "Area를 찾을 수 없습니다."),
@@ -26,7 +27,7 @@ public enum ErrorCode {
     NOT_FOUND_POST_ENTITY("P002", "Post를 찾을 수 없습니다."),
     NOT_FOUND_POST_LIKE_ENTITY("P003", "Post의 좋아요 기록을 찾을 수 없습니다."),
     ALREADY_EXISTS_POST_LIKE("P004", "Post의 좋아요 기록이 이미 존재합니다."),
-    POST_NOT_CREATED_BY_USER("P005", "게시글을 작성한 회원이 아니므로 게시글을 수정할 수 없습니다."),
+    POST_NOT_CREATED_BY_USER("P005", "게시글을 작성한 회원이 아니므로 게시글을 수정 또는 삭제할 수 없습니다."),
 
     //member
     NOT_FOUND_MEMBER_ENTITY("M001", "Member를 찾을 수 없습니다."),

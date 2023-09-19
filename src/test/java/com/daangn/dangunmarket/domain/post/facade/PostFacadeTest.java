@@ -15,12 +15,13 @@ import com.daangn.dangunmarket.domain.post.model.Category;
 import com.daangn.dangunmarket.domain.post.model.Post;
 import com.daangn.dangunmarket.domain.post.repository.category.CategoryRepository;
 import com.daangn.dangunmarket.domain.post.repository.post.PostRepository;
+import com.daangn.dangunmarket.global.aws.dto.ImageInfo;
 import com.daangn.dangunmarket.global.aws.s3.S3Uploader;
+import com.daangn.dangunmarket.global.exception.EntityNotFoundException;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-
-import org.locationtech.jts.io.ParseException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -31,6 +32,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.catchException;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
@@ -67,8 +69,8 @@ class PostFacadeTest {
     private Long setupMemberId;
 
     @BeforeEach
-    void setup()  {
-        given(s3Uploader.saveImages(any())).willReturn(List.of("z", "s"));
+    void setup() {
+        given(s3Uploader.saveImages(any())).willReturn(List.of(new ImageInfo("z", "zname"), new ImageInfo("s", "sname")));
         dataSetup();
     }
 
@@ -86,8 +88,8 @@ class PostFacadeTest {
 
         assertThat(post.getMemberId()).isEqualTo(postCreateRequestParam.memberId());
         assertThat(post.getAreaId()).isEqualTo(postCreateRequestParam.areaId());
-        assertThat(post.getLocalPreference().getAlias()).isEqualTo(postCreateRequestParam.alias());
-        assertThat(post.getPostImageList().size()).isEqualTo(postCreateRequestParam.files().size());
+        assertThat(post.getLocationPreference().getAlias()).isEqualTo(postCreateRequestParam.alias());
+        assertThat(post.getPostImages().size()).isEqualTo(postCreateRequestParam.files().size());
         assertThat(post.getTitle()).isEqualTo(postCreateRequestParam.title());
         assertThat(post.getContent()).isEqualTo(postCreateRequestParam.content());
         assertThat(post.getPrice()).isEqualTo(postCreateRequestParam.price());
@@ -114,6 +116,16 @@ class PostFacadeTest {
         assertThat(responseParam.memberName()).isEqualTo("james");
         assertThat(responseParam.urls().size()).isEqualTo(2);
         assertThat(responseParam.likeCount()).isEqualTo(0);
+    }
+
+    @Test
+    @DisplayName("올바르지 않은 PostId로 조회 시 EntityNotFoundException가 발생하는 것을 확인한다.")
+    void findById_inCorrectProductId_EntityNotFoundException() {
+        //when
+        Exception exception = catchException(() -> postFacade.findById(50L));
+
+        //when
+        assertThat(exception).isInstanceOf(EntityNotFoundException.class);
     }
 
     @Test
@@ -149,7 +161,7 @@ class PostFacadeTest {
     }
 
     @Test
-    @DisplayName("")
+    @DisplayName("게시글을 수정 후 제먹과 내용이 입력값과 일치한지 확인한다.")
     void updatePost_response_equals() {
         //given
         List<PostCreateRequestParam> postCreateRequestParams = DataInitializerFactory.getPostCreateRequestParams(setUpMemberId, setUpCategory.getId());
@@ -165,6 +177,39 @@ class PostFacadeTest {
         assertThat(updatedPost.getTitle()).isEqualTo(postUpdateRequestParam.title());
         assertThat(updatedPost.getContent()).isEqualTo(postUpdateRequestParam.content());
     }
+
+    @Test
+    @DisplayName("게시글을 작성한 유저가 게시글 삭제 요청 시 게시글을 성공적으로 삭제한다.")
+    void deletePost_MemberIdAndPostID_Success() {
+        //given
+        PostCreateRequestParam postCreateRequestParam = DataInitializerFactory.getPostCreateRequestParams(setUpMemberId, setUpCategory.getId()).get(1);
+        Long postId = postFacade.createPost(postCreateRequestParam);
+        Long memberId = postCreateRequestParam.memberId();
+
+        //when
+        postFacade.deletePost(memberId, postId);
+
+        //then
+        Assertions.assertThatThrownBy(() -> postFacade.findById(postId))
+                .isInstanceOf(EntityNotFoundException.class);
+
+    }
+
+
+    @Test
+    @DisplayName("게시글을 삭제 권한이 없는 유저가 게시글 삭제 요청시 예외가 발생한다. ")
+    void deletePost_MemberIdAndPostID_Throw() {
+        //given
+        PostCreateRequestParam postCreateRequestParam = DataInitializerFactory.getPostCreateRequestParams(setUpMemberId, setUpCategory.getId()).get(1);
+        Long postId = postFacade.createPost(postCreateRequestParam);
+        Long memberId = postCreateRequestParam.memberId();
+
+        //when
+        Long strangeMemberId = 5L;
+        Assertions.assertThatThrownBy(() -> postFacade.deletePost(strangeMemberId, postId))
+                .isInstanceOf(UnauthorizedAccessException.class);
+    }
+
 
     /**
      * Member, Category, Product을 미리 setup함.

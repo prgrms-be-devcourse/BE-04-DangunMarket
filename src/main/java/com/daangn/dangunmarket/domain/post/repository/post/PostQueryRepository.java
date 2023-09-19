@@ -37,7 +37,7 @@ public class PostQueryRepository {
                         QArea.area.name
                 ))
                 .from(post)
-                .leftJoin(post.postImageList, postImage)
+                .leftJoin(post.postImages.postImageList, postImage)
                 .join(QArea.area).on(post.areaId.eq(QArea.area.id))
                 .where(post.areaId.eq(areaId))
                 .orderBy(post.createdAt.desc())
@@ -61,7 +61,7 @@ public class PostQueryRepository {
                         QArea.area.name
                 ))
                 .from(post)
-                .leftJoin(post.postImageList, postImage)
+                .leftJoin(post.postImages.postImageList, postImage)
                 .join(QArea.area).on(post.areaId.eq(QArea.area.id))
                 .where(post.areaId.eq(areaId),
                         eqTitle(conditions.keyword()),
