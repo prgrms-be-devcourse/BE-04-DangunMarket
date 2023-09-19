@@ -16,8 +16,8 @@ public class ChatMessageRepositoryImpl implements ChatMessageRepository{
         this.chatMessageQueryRepository = chatMessageQueryRepository;
     }
 
-    public List<ChatMessage> findByChatRoomInfoIds(List<Long> chatRoomInfoIds){
-        return chatMessageQueryRepository.findByChatRoomInfoIds(chatRoomInfoIds);
+    public List<ChatMessage> findByChatRoomIds(List<Long> chatRoomIds){
+        return chatMessageQueryRepository.findByChatRoomIds(chatRoomIds);
     }
 
 }

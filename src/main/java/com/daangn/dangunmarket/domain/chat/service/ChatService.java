@@ -31,11 +31,11 @@ public class ChatService {
     public ChatRoomsFindResponses findChatRoomsByMemberId(Long memberId, Pageable pageable) {
         Slice<JoinedMemberResponse> roomInfoWithMembers = chatRoomInfoRepository.findMembersInSameChatRooms(memberId, pageable);
 
-        List<Long> chatRoomInfoIds = roomInfoWithMembers.getContent().stream()
-                .map(e -> e.chatRoomInfo().getId())
+        List<Long> chatRoomIds = roomInfoWithMembers.getContent().stream()
+                .map(e -> e.chatRoomInfo().getChatRoom().getId())
                 .toList();
 
-        List<ChatMessage> chatMessages = chatMessageRepository.findByChatRoomInfoIds(chatRoomInfoIds);
+        List<ChatMessage> chatMessages = chatMessageRepository.findByChatRoomIds(chatRoomIds);
 
         return mapper.toChatRoomsFindResponses(roomInfoWithMembers, chatMessages);
     }

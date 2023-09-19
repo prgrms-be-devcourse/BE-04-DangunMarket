@@ -6,6 +6,6 @@ import java.util.List;
 
 public interface ChatMessageRepository {
 
-    List<ChatMessage> findByChatRoomInfoIds(List<Long> chatRoomInfoIds);
+    List<ChatMessage> findByChatRoomIds(List<Long> chatRoomIds);
 
 }

@@ -18,11 +18,11 @@ public class ChatMessageQueryRepository {
         this.mongoTemplate = mongoTemplate;
     }
 
-    public List<ChatMessage> findByChatRoomInfoIds(List<Long> chatRoomInfoIds){
+    public List<ChatMessage> findByChatRoomIds(List<Long> chatRoomIds){
         Aggregation aggregation = Aggregation.newAggregation(
-                Aggregation.match(Criteria.where("chat_room_info_id").in(chatRoomInfoIds)),
+                Aggregation.match(Criteria.where("chat_room_id").in(chatRoomIds)),
                 Aggregation.sort(Sort.Direction.DESC, "created_at"),
-                Aggregation.group("chat_room_info_id").first("$$ROOT").as("latest_message"),
+                Aggregation.group("chat_room_id").first("$$ROOT").as("latest_message"),
                 Aggregation.project().andExclude("_id")
         );
 

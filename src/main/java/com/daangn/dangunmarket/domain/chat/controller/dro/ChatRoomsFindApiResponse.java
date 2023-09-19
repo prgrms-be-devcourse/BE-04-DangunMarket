@@ -3,7 +3,7 @@ package com.daangn.dangunmarket.domain.chat.controller.dro;
 import java.time.LocalDateTime;
 
 public record ChatRoomsFindApiResponse(
-        Long chatRoomInfoId,
+        Long chatRoomId,
         String otherMemberName,
         String latestMessage,
         Integer readOrNot,

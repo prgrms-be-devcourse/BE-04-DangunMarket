@@ -19,19 +19,18 @@ public interface ChatMapper {
     default ChatRoomsFindResponses toChatRoomsFindResponses(Slice<JoinedMemberResponse> roomInfoWithMembers, List<ChatMessage> chatMessages){
         Slice<ChatRoomsFindResponse> mappedResponses = roomInfoWithMembers
                 .map((roomInfoWithMember) -> {
-                    Long chatRoomInfoId = roomInfoWithMember.chatRoomInfo().getId();
+                    Long chatRoomId = roomInfoWithMember.chatRoomInfo().getChatRoom().getId();
+
                     ChatMessage chatMessage = chatMessages.stream()
-                            .filter(e -> Objects.equals(e.getChatRoomInfoId(), chatRoomInfoId))
+                            .filter(e -> Objects.equals(e.getChatRoomId(), chatRoomId))
                             .findFirst()
-                            .orElseGet(() -> {
-                                return new ChatMessage(
-                                        chatRoomInfoId,
-                                        "",
-                                        null,
-                                        "",
-                                        "",
-                                        1);
-                            });
+                            .orElseGet(() -> new ChatMessage(
+                                    chatRoomId,
+                                    "",
+                                    null,
+                                    "",
+                                    "",
+                                    1));
 
                     Integer readOrNot = chatMessage.getReadOrNot();
                     if (!Objects.equals(roomInfoWithMember.member().getId(), chatMessage.getMemberId())){
@@ -39,7 +38,7 @@ public interface ChatMapper {
                     }
 
                     return new ChatRoomsFindResponse(
-                            chatRoomInfoId,
+                            chatRoomId,
                             roomInfoWithMember.member().getNickName(),
                             chatMessage.getMessage(),
                             readOrNot,
