@@ -15,6 +15,7 @@ import org.springframework.util.Assert;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Entity
 @Table(name = "posts")
@@ -90,6 +91,7 @@ public class Post extends BaseEntity {
         return postImageList;
     }
 
+    //이름 , 주석 // update 용으로 하나 만들고 중복같지만 목적이 다른
     public void addPostImages(List<PostImage> postImages) {
         for(PostImage postImage : postImages) {
             this.postImageList.add(postImage);
@@ -122,12 +124,20 @@ public class Post extends BaseEntity {
     public void edit (PostEditor postEditor) {
         areaId = postEditor.areaId();
         localPreference = postEditor.locationPreference();
-        postImageList = postEditor.postImages();
         category = postEditor.category();
         title = new Title(postEditor.title());
         content = postEditor.content();
         price = new Price(postEditor.price());
         isOfferAllowed = postEditor.isOfferAllowed();
+
+        this.addPostImages(postEditor.postImages());
     }
 
+    public boolean isCreatedBy(Long userId ){
+        if (!Objects.equals(this.memberId, userId)) {
+            return false;
+        }
+
+        return true;
+    }
 }

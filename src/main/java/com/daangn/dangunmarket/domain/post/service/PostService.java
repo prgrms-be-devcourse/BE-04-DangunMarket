@@ -4,7 +4,6 @@ import com.amazonaws.services.kms.model.NotFoundException;
 import com.daangn.dangunmarket.domain.post.exception.UnauthorizedAccessException;
 import com.daangn.dangunmarket.domain.post.model.Post;
 import com.daangn.dangunmarket.domain.post.repository.dto.PostDto;
-import com.daangn.dangunmarket.domain.post.model.vo.PostEditor;
 import com.daangn.dangunmarket.domain.post.repository.post.PostRepository;
 import com.daangn.dangunmarket.domain.post.service.dto.*;
 import com.daangn.dangunmarket.domain.post.service.mapper.PostDtoMapper;
@@ -49,45 +48,36 @@ public class PostService {
     }
 
     public PostToUpdateResponse getPostInfoToUpdate(Long memberId, Long postId) {
-        PostFindResponse response = findById(postId);
+        Post post = postRepository.findById(postId)
+                .orElseThrow(() -> new EntityNotFoundException(NOT_FOUND_POST_ENTITY));
 
-        if (!isPostCreatedByUser(response, memberId)) {
+        if (!post.isCreatedBy(memberId)) {
             throw new UnauthorizedAccessException(POST_NOT_CREATED_BY_USER);
         }
 
-        return postDtoMapper.toPostToUpdateResponse(response);
-    }
-
-    private boolean isPostCreatedByUser(PostFindResponse response, Long memberId) {
-        return response.memberId() == memberId;
+        return postDtoMapper.toPostToUpdateResponse(post);
     }
 
     public PostGetResponses getPosts(Long areaId, Pageable pageable) {
         Page<PostDto> postDtoPages = postRepository.getPostsSimple(areaId, pageable);
 
-        PostGetResponses responses = PostGetResponses.from(postDtoPages);
-        return responses;
+        return PostGetResponses.from(postDtoPages);
     }
-
 
     @Transactional
     public Long updatePost(PostUpdateRequest request) {
-        Post postToUpdate = postRepository.findById(request.postId())
+        Post postForUpdate = postRepository.findById(request.postId())
                 .orElseThrow(() -> new NotFoundException("해당 게시글이 존재하지 않습니다."));
 
-        PostEditor postEditor = PostEditor.toPostEditor(request);
-        postToUpdate.addPostImages(request.postImages());
-        postToUpdate.edit(postEditor);
+        postForUpdate.edit(request.toPostEditor());
 
-        postRepository.save(postToUpdate);
-        return request.postId();
+        return postForUpdate.getId();
     }
 
     public PostSearchResponses searchPosts(Long areaId, PostSearchConditionRequest searchCondition) {
         Page<PostDto> postDtoPages = postRepository.getPostsByConditions(areaId, searchCondition);
 
-        PostSearchResponses responses = PostSearchResponses.from(postDtoPages);
-        return responses;
+        return PostSearchResponses.from(postDtoPages);
     }
 
 }
