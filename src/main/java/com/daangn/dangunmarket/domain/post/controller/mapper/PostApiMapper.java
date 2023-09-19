@@ -17,7 +17,13 @@ import com.daangn.dangunmarket.domain.post.service.dto.PostLikeResponse;
 
 import org.mapstruct.InjectionStrategy;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
+import org.mapstruct.Named;
 import org.springframework.data.domain.Pageable;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.util.Collections;
+import java.util.List;
 
 @Mapper(
         componentModel = "spring",
@@ -37,8 +43,27 @@ public interface PostApiMapper {
 
     PostToUpdateApiResponse toPostToUpdateApiResponse(PostToUpdateResponseParam postToUpdateResponseParam);
 
-    PostUpdateRequestParam toPostUpdateRequestParam(PostUpdateApiRequest postUpdateApiRequest);
+    @Mapping(target = "files", source = "request", qualifiedByName = "mapFiles")
+    @Mapping(target = "urls", source = "request", qualifiedByName = "mapUrls")
+    PostUpdateRequestParam toPostUpdateRequestParam(PostUpdateApiRequest request);
 
+    @Named("mapFiles")
+    static List<MultipartFile> mapFiles(PostUpdateApiRequest request) {
+        if (request != null && request.getFiles() != null) {
+            return request.postImageUpdateApiRequest().files();
+        } else {
+            return Collections.emptyList();
+        }
+    }
+
+    @Named("mapUrls")
+    static List<String> mapUrls(PostUpdateApiRequest request) {
+        if (request != null && request.getUrls() != null) {
+            return request.postImageUpdateApiRequest().urls();
+        } else {
+            return Collections.emptyList();
+        }
+    }
     PostUpdateApiResponse toPostUpdateApiResponse(Long postId);
 
 }
