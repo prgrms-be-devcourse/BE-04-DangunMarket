@@ -32,7 +32,8 @@ public class ActivityAreaController {
         this.activityAreaApiMapper = activityAreaApiMapper;
     }
 
-    @PostMapping
+    @PostMapping(
+            consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ActivityAreaCreateApiResponse> createActivityArea(@RequestBody @Valid ActivityAreaCreateApiRequest activityAreaCreateApiRequest
             , Authentication authentication) {
         ActivityAreaCreateRequestParam activityAreaCreateRequestParam = activityAreaApiMapper.toActivityAreaCreateRequestParam(activityAreaCreateApiRequest);

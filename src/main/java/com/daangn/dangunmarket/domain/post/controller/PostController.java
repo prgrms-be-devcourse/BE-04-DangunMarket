@@ -114,7 +114,10 @@ public class PostController {
 
         URI uri = createURI(postId);
 
-        return ResponseEntity.created(uri).body(postUpdateApiResponse);
+        return ResponseEntity
+                .ok()
+                .header("Content-Location", uri.toString())
+                .body(postUpdateApiResponse);
     }
 
     /**
