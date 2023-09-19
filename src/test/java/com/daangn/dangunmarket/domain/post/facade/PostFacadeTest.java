@@ -88,7 +88,7 @@ class PostFacadeTest {
 
         assertThat(post.getMemberId()).isEqualTo(postCreateRequestParam.memberId());
         assertThat(post.getAreaId()).isEqualTo(postCreateRequestParam.areaId());
-        assertThat(post.getLocalPreference().getAlias()).isEqualTo(postCreateRequestParam.alias());
+        assertThat(post.getLocationPreference().getAlias()).isEqualTo(postCreateRequestParam.alias());
         assertThat(post.getPostImages().size()).isEqualTo(postCreateRequestParam.files().size());
         assertThat(post.getTitle()).isEqualTo(postCreateRequestParam.title());
         assertThat(post.getContent()).isEqualTo(postCreateRequestParam.content());
@@ -161,7 +161,7 @@ class PostFacadeTest {
     }
 
     @Test
-    @DisplayName("")
+    @DisplayName("게시글을 수정 후 제먹과 내용이 입력값과 일치한지 확인한다.")
     void updatePost_response_equals() {
         //given
         List<PostCreateRequestParam> postCreateRequestParams = DataInitializerFactory.getPostCreateRequestParams(setUpMemberId, setUpCategory.getId());

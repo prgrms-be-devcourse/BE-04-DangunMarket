@@ -140,7 +140,7 @@ public class PostLikeServiceTest {
                 .memberId(2L)
                 .areaId(1L)
                 .postImages(List.of(new PostImage("abc", "파일이름1"), new PostImage("123", "파일이름2")))
-                .localPreference(new LocationPreference(point, "test alias"))
+                .locationPreference(new LocationPreference(point, "test alias"))
                 .category(category1)
                 .tradeStatus(TradeStatus.IN_PROGRESS)
                 .title(new Title("제목"))

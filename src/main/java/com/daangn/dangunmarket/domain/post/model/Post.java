@@ -47,7 +47,7 @@ public class Post extends BaseEntity {
     private Long areaId;
 
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
-    private LocationPreference localPreference;
+    private LocationPreference locationPreference;
 
     @Embedded
     private PostImages postImages = new PostImages();
@@ -78,7 +78,7 @@ public class Post extends BaseEntity {
     private Integer likeCount;
 
     @Builder
-    public Post(Long memberId, Long areaId, LocationPreference localPreference, List<PostImage> postImages, Category category, TradeStatus tradeStatus, Title title, String content, Price price, boolean isOfferAllowed, LocalDateTime refreshedAt, Integer likeCount) {
+    public Post(Long memberId, Long areaId, LocationPreference locationPreference, List<PostImage> postImages, Category category, TradeStatus tradeStatus, Title title, String content, Price price, boolean isOfferAllowed, LocalDateTime refreshedAt, Integer likeCount) {
         Assert.notNull(memberId, "memberId는 null값이 들어올 수 없습니다.");
         Assert.notNull(areaId, "areaId는 null값이 들어올 수 없습니다.");
         Assert.notNull(tradeStatus, "tradeStatus는 null값이 들어올 수 없습니다.");
@@ -90,7 +90,7 @@ public class Post extends BaseEntity {
         postImages.forEach(this::addPostImage);
         this.memberId = memberId;
         this.areaId = areaId;
-        this.localPreference = localPreference;
+        this.locationPreference = locationPreference;
         this.category = category;
         this.tradeStatus = tradeStatus;
         this.title = title;
@@ -110,6 +110,7 @@ public class Post extends BaseEntity {
         postImage.changePost(this);
     }
 
+    //이름 , 주석 // update 용으로 하나 만들고 중복같지만 목적이 다른
     public void addPostImages(List<PostImage> postImages) {
         for (PostImage postImage : postImages) {
             this.addPostImage(postImage);
@@ -172,20 +173,29 @@ public class Post extends BaseEntity {
         postImages.getPostImageList()
                 .stream()
                 .forEach(PostImage::deletePostImage); //이미지 상태 변경
-        if (localPreference != null) {
-            localPreference.deleteLocationPreference(); //선호 장소 상태 변경
+        if (locationPreference != null) {
+            locationPreference.deleteLocationPreference(); //선호 장소 상태 변경
         }
         isDeleted = true; //post 상태 변경
     }
 
     public void edit(PostEditor postEditor) {
         areaId = postEditor.areaId();
-        localPreference = postEditor.locationPreference();
+        locationPreference = postEditor.locationPreference();
         category = postEditor.category();
         title = new Title(postEditor.title());
         content = postEditor.content();
         price = new Price(postEditor.price());
         isOfferAllowed = postEditor.isOfferAllowed();
+
+        this.addPostImages(postEditor.postImages());
     }
 
+    public boolean isCreatedBy(Long userId ){
+        if (!Objects.equals(this.memberId, userId)) {
+            return false;
+        }
+
+        return true;
+    }
 }
