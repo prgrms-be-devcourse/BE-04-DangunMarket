@@ -25,19 +25,19 @@ import static com.daangn.dangunmarket.global.response.ErrorCode.*;
 @RestControllerAdvice
 @Slf4j
 public class GlobalExceptionRestHandler {
-   ///**
-   // * [Exception] 객체 혹은 파라미터의 데이터 값이 유효하지 않은 경우
-   // */
-   // @ExceptionHandler(MethodArgumentNotValidException.class)
-   // protected ResponseEntity<ErrorResponse> handleMethodArgumentNotValidException(MethodArgumentNotValidException e) {
-   //     log.warn("Handle MethodArgumentNotValidException", e.getMessage());
-   //     final ErrorResponse response = ErrorResponse.of(INVALID_METHOD_ERROR, e.getBindingResult());
-   //     return ResponseEntity
+    /**
+    * [Exception] 객체 혹은 파라미터의 데이터 값이 유효하지 않은 경우
+    */
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    protected ResponseEntity<ErrorResponse> handleMethodArgumentNotValidException(MethodArgumentNotValidException e) {
+        log.warn("Handle MethodArgumentNotValidException", e.getMessage());
+        final ErrorResponse response = ErrorResponse.of(INVALID_METHOD_ERROR, e.getBindingResult());
+        return ResponseEntity
 
-   //             .status(HttpStatus.BAD_REQUEST)
+                .status(HttpStatus.BAD_REQUEST)
 
-   //             .body(response);
-   // }
+                .body(response);
+    }
 
     /**
      * [Exception] 클라이언트에서 request의 '파라미터로' 데이터가 넘어오지 않았을 경우
