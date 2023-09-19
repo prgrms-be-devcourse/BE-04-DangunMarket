@@ -1,16 +1,23 @@
 package com.daangn.dangunmarket.domain;
 
 import com.daangn.dangunmarket.domain.area.model.Area;
+import com.daangn.dangunmarket.domain.chat.model.ChatRoom;
+import com.daangn.dangunmarket.domain.chat.model.ChatRoomInfo;
 import com.daangn.dangunmarket.domain.member.model.Member;
 import com.daangn.dangunmarket.domain.member.model.NickName;
 import com.daangn.dangunmarket.domain.post.facade.dto.PostCreateRequestParam;
 import com.daangn.dangunmarket.domain.post.facade.dto.PostUpdateRequestParam;
 import com.daangn.dangunmarket.domain.post.model.Category;
+import com.daangn.dangunmarket.domain.post.model.Post;
+import com.daangn.dangunmarket.domain.post.model.TradeStatus;
+import com.daangn.dangunmarket.domain.post.model.vo.Price;
+import com.daangn.dangunmarket.domain.post.model.vo.Title;
 import org.locationtech.jts.geom.GeometryFactory;
 import org.locationtech.jts.geom.MultiPolygon;
 import org.locationtech.jts.io.ParseException;
 import org.locationtech.jts.io.WKTReader;
 import org.springframework.mock.web.MockMultipartFile;
+import org.springframework.security.core.parameters.P;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
@@ -65,6 +72,17 @@ public final class DataInitializerFactory {
                 .build();
     }
 
+    public static Member member2() {
+        return Member.builder()
+                .roleType(USER)
+                .memberProvider(GOOGLE)
+                .socialId("member2 socialId")
+                .nickName(new NickName("byeol"))
+                .reviewScore(26)
+                .build();
+    }
+
+
     public static Category category() {
         return new Category("전자기기", null, 1L, new ArrayList<>());
     }
@@ -83,6 +101,18 @@ public final class DataInitializerFactory {
         List<MultipartFile> updateMockMultipartFiles = List.of(new MockMultipartFile("테스트1", (byte[]) null), new MockMultipartFile("테스트2", (byte[]) null));
         List<String> urls = new ArrayList<>();
         return new PostUpdateRequestParam(postId, 37.5297, 126.8876, "데브코스 공원 벤치", updateMockMultipartFiles, urls, categoryId, "의자 팔아요", "아기가 쓰던 의자입니다.", 100000L, true);
+    }
+
+    public static ChatRoomInfo sellerChatRoomInfo(Long postId, Long writerId, ChatRoom chatRoom) {
+        return new ChatRoomInfo(true, postId, chatRoom, writerId);
+    }
+
+    public static ChatRoomInfo buyerChatRoomInfo(Long postId, Long buyerId, ChatRoom chatRoom) {
+        return new ChatRoomInfo(false, postId, chatRoom, buyerId);
+    }
+
+    public static Post post(Long memberId, Category category) {
+        return new Post(memberId, 2L, null, new ArrayList<>(), category, TradeStatus.IN_PROGRESS, new Title("달님이 젤리 가게"), "사용감 있습니다.", new Price(10000), true, LocalDateTime.now(), 0);
     }
 
 }
