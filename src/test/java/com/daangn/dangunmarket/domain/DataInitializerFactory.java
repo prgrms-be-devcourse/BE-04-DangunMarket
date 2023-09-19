@@ -81,7 +81,8 @@ public final class DataInitializerFactory {
 
     public static PostUpdateRequestParam postUpdateRequestParam(Long postId, Long categoryId) {
         List<MultipartFile> updateMockMultipartFiles = List.of(new MockMultipartFile("테스트1", (byte[]) null), new MockMultipartFile("테스트2", (byte[]) null));
-        return new PostUpdateRequestParam(postId, 37.5297, 126.8876, "데브코스 공원 벤치", updateMockMultipartFiles, categoryId, "의자 팔아요", "아기가 쓰던 의자입니다.", 100000L, true);
+        List<String> urls = new ArrayList<>();
+        return new PostUpdateRequestParam(postId, 37.5297, 126.8876, "데브코스 공원 벤치", updateMockMultipartFiles, urls, categoryId, "의자 팔아요", "아기가 쓰던 의자입니다.", 100000L, true);
     }
 
 }
