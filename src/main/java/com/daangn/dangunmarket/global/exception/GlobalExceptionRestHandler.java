@@ -120,7 +120,7 @@ public class GlobalExceptionRestHandler {
         log.warn("Handle EntityNotFoundException :", e);
         final ErrorResponse response = ErrorResponse.of(e.getErrorCode(), e.getMessage());
         return ResponseEntity
-                .status(HttpStatus.OK)
+                .status(HttpStatus.NOT_FOUND)
                 .body(response);
     }
 
