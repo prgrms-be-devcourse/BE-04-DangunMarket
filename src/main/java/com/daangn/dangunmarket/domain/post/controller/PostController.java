@@ -91,7 +91,7 @@ public class PostController {
         return ResponseEntity.ok(response);
     }
 
-    @PatchMapping("/{postId}")
+    @PatchMapping("/{postId}/trade-status")
     public ResponseEntity<PostUpdateStatusApiResponse> changeStatus(
             @PathVariable Long postId,
             @RequestBody PostUpdateStatusApiRequest request) {
@@ -102,7 +102,7 @@ public class PostController {
         return ResponseEntity.ok(apiResponse);
     }
 
-    @PatchMapping("/{postId}/refresh")
+    @PatchMapping("/{postId}/refreshed-at")
     public ResponseEntity<PostRefreshApiResponse> refreshPostTime(
             @PathVariable Long postId,
             Authentication authentication
