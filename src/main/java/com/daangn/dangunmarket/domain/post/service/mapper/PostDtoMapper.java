@@ -1,6 +1,6 @@
 package com.daangn.dangunmarket.domain.post.service.mapper;
 
-import com.daangn.dangunmarket.domain.post.service.dto.PostFindResponse;
+import com.daangn.dangunmarket.domain.post.model.Post;
 import com.daangn.dangunmarket.domain.post.service.dto.PostToUpdateResponse;
 import org.mapstruct.InjectionStrategy;
 import org.mapstruct.Mapper;
@@ -12,8 +12,8 @@ import org.mapstruct.Mapping;
 )
 public interface PostDtoMapper {
 
-    @Mapping(target = "postImages", source = "postImageList")
-    PostToUpdateResponse toPostToUpdateResponse(PostFindResponse postFindResponse);
+    @Mapping(source = "post.id", target = "postId")
+    PostToUpdateResponse toPostToUpdateResponse(Post post);
 
 }
 

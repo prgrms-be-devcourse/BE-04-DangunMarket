@@ -25,14 +25,16 @@ import static com.daangn.dangunmarket.global.response.ErrorCode.*;
 @Slf4j
 public class GlobalExceptionRestHandler {
     /**
-     * [Exception] 객체 혹은 파라미터의 데이터 값이 유효하지 않은 경우
-     */
+    * [Exception] 객체 혹은 파라미터의 데이터 값이 유효하지 않은 경우
+    */
     @ExceptionHandler(MethodArgumentNotValidException.class)
     protected ResponseEntity<ErrorResponse> handleMethodArgumentNotValidException(MethodArgumentNotValidException e) {
-        log.warn("Handle MothodArgumentNotValidException", e.getMessage());
+        log.warn("Handle MethodArgumentNotValidException", e.getMessage());
         final ErrorResponse response = ErrorResponse.of(INVALID_METHOD_ERROR, e.getBindingResult());
         return ResponseEntity
+
                 .status(HttpStatus.BAD_REQUEST)
+
                 .body(response);
     }
 
@@ -159,7 +161,7 @@ public class GlobalExceptionRestHandler {
 
     /**
      * [Exception] 서버에 정의되지 않은 모든 예외
-     */
+      */
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponse> handleAllException(Exception e) {
         log.error("Handle Exception :", e);

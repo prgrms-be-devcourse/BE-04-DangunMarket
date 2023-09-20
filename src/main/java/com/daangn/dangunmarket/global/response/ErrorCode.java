@@ -4,7 +4,6 @@ import lombok.Getter;
 
 @Getter
 public enum ErrorCode {
-
     //global
     INTERNAL_SERVER_ERROR("G001", "Internal Server Error"),
 
@@ -35,7 +34,10 @@ public enum ErrorCode {
     //login
     EXPIRED_TOKEN("L001", "토큰이 만료되었습니다."),
     UNAUTHORIZED_TOKEN("L002", "인증되지 않은 토큰입니다."),
-    OAUTH_CLIENT_SERVER_ERROR("L003", "oauth 클라이언트 서버 에러입니다.");
+    OAUTH_CLIENT_SERVER_ERROR("L003", "oauth 클라이언트 서버 에러입니다."),
+
+    //chat
+    NOT_CREATE_CHAT_ROOM("C001","이미 존재하는 방입니다.");
 
     private final String code;
     private final String message;

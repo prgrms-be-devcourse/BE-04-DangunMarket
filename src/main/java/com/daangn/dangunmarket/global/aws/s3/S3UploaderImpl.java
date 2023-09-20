@@ -15,8 +15,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -71,7 +69,7 @@ public class S3UploaderImpl implements S3Uploader {
     }
 
     @Override
-    public void deleteImage2(String fileName) {
+    public void deleteImage(String fileName) {
         try {
             amazonS3Client.deleteObject(bucket, fileName);
         } catch (AmazonServiceException e) {
@@ -83,46 +81,9 @@ public class S3UploaderImpl implements S3Uploader {
         }
     }
 
-    @Override
-    public void deleteImages(List<String> fileNames) {
-        for (String fileName : fileNames) {
-            deleteImage(fileName);
-        }
-    }
-
     private String changeFileName(String fileName) {
         String uuid = UUID.randomUUID().toString();
         return uuid + "-" + fileName;
-    }
-
-    @Transactional
-    @Override
-    public void deleteImage(String imageUrl) {
-        try {
-            // 이미지 URL에서 파일 이름을 추출
-            String fileName = extractFileNameFromImageUrl(imageUrl);
-
-            // Amazon S3에서 파일 삭제
-            amazonS3Client.deleteObject(bucket, fileName);
-        } catch (AmazonServiceException e) {
-            log.error("deleteImage AmazonServiceException imageUrl={}, error={}", imageUrl, e.getMessage());
-            // throw new ImageDeleteException(ErrorCode.INTERNAL_SERVER_ERROR);
-        } catch (SdkClientException e) {
-            log.error("deleteImage SdkClientException imageUrl={}, error = {}", imageUrl, e.getMessage());
-            // throw new ImageDeleteException(ErrorCode.INTERNAL_SERVER_ERROR);
-        }
-    }
-
-    private String extractFileNameFromImageUrl(String imageUrl) {
-        try {
-            URI uri = new URI(imageUrl);
-            String path = uri.getPath();
-            String fileName = path.substring(path.lastIndexOf("/") + 1);
-
-            return fileName;
-        } catch (URISyntaxException e) {
-            throw new IllegalArgumentException("Invalid image URL: " + imageUrl, e);
-        }
     }
 
 }

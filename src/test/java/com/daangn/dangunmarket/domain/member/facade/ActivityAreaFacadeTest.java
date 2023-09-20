@@ -1,13 +1,12 @@
 package com.daangn.dangunmarket.domain.member.facade;
 
 import com.amazonaws.services.kms.model.NotFoundException;
-
 import com.daangn.dangunmarket.domain.DataInitializerFactory;
 import com.daangn.dangunmarket.domain.area.model.Area;
 import com.daangn.dangunmarket.domain.area.service.AreaService;
 import com.daangn.dangunmarket.domain.member.facade.dto.ActivityAreaCreateRequestParam;
 import com.daangn.dangunmarket.domain.member.facade.dto.ActivityAreaIsVerifiedRequestParam;
-import com.daangn.dangunmarket.domain.member.model.*;
+import com.daangn.dangunmarket.domain.member.model.Member;
 import com.daangn.dangunmarket.domain.member.service.ActivityAreaService;
 import com.daangn.dangunmarket.domain.member.service.MemberService;
 import com.daangn.dangunmarket.domain.member.service.dto.ActivityAreaFindResponse;
@@ -52,7 +51,6 @@ public class ActivityAreaFacadeTest {
 
     @BeforeEach
     void setUp() throws ParseException {
-
         member = DataInitializerFactory.member();
         saveMember = memberService.save(member);
         activityAreaCreateRequestParam = new ActivityAreaCreateRequestParam(37.575328952171, 126.96496674529);
@@ -125,7 +123,6 @@ public class ActivityAreaFacadeTest {
         List<Area> areas = DataInitializerFactory.getAreas();
         areaService.save(areas.get(0));
         areaService.save(areas.get(1));
-
     }
 
 }

@@ -1,38 +1,53 @@
 package com.daangn.dangunmarket.domain.chat.model;
 
-import com.daangn.dangunmarket.domain.member.model.Member;
-import jakarta.persistence.*;
-import lombok.AccessLevel;
+import jakarta.persistence.Id;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.Field;
+import org.springframework.data.mongodb.core.mapping.FieldType;
 
-@Entity
-@Table(name = "chat_messages")
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+import java.time.LocalDateTime;
+
+@Document(collection = "chat_messages")
+@Getter
+@NoArgsConstructor
 public class ChatMessage {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @Field(value = "_id", targetType = FieldType.OBJECT_ID)
+    private String id;
 
-    @Column(nullable = false)
-    private String content;
+    @Field("chat_room_id")
+    private Long chatRoomId;
 
-    @Column(nullable = false)
-    private boolean readOrNot;
+    @Field("sender_name")
+    private String senderName;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "chat_room_infos_id", referencedColumnName = "id", nullable = false)
-    private ChatRoomInfo chatRoomInfo;
+    @Field("member_id")
+    private Long memberId;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "members_id", referencedColumnName = "id", nullable = false)
-    private Member member;
+    @Field("message")
+    private String message;
 
-    public ChatMessage(String content, boolean readOrNot, ChatRoomInfo chatRoomInfo, Member member) {
-        this.content = content;
+    @Field("img_url")
+    private String imgUrl;
+
+    @Field("read_or_not")
+    private Integer readOrNot;
+
+    @Field("created_at")
+    @CreatedDate
+    private LocalDateTime createdAt;
+
+    public ChatMessage(Long chatRoomId, String senderName, Long memberId, String message, String imgUrl, Integer readOrNot) {
+        this.chatRoomId = chatRoomId;
+        this.senderName = senderName;
+        this.memberId = memberId;
+        this.message = message;
+        this.imgUrl = imgUrl;
         this.readOrNot = readOrNot;
-        this.chatRoomInfo = chatRoomInfo;
-        this.member = member;
     }
 
 }
