@@ -18,18 +18,4 @@ public record PostEditor(
         long price,
         boolean isOfferAllowed
 ) {
-
-    public static PostEditor toPostEditor(PostUpdateRequest request) {
-        return new PostEditor(
-                request.postId(),
-                request.locationPreference(),
-                request.postImages(),
-                request.category(),
-                request.areaId(),
-                request.title(),
-                request.content(),
-                request.price(),
-                request.isOfferAllowed());
-    }
-
 }

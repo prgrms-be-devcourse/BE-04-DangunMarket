@@ -32,7 +32,7 @@ public class PostImageService {
         List<PostImage> postImagesToRemove = existingPostImages.stream().filter(u -> !urls.contains(u.getUrl())).toList();
         postImagesToRemove.forEach(r -> {
             postToEdit.removePostImage(r);
-            s3Uploader.deleteImage2(r.getUrl());
+            s3Uploader.deleteImage(r.getUrl());
         });
     }
 

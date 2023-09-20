@@ -16,7 +16,7 @@ public class PostEventHandler {
 
     @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
     public void deleteImage(String fileName) {
-        s3Uploader.deleteImage2(fileName);
+        s3Uploader.deleteImage(fileName);
     }
 
 }

@@ -12,7 +12,6 @@ public record LikedPostFindResponseList(Slice<LikedPostFindResponse> likedPosts)
                 e.area().getName(),
                 e.post().getPrice(),
                 e.post().getLikeCount()));
-
         return new LikedPostFindResponseList(mapResponse);
     }
 

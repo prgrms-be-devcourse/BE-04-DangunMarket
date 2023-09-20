@@ -11,7 +11,7 @@ import java.util.Optional;
 
 public interface PostJpaRepository extends JpaRepository<Post, Long> {
 
-    @Query("SELECT p FROM Post p LEFT JOIN FETCH p.localPreference lp WHERE p.isDeleted = false AND p.id = :id")
+    @Query("SELECT p FROM Post p LEFT JOIN FETCH p.locationPreference lp WHERE p.isDeleted = false AND p.id = :id")
     Optional<Post> findById(@Param(value = "id") Long id);
 
     @Lock(LockModeType.PESSIMISTIC_WRITE)

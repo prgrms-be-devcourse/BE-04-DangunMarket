@@ -157,7 +157,7 @@ public class PostLikeServiceTest {
                 .memberId(2L)
                 .areaId(1L)
                 .postImages(List.of())
-                .localPreference(new LocationPreference(point, "test alias"))
+                .locationPreference(new LocationPreference(point, "test alias"))
                 .category(category1)
                 .tradeStatus(TradeStatus.IN_PROGRESS)
                 .title(new Title("제목"))
