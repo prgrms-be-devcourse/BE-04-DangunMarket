@@ -67,6 +67,9 @@ dependencies {
     //map struct
     implementation 'org.mapstruct:mapstruct:1.5.5.Final'
     annotationProcessor 'org.mapstruct:mapstruct-processor:1.5.5.Final'
+
+    //mongodb
+    implementation 'org.springframework.boot:spring-boot-starter-data-mongodb-reactive'
 }
 
 tasks.named('test') {

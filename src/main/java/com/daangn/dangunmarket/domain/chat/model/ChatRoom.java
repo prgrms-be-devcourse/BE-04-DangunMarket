@@ -2,11 +2,13 @@ package com.daangn.dangunmarket.domain.chat.model;
 
 import jakarta.persistence.*;
 import lombok.AccessLevel;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "chat_rooms")
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Getter
+@NoArgsConstructor
 public class ChatRoom {
 
     @Id
