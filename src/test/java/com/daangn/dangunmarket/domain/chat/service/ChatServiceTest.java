@@ -52,11 +52,6 @@ class ChatServiceTest {
     private ChatRoom savedRoom1;
     private ChatRoom savedRoom2;
 
-    private ChatMessage message1;
-    private ChatMessage message2;
-    private ChatMessage message3;
-    private ChatMessage message4;
-
     @BeforeEach
     void setup() {
         dataSetup();
@@ -64,10 +59,7 @@ class ChatServiceTest {
 
     @AfterEach
     void tearDown() {
-        chatMessageMongoRepository.delete(message1);
-        chatMessageMongoRepository.delete(message2);
-        chatMessageMongoRepository.delete(message3);
-        chatMessageMongoRepository.delete(message4);
+        chatMessageMongoRepository.deleteAll();
     }
 
     @Test
@@ -158,7 +150,7 @@ class ChatServiceTest {
                 savedMember3.getId()
         ));
 
-        message1 = chatMessageMongoRepository.save(new ChatMessage(
+        chatMessageMongoRepository.save(new ChatMessage(
                 savedRoom1.getId(),
                 savedMember1.getId(),
                 "방 1의 첫번째 메세지",
@@ -166,7 +158,7 @@ class ChatServiceTest {
                 1
         ));
 
-        message2 = chatMessageMongoRepository.save(new ChatMessage(
+        chatMessageMongoRepository.save(new ChatMessage(
                 savedRoom1.getId(),
                 savedMember2.getId(),
                 "방 1의 두번째 메세지",
@@ -174,7 +166,7 @@ class ChatServiceTest {
                 1
         ));
 
-        message3 = chatMessageMongoRepository.save(new ChatMessage(
+        chatMessageMongoRepository.save(new ChatMessage(
                 savedRoom2.getId(),
                 savedMember3.getId(),
                 "방 2의 첫번째 메세지",
@@ -182,7 +174,7 @@ class ChatServiceTest {
                 1
         ));
 
-        message4 = chatMessageMongoRepository.save(new ChatMessage(
+        chatMessageMongoRepository.save(new ChatMessage(
                 savedRoom2.getId(),
                 savedMember1.getId(),
                 "방 2의 두번째 메세지",

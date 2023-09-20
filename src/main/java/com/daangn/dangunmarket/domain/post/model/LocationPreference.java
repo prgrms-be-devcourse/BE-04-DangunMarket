@@ -1,6 +1,12 @@
 package com.daangn.dangunmarket.domain.post.model;
 
-import jakarta.persistence.*;
+import com.daangn.dangunmarket.global.entity.BaseEntity;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -11,7 +17,7 @@ import org.springframework.util.Assert;
 @Table(name = "location_preferences")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class LocationPreference {
+public class LocationPreference extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -39,4 +45,7 @@ public class LocationPreference {
         return geography.getX();
     }
 
+    public void deleteLocationPreference() {
+        isDeleted = true;
+    }
 }

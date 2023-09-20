@@ -4,8 +4,8 @@ import com.amazonaws.services.kms.model.NotFoundException;
 import com.daangn.dangunmarket.domain.post.model.Post;
 import com.daangn.dangunmarket.domain.post.model.PostImage;
 import com.daangn.dangunmarket.domain.post.repository.post.PostRepository;
+import com.daangn.dangunmarket.global.aws.dto.ImageInfo;
 import com.daangn.dangunmarket.global.aws.s3.S3Uploader;
-
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -32,15 +32,17 @@ public class PostImageService {
         List<PostImage> postImagesToRemove = existingPostImages.stream().filter(u -> !urls.contains(u.getUrl())).toList();
         postImagesToRemove.forEach(r -> {
             postToEdit.removePostImage(r);
-            s3Uploader.deleteImage(r.getUrl());
+            s3Uploader.deleteImage2(r.getUrl());
         });
     }
 
     public List<PostImage> saveImagesFromRequest(List<MultipartFile> files) {
-        List<String> url = s3Uploader.saveImages(files);
-        return url.stream()
-                .map(PostImage::new)
+        List<ImageInfo> imageInfos = s3Uploader.saveImages(files);
+        List<PostImage> postImages = imageInfos.stream()
+                .map(p -> new PostImage(p.url(), p.fileName()))
                 .toList();
+
+        return postImages;
     }
 
 }
