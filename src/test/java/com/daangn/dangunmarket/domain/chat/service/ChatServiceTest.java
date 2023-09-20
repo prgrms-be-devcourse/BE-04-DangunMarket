@@ -1,5 +1,6 @@
 package com.daangn.dangunmarket.domain.chat.service;
 
+import com.daangn.dangunmarket.domain.DataInitializerFactory;
 import com.daangn.dangunmarket.domain.chat.model.ChatMessage;
 import com.daangn.dangunmarket.domain.chat.model.ChatRoom;
 import com.daangn.dangunmarket.domain.chat.model.ChatRoomInfo;
@@ -91,33 +92,17 @@ class ChatServiceTest {
      * room2  : savedMember1, savedMember3   :   Member3, Member1
      */
     private void dataSetup() {
-        Member setupMember1 = Member.builder()
-                .roleType(USER)
-                .memberProvider(GOOGLE)
-                .socialId("member2 socialId")
-                .nickName(new NickName("james"))
-                .reviewScore(35)
-                .build();
+        savedMember1 = memberJpaRepository.save(
+                DataInitializerFactory.member("james", 35)
+        );
 
-        Member setupMember2 = Member.builder()
-                .roleType(USER)
-                .memberProvider(GOOGLE)
-                .socialId("member3 socialId")
-                .nickName(new NickName("hany"))
-                .reviewScore(25)
-                .build();
+        Member savedMember2 = memberJpaRepository.save(
+                DataInitializerFactory.member("hany", 25)
+        );
 
-        Member setupMember3 = Member.builder()
-                .roleType(USER)
-                .memberProvider(GOOGLE)
-                .socialId("member4 socialId")
-                .nickName(new NickName("mac"))
-                .reviewScore(27)
-                .build();
-
-        savedMember1 = memberJpaRepository.save(setupMember1);
-        Member savedMember2 = memberJpaRepository.save(setupMember2);
-        Member savedMember3 = memberJpaRepository.save(setupMember3);
+        Member savedMember3 = memberJpaRepository.save(
+                DataInitializerFactory.member("mac", 27)
+        );
 
         savedRoom1 = chatRoomJpaRepository.save(new ChatRoom());
         savedRoom2 = chatRoomJpaRepository.save(new ChatRoom());

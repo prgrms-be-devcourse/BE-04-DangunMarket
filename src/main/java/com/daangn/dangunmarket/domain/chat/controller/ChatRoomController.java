@@ -15,11 +15,11 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping(value = "/chats",
         produces = MediaType.APPLICATION_JSON_VALUE)
-public class ChatController {
+public class ChatRoomController {
 
     private final ChatService chatService;
 
-    public ChatController(ChatService chatService) {
+    public ChatRoomController(ChatService chatService) {
         this.chatService = chatService;
     }
 
