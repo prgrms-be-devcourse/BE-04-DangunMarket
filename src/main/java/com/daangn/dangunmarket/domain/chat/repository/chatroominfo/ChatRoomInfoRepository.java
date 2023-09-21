@@ -10,6 +10,10 @@ import java.util.Optional;
 
 public interface ChatRoomInfoRepository {
 
+    /**
+     *  인자로 들어온 memberId와 동일한 ChatRoom을 가진 ChatRoomInfo들 조회
+     *  (반환되는 값은 인자 memberId를 가진 ChatRoomInfo는 제외하고 반환한다.)
+     */
     Slice<JoinedMemberResponse> findMembersInSameChatRooms(Long memberId, Pageable pageable);
 
     Optional<ChatRoomInfo> findChatRoomInfoByPostIdAndMemberId(Long postId, Long memberId);

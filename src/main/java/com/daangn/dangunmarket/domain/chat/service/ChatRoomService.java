@@ -1,13 +1,19 @@
 package com.daangn.dangunmarket.domain.chat.service;
 
+import com.daangn.dangunmarket.domain.chat.model.ChatMessage;
 import com.daangn.dangunmarket.domain.chat.model.ChatRoom;
 import com.daangn.dangunmarket.domain.chat.model.ChatRoomInfo;
+import com.daangn.dangunmarket.domain.chat.repository.chatmessage.ChatMessageRepository;
 import com.daangn.dangunmarket.domain.chat.repository.chatroom.ChatRoomRepository;
 import com.daangn.dangunmarket.domain.chat.repository.chatroominfo.ChatRoomInfoRepository;
+import com.daangn.dangunmarket.domain.chat.repository.chatroominfo.dto.JoinedMemberResponse;
 import com.daangn.dangunmarket.domain.chat.service.dto.ChatRoomCreateRequest;
-import com.daangn.dangunmarket.domain.post.repository.post.PostRepository;
+import com.daangn.dangunmarket.domain.chat.service.dto.ChatRoomsFindResponses;
+import com.daangn.dangunmarket.domain.chat.service.mapper.ChatMapper;
 import com.daangn.dangunmarket.global.exception.EntityNotFoundException;
 import com.daangn.dangunmarket.global.response.ErrorCode;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,10 +24,14 @@ public class ChatRoomService {
 
     private final ChatRoomInfoRepository chatRoomInfoRepository;
     private final ChatRoomRepository chatRoomRepository;
+    private final ChatMessageRepository chatMessageRepository;
+    private final ChatMapper mapper;
 
-    public ChatRoomService(ChatRoomInfoRepository chatRoomInfoRepository, ChatRoomRepository chatRoomRepository) {
+    public ChatRoomService(ChatRoomInfoRepository chatRoomInfoRepository, ChatRoomRepository chatRoomRepository, ChatMessageRepository chatMessageRepository, ChatMapper mapper) {
         this.chatRoomInfoRepository = chatRoomInfoRepository;
         this.chatRoomRepository = chatRoomRepository;
+        this.chatMessageRepository = chatMessageRepository;
+        this.mapper = mapper;
     }
 
     @Transactional
@@ -38,8 +48,20 @@ public class ChatRoomService {
         return chatRoom.getId();
     }
 
+    public ChatRoomsFindResponses findChatRoomsByMemberId(Long memberId, Pageable pageable) {
+        Slice<JoinedMemberResponse> roomInfoWithMembers = chatRoomInfoRepository.findMembersInSameChatRooms(memberId, pageable);
+
+        List<Long> chatRoomIds = roomInfoWithMembers.getContent().stream()
+                .map(e -> e.chatRoomInfo().getChatRoom().getId())
+                .toList();
+
+        List<ChatMessage> chatMessages = chatMessageRepository.findByChatRoomIds(chatRoomIds);
+
+        return mapper.toChatRoomsFindResponses(roomInfoWithMembers, chatMessages);
+    }
+
     @Transactional
-    public void deleteChatRoomById(Long chatRoomId, Long memberId) {
+    public void deleteChatRoomByIdAndMemberId(Long chatRoomId, Long memberId) {
         List<ChatRoomInfo> findChatRoomInfos = chatRoomInfoRepository.findByChatRoomId(chatRoomId);
 
         ChatRoomInfo chatRoomInfo = findChatRoomInfos.stream()

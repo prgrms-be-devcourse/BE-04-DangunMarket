@@ -3,7 +3,6 @@ package com.daangn.dangunmarket.domain.chat.controller;
 import com.daangn.dangunmarket.domain.auth.jwt.CustomUser;
 import com.daangn.dangunmarket.domain.chat.controller.dro.ChatRoomsFindApiResponses;
 import com.daangn.dangunmarket.domain.chat.service.ChatRoomService;
-import com.daangn.dangunmarket.domain.chat.service.ChatService;
 import com.daangn.dangunmarket.domain.chat.service.dto.ChatRoomsFindResponses;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
@@ -20,11 +19,9 @@ import org.springframework.web.bind.annotation.RestController;
         produces = MediaType.APPLICATION_JSON_VALUE)
 public class ChatRoomController {
 
-    private final ChatService chatService;
     private final ChatRoomService chatRoomService;
 
-    public ChatRoomController(ChatService chatService, ChatRoomService chatRoomService) {
-        this.chatService = chatService;
+    public ChatRoomController(ChatRoomService chatRoomService) {
         this.chatRoomService = chatRoomService;
     }
 
@@ -34,7 +31,7 @@ public class ChatRoomController {
             Authentication authentication
     ) {
         CustomUser customUser = (CustomUser) authentication.getPrincipal();
-        ChatRoomsFindResponses responses = chatService.findChatRoomsByMemberId(customUser.memberId(), pageable);
+        ChatRoomsFindResponses responses = chatRoomService.findChatRoomsByMemberId(customUser.memberId(), pageable);
 
         ChatRoomsFindApiResponses apiResponses = ChatRoomsFindApiResponses.from(responses);
 
@@ -47,7 +44,7 @@ public class ChatRoomController {
             Authentication authentication
     ){
         CustomUser customUser = (CustomUser) authentication.getPrincipal();
-        chatRoomService.deleteChatRoomById(chatRoomId, customUser.memberId());
+        chatRoomService.deleteChatRoomByIdAndMemberId(chatRoomId, customUser.memberId());
 
         return ResponseEntity.noContent().build();
     }
