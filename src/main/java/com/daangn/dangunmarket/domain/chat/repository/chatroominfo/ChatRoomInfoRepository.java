@@ -5,6 +5,7 @@ import com.daangn.dangunmarket.domain.chat.repository.chatroominfo.dto.JoinedMem
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface ChatRoomInfoRepository {
@@ -14,5 +15,7 @@ public interface ChatRoomInfoRepository {
     Optional<ChatRoomInfo> findChatRoomInfoByPostIdAndMemberId(Long postId, Long memberId);
 
     ChatRoomInfo save(ChatRoomInfo chatRoomInfo);
+
+    List<ChatRoomInfo> findByChatRoomId(Long chatRoomId);
 
 }

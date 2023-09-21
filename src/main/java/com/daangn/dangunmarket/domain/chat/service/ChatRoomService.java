@@ -6,21 +6,25 @@ import com.daangn.dangunmarket.domain.chat.repository.chatroom.ChatRoomRepositor
 import com.daangn.dangunmarket.domain.chat.repository.chatroominfo.ChatRoomInfoRepository;
 import com.daangn.dangunmarket.domain.chat.service.dto.ChatRoomCreateRequest;
 import com.daangn.dangunmarket.domain.post.repository.post.PostRepository;
+import com.daangn.dangunmarket.global.exception.EntityNotFoundException;
+import com.daangn.dangunmarket.global.response.ErrorCode;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Service
 public class ChatRoomService {
 
     private final ChatRoomInfoRepository chatRoomInfoRepository;
     private final ChatRoomRepository chatRoomRepository;
-    private final PostRepository postRepository;
 
-    public ChatRoomService(ChatRoomInfoRepository chatRoomInfoRepository, ChatRoomRepository chatRoomRepository, PostRepository postRepository) {
+    public ChatRoomService(ChatRoomInfoRepository chatRoomInfoRepository, ChatRoomRepository chatRoomRepository) {
         this.chatRoomInfoRepository = chatRoomInfoRepository;
         this.chatRoomRepository = chatRoomRepository;
-        this.postRepository = postRepository;
     }
 
+    @Transactional
     public Long createChatRoom(Long memberId, Long writerId, ChatRoomCreateRequest request) {
 
         ChatRoom chatRoom = new ChatRoom();
@@ -32,6 +36,22 @@ public class ChatRoomService {
         chatRoomInfoRepository.save(buyerChatRoomInfo);
 
         return chatRoom.getId();
+    }
+
+    @Transactional
+    public void deleteChatRoomById(Long chatRoomId, Long memberId) {
+        List<ChatRoomInfo> findChatRoomInfos = chatRoomInfoRepository.findByChatRoomId(chatRoomId);
+
+        ChatRoomInfo chatRoomInfo = findChatRoomInfos.stream()
+                .filter(e -> e.isSameMember(memberId))
+                .findFirst()
+                .orElseThrow(() -> new EntityNotFoundException(ErrorCode.NOT_FOUND_ENTITY));
+
+        chatRoomInfo.deleteChatRoomInfo();
+
+        if (findChatRoomInfos.size() < 2){
+            chatRoomInfo.getChatRoom().deleteChatRoom();
+        }
     }
 
 }

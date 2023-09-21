@@ -22,7 +22,7 @@ public class ChatService {
     private final ChatMessageRepository chatMessageRepository;
     private final ChatMapper mapper;
 
-    public ChatService(ChatRoomInfoRepository chatRoomInfoRepository, ChatRoomRepository chatRoomRepository, ChatMessageRepository chatMessageRepository, ChatMapper mapper) {
+    public ChatService(ChatRoomInfoRepository chatRoomInfoRepository, ChatMessageRepository chatMessageRepository, ChatMapper mapper) {
         this.chatRoomInfoRepository = chatRoomInfoRepository;
         this.chatMessageRepository = chatMessageRepository;
         this.mapper = mapper;
