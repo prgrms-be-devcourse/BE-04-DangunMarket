@@ -23,14 +23,14 @@ public class ChatRoomFacade {
         this.chatRoomInfoService = chatRoomInfoService;
     }
 
-    public Long createChatRoom(Long memberId, ChatRoomCreateRequest request){
+    public Long createChatRoom(Long memberId, ChatRoomCreateRequest request) {
 
-        if(chatRoomInfoService.isExistedRoom(request.postId(),memberId)) {
+        if (chatRoomInfoService.isExistedRoom(request.postId(), memberId)) {
             throw new RoomNotCreateException(NOT_CREATE_CHAT_ROOM);
         }
 
         PostFindResponse postFindResponse = postService.findById(request.postId());
-        return chatRoomService.createChatRoom(memberId,postFindResponse.memberId(),request);
+        return chatRoomService.createChatRoom(memberId, postFindResponse.memberId(), request);
     }
 
 }

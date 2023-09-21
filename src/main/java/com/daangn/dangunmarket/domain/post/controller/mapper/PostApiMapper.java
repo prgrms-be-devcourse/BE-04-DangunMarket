@@ -54,7 +54,6 @@ public interface PostApiMapper {
     PostDeleteApiResponse toPostDeleteApiResponse(Long deletedPostId);
 
 
-
     @Named("mapFiles")
     static List<MultipartFile> mapFiles(PostUpdateApiRequest request) {
         if (request != null && request.getFiles() != null) {
@@ -72,6 +71,7 @@ public interface PostApiMapper {
             return Collections.emptyList();
         }
     }
+
     PostUpdateApiResponse toPostUpdateApiResponse(Long postId);
 
 }

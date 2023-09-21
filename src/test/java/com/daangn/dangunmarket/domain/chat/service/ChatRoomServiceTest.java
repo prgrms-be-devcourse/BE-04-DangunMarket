@@ -61,7 +61,7 @@ class ChatRoomServiceTest {
         ChatRoomCreateRequest chatRoomCreateRequest = new ChatRoomCreateRequest(existedPostId);
 
         //when
-        Long chatRoomId = chatRoomService.createChatRoom(newBuyerId, existedSellerId ,chatRoomCreateRequest);
+        Long chatRoomId = chatRoomService.createChatRoom(newBuyerId, existedSellerId, chatRoomCreateRequest);
         Optional<ChatRoom> chatRoom = chatRoomRepository.findById(chatRoomId);
 
         //then

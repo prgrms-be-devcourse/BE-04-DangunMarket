@@ -27,7 +27,7 @@ public class ChatRoomInfo {
 
     private boolean isWriter;
 
-    @Column(nullable = false,name = "posts_id")
+    @Column(nullable = false, name = "posts_id")
     private Long postId;
 
     @ManyToOne(fetch = FetchType.LAZY)
