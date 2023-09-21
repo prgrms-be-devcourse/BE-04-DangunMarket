@@ -7,18 +7,20 @@ import com.daangn.dangunmarket.domain.post.exception.InvalidPostLikeException;
 import com.daangn.dangunmarket.domain.post.model.Category;
 import com.daangn.dangunmarket.domain.post.model.LocationPreference;
 import com.daangn.dangunmarket.domain.post.model.Post;
-import com.daangn.dangunmarket.domain.post.model.PostImage;
 import com.daangn.dangunmarket.domain.post.model.TradeStatus;
 import com.daangn.dangunmarket.domain.post.model.vo.Price;
 import com.daangn.dangunmarket.domain.post.model.vo.Title;
 import com.daangn.dangunmarket.domain.post.repository.category.CategoryRepository;
+import com.daangn.dangunmarket.domain.post.repository.post.PostJpaRepository;
 import com.daangn.dangunmarket.domain.post.repository.post.PostRepository;
+import com.daangn.dangunmarket.domain.post.repository.postlike.PostLikeJpaRepository;
 import com.daangn.dangunmarket.domain.post.service.PostLikeService;
 import com.daangn.dangunmarket.global.GeometryTypeFactory;
 import com.daangn.dangunmarket.global.exception.EntityNotFoundException;
 import com.daangn.dangunmarket.global.response.ErrorCode;
 import lombok.extern.slf4j.Slf4j;
 import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -26,6 +28,7 @@ import org.locationtech.jts.geom.Point;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
@@ -56,6 +59,12 @@ public class PostLikeServiceTest {
     @Autowired
     private PostRepository postRepository;
 
+    @Autowired
+    private PostJpaRepository postJpaRepository;
+
+    @Autowired
+    private PostLikeJpaRepository postLikeJpaRepository;
+
     private Member member1;
     private Post post;
     private List<Member> members;
@@ -65,9 +74,16 @@ public class PostLikeServiceTest {
         setUpData();
     }
 
+    @AfterEach
+    void tearDown(){
+        postLikeJpaRepository.deleteAll();
+        postJpaRepository.deleteAll();
+    }
+
     private static final int MEMBER_COUNT = 20;
 
     @Test
+    @Transactional(propagation = Propagation.NEVER)
     @DisplayName("좋아요를 누른 수 만큼 게시물의 좋아요 수가 증가하고, 좋아요 수랑 게시물의 좋아요 수랑 일치한다")
     void likePost_PostIdMemberId_Success() throws InterruptedException {
         //given
@@ -139,7 +155,7 @@ public class PostLikeServiceTest {
         post = Post.builder()
                 .memberId(2L)
                 .areaId(1L)
-                .postImages(List.of(new PostImage("abc", "파일이름1"), new PostImage("123", "파일이름2")))
+                .postImages(List.of())
                 .locationPreference(new LocationPreference(point, "test alias"))
                 .category(category1)
                 .tradeStatus(TradeStatus.IN_PROGRESS)

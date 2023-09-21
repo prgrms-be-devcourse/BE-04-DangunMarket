@@ -27,14 +27,14 @@ public class ChatRoomInfo {
 
     private boolean isWriter;
 
-    @Column(nullable = false, name = "posts_id")
+    @Column(nullable = false,name = "post_id")
     private Long postId;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "chatrooms_id", referencedColumnName = "id", nullable = false)
+    @JoinColumn(name = "chatroom_id", referencedColumnName = "id", nullable = false)
     private ChatRoom chatRoom;
 
-    @Column(nullable = false, name = "members_id")
+    @Column(nullable = false, name = "member_id")
     private Long memberId;
 
     @Builder

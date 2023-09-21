@@ -22,9 +22,6 @@ public class ChatMessage {
     @Field("chat_room_id")
     private Long chatRoomId;
 
-    @Field("sender_name")
-    private String senderName;
-
     @Field("member_id")
     private Long memberId;
 
@@ -41,9 +38,8 @@ public class ChatMessage {
     @CreatedDate
     private LocalDateTime createdAt;
 
-    public ChatMessage(Long chatRoomId, String senderName, Long memberId, String message, String imgUrl, Integer readOrNot) {
+    public ChatMessage(Long chatRoomId, Long memberId, String message, String imgUrl, Integer readOrNot) {
         this.chatRoomId = chatRoomId;
-        this.senderName = senderName;
         this.memberId = memberId;
         this.message = message;
         this.imgUrl = imgUrl;

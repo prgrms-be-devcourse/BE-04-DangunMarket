@@ -18,6 +18,7 @@ import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Entity
 @Getter
@@ -67,6 +68,10 @@ public class Member {
 
     public void addActivityArea(ActivityArea activityArea) {
         activityAreas.add(activityArea);
+    }
+
+    public boolean isNotMemberId(Long memberId){
+        return !Objects.equals(id, memberId);
     }
 
 }
