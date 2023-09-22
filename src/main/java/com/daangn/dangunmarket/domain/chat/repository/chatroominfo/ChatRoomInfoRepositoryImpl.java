@@ -6,6 +6,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -32,6 +33,11 @@ public class ChatRoomInfoRepositoryImpl implements ChatRoomInfoRepository {
     @Override
     public ChatRoomInfo save(ChatRoomInfo chatRoomInfo) {
         return chatRoomInfoJpaRepository.save(chatRoomInfo);
+    }
+
+    @Override
+    public List<ChatRoomInfo> findByChatRoomId(Long chatRoomId) {
+        return chatRoomInfoJpaRepository.findChatRoomInfoByChatRoomId(chatRoomId);
     }
 
 }

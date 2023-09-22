@@ -29,7 +29,6 @@ dependencies {
     implementation 'org.hibernate:hibernate-core:6.1.7.Final'
     implementation 'org.hibernate:hibernate-spatial:6.1.7.Final'
 
-
     runtimeOnly 'com.mysql:mysql-connector-j'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation "org.mockito:mockito-core:3.+"
@@ -70,9 +69,6 @@ dependencies {
     //map struct
     implementation 'org.mapstruct:mapstruct:1.5.5.Final'
     annotationProcessor 'org.mapstruct:mapstruct-processor:1.5.5.Final'
-
-    //mongodb
-    implementation 'org.springframework.boot:spring-boot-starter-data-mongodb-reactive'
 }
 
 tasks.named('test') {
