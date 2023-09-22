@@ -1,7 +1,7 @@
 package com.daangn.dangunmarket.domain.chat.controller;
 
 import com.daangn.dangunmarket.domain.auth.jwt.CustomUser;
-import com.daangn.dangunmarket.domain.chat.controller.dro.ChatRoomsFindApiResponses;
+import com.daangn.dangunmarket.domain.chat.controller.dto.ChatRoomsFindApiResponses;
 import com.daangn.dangunmarket.domain.chat.service.ChatRoomService;
 import com.daangn.dangunmarket.domain.chat.service.dto.ChatRoomsFindResponses;
 import org.springframework.data.domain.Pageable;

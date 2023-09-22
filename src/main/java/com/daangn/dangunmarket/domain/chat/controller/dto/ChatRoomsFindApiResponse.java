@@ -1,4 +1,4 @@
-package com.daangn.dangunmarket.domain.chat.controller.dro;
+package com.daangn.dangunmarket.domain.chat.controller.dto;
 
 import java.time.LocalDateTime;
 
