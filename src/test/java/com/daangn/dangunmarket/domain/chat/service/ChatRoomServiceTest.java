@@ -1,22 +1,28 @@
 package com.daangn.dangunmarket.domain.chat.service;
 
 import com.daangn.dangunmarket.domain.DataInitializerFactory;
+import com.daangn.dangunmarket.domain.chat.model.ChatMessage;
 import com.daangn.dangunmarket.domain.chat.model.ChatRoom;
 import com.daangn.dangunmarket.domain.chat.model.ChatRoomInfo;
+import com.daangn.dangunmarket.domain.chat.repository.chatmessage.ChatMessageMongoRepository;
 import com.daangn.dangunmarket.domain.chat.repository.chatroom.ChatRoomRepository;
 import com.daangn.dangunmarket.domain.chat.repository.chatroominfo.ChatRoomInfoRepository;
 import com.daangn.dangunmarket.domain.chat.service.dto.ChatRoomCreateRequest;
+import com.daangn.dangunmarket.domain.member.repository.MemberRepository;
 import com.daangn.dangunmarket.domain.post.model.Category;
 import com.daangn.dangunmarket.domain.post.model.Post;
 import com.daangn.dangunmarket.domain.post.repository.category.CategoryRepository;
 import com.daangn.dangunmarket.domain.post.repository.post.PostRepository;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.TestPropertySource;
 import org.springframework.transaction.annotation.Transactional;
+
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -24,6 +30,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @SpringBootTest
 @Transactional
 @ActiveProfiles("test")
+@TestPropertySource(value = "classpath:/application-test.yml")
 class ChatRoomServiceTest {
 
     @Autowired
@@ -41,6 +48,15 @@ class ChatRoomServiceTest {
     @Autowired
     PostRepository postRepository;
 
+    @Autowired
+    MemberRepository memberRepository;
+
+    @Autowired
+    ChatMessageService chatMessageService;
+
+    @Autowired
+    ChatMessageMongoRepository chatMessageRepository;
+
     Long existedSellerId;
     Long existedPostId;
     Long existedBuyerId;
@@ -49,7 +65,14 @@ class ChatRoomServiceTest {
 
     @BeforeEach
     void setUp() {
+        chatMessageRepository.deleteAll();
         dateSetUp();
+
+    }
+
+    @AfterEach
+    void tearDown() {
+        chatMessageRepository.deleteAll();
     }
 
     @Test
@@ -57,14 +80,32 @@ class ChatRoomServiceTest {
     void createChatRoom_Optional_returnIsPresent() {
         //given
         Long newBuyerId = existedBuyerId + 1;
-        ChatRoomCreateRequest chatRoomCreateRequest = new ChatRoomCreateRequest(existedPostId);
+        ChatRoomCreateRequest chatRoomCreateRequest = new ChatRoomCreateRequest(existedPostId, newBuyerId);
 
         //when
-        Long chatRoomId = chatRoomService.createChatRoom(newBuyerId, existedSellerId ,chatRoomCreateRequest);
+        Long chatRoomId = chatRoomService.createChatRoom(existedSellerId, chatRoomCreateRequest);
         Optional<ChatRoom> chatRoom = chatRoomRepository.findById(chatRoomId);
 
         //then
         assertThat(chatRoom.isPresent()).isEqualTo(true);
+    }
+
+    @Test
+    @DisplayName("입장하면 상대방이 보낸 읽지 않은 메세지가 모두 읽음 처리됨을 확인한다.")
+    void readAllMessage_readNotMessage_returnReadMessageCount() {
+        //given
+        ChatMessage chatMessage1 = DataInitializerFactory.chatMessage1(savedChatRoom.getId(), existedSellerId);
+        ChatMessage chatMessage2 = DataInitializerFactory.chatMessage2(savedChatRoom.getId(), existedSellerId);
+
+        chatMessageRepository.save(chatMessage1);
+        chatMessageRepository.save(chatMessage2);
+
+        //when
+        int readMessageSize = chatRoomService.readAllMessage(savedChatRoom.getId(), existedSellerId);
+
+        //then
+        assertThat(readMessageSize).isEqualTo(2);
+        assertThat(chatRoomService.readAllMessage(savedChatRoom.getId(), existedSellerId)).isEqualTo(0);
     }
 
     void dateSetUp() {
@@ -87,7 +128,6 @@ class ChatRoomServiceTest {
 
         chatRoomInfoRepository.save(buyderChatRoomInfo);
         chatRoomInfoRepository.save(sellerChatRoomInfo);
-
     }
 
 }
