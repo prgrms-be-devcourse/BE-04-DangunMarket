@@ -1,11 +1,14 @@
 package com.daangn.dangunmarket.domain.chat.model;
 
+import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.redis.core.RedisHash;
 
-@Getter
 @RedisHash(value = "session_info")
+@Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class SessionInfo {
 
     @Id
