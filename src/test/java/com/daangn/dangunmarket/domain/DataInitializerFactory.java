@@ -1,6 +1,7 @@
 package com.daangn.dangunmarket.domain;
 
 import com.daangn.dangunmarket.domain.area.model.Area;
+import com.daangn.dangunmarket.domain.chat.model.ChatMessage;
 import com.daangn.dangunmarket.domain.chat.model.ChatRoom;
 import com.daangn.dangunmarket.domain.chat.model.ChatRoomInfo;
 import com.daangn.dangunmarket.domain.member.model.Member;
@@ -17,7 +18,6 @@ import org.locationtech.jts.geom.MultiPolygon;
 import org.locationtech.jts.io.ParseException;
 import org.locationtech.jts.io.WKTReader;
 import org.springframework.mock.web.MockMultipartFile;
-import org.springframework.security.core.parameters.P;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
@@ -82,7 +82,6 @@ public final class DataInitializerFactory {
                 .build();
     }
 
-
     public static Category category() {
         return new Category("전자기기", null, 1L, new ArrayList<>());
     }
@@ -113,6 +112,14 @@ public final class DataInitializerFactory {
 
     public static Post post(Long memberId, Category category) {
         return new Post(memberId, 2L, null, new ArrayList<>(), category, TradeStatus.IN_PROGRESS, new Title("달님이 젤리 가게"), "사용감 있습니다.", new Price(10000), true, LocalDateTime.now(), 0);
+    }
+
+    public static ChatMessage chatMessage1(Long chatRoomId, Long sender) {
+        return new ChatMessage(chatRoomId, sender, "반가워요!", "a", 1);
+    }
+
+    public static ChatMessage chatMessage2(Long chatRoomId, Long sender) {
+        return new ChatMessage(chatRoomId, sender, "물건 깔끔!", "a", 1);
     }
 
 }
