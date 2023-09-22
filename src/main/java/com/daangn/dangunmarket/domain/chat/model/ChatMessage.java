@@ -6,7 +6,6 @@ import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
-import org.springframework.data.mongodb.core.mapping.FieldType;
 
 import java.time.LocalDateTime;
 
@@ -16,14 +15,10 @@ import java.time.LocalDateTime;
 public class ChatMessage {
 
     @Id
-    @Field(value = "_id", targetType = FieldType.OBJECT_ID)
     private String id;
 
     @Field("chat_room_id")
     private Long chatRoomId;
-
-    @Field("sender_name")
-    private String senderName;
 
     @Field("member_id")
     private Long memberId;
@@ -41,9 +36,8 @@ public class ChatMessage {
     @CreatedDate
     private LocalDateTime createdAt;
 
-    public ChatMessage(Long chatRoomId, String senderName, Long memberId, String message, String imgUrl, Integer readOrNot) {
+    public ChatMessage(Long chatRoomId, Long memberId, String message, String imgUrl, Integer readOrNot) {
         this.chatRoomId = chatRoomId;
-        this.senderName = senderName;
         this.memberId = memberId;
         this.message = message;
         this.imgUrl = imgUrl;
