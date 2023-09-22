@@ -52,9 +52,6 @@ class ChatRoomServiceTest {
     MemberRepository memberRepository;
 
     @Autowired
-    ChatMessageService chatMessageService;
-
-    @Autowired
     ChatMessageMongoRepository chatMessageRepository;
 
     Long existedSellerId;
