@@ -29,9 +29,9 @@ public interface ChatMapper {
                             .orElseGet(() -> createDefaultMessage(chatRoomId));
 
                     Integer readOrNot = chatMessage.getReadOrNot();
-                   // if (member.isNotMemberId(chatMessage.getMemberId())) {
-                   //     readOrNot = 0;
-                   // }
+                    if (member.isNotMemberId(chatMessage.getMemberId())) {
+                        readOrNot = 0;
+                    }
 
                     return new ChatRoomsFindResponse(
                             chatRoomId,
