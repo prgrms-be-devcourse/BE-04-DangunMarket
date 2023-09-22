@@ -2,11 +2,10 @@ package com.daangn.dangunmarket.domain.chat.repository.chatroominfo;
 
 import com.daangn.dangunmarket.domain.chat.model.ChatRoomInfo;
 import org.springframework.stereotype.Repository;
-
 import java.util.Optional;
 
 @Repository
-public class ChatRoomInfoRepositoryImpl implements ChatRoomInfoRepository{
+public class ChatRoomInfoRepositoryImpl implements ChatRoomInfoRepository {
 
     private final ChatRoomInfoJpaRepository chatRoomInfoJpaRepository;
 
@@ -16,12 +15,22 @@ public class ChatRoomInfoRepositoryImpl implements ChatRoomInfoRepository{
 
     @Override
     public Optional<ChatRoomInfo> findChatRoomInfoByPostIdAndMemberId(Long postId, Long memberId) {
-        return chatRoomInfoJpaRepository.findChatRoomInfoByPostIdAndMemberId(postId,memberId);
+        return chatRoomInfoJpaRepository.findChatRoomInfoByPostIdAndMemberId(postId, memberId);
     }
 
     @Override
     public ChatRoomInfo save(ChatRoomInfo chatRoomInfo) {
         return chatRoomInfoJpaRepository.save(chatRoomInfo);
+    }
+
+    @Override
+    public Long findSenderIdByChatRoomInfoAndMyId(Long chatRoomId, Long myId) {
+        return chatRoomInfoJpaRepository.findSenderIdByChatRoomInfoAndMyId(chatRoomId, myId);
+    }
+
+    @Override
+    public Long findPostIdByChatRoomId(Long chatRoomId) {
+        return chatRoomInfoJpaRepository.findPostIdByChatRoomId(chatRoomId);
     }
 
 }

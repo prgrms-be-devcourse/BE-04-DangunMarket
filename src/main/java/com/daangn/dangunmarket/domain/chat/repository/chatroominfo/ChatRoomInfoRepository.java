@@ -6,8 +6,12 @@ import java.util.Optional;
 
 public interface ChatRoomInfoRepository {
 
-  Optional<ChatRoomInfo> findChatRoomInfoByPostIdAndMemberId(Long postId, Long memberId);
+    Optional<ChatRoomInfo> findChatRoomInfoByPostIdAndMemberId(Long postId, Long memberId);
 
-  ChatRoomInfo save(ChatRoomInfo chatRoomInfo);
+    ChatRoomInfo save(ChatRoomInfo chatRoomInfo);
+
+    Long findSenderIdByChatRoomInfoAndMyId(Long chatRoomId, Long myId);
+
+    Long findPostIdByChatRoomId(Long chatRoomId);
 
 }
