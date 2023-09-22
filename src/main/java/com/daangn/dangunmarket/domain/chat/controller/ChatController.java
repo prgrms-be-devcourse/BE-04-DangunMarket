@@ -42,7 +42,7 @@ public class ChatController {
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
-    @PutMapping("/{sessionId}")
+    @PutMapping("/session-info/{sessionId}")
     public ResponseEntity<Void> saveSessionIdWithMemberId(
             @PathVariable String sessionId,
             Authentication authentication
