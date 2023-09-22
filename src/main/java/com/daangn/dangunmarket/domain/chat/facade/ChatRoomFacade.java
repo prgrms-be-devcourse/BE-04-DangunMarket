@@ -3,7 +3,6 @@ package com.daangn.dangunmarket.domain.chat.facade;
 import com.daangn.dangunmarket.domain.chat.exception.RoomNotCreateException;
 import com.daangn.dangunmarket.domain.chat.facade.dto.ChatRoomCheckInParamResponse;
 import com.daangn.dangunmarket.domain.chat.facade.mapper.ChatRoomParamDtoMapper;
-import com.daangn.dangunmarket.domain.chat.service.ChatRoomEntryService;
 import com.daangn.dangunmarket.domain.chat.service.ChatRoomInfoService;
 import com.daangn.dangunmarket.domain.chat.service.dto.ChatRoomCreateRequest;
 import com.daangn.dangunmarket.domain.chat.service.ChatRoomService;
@@ -23,16 +22,14 @@ public class ChatRoomFacade {
     private final ChatRoomInfoService chatRoomInfoService;
     private final MemberService memberService;
     private final ChatRoomParamDtoMapper chatRoomParamDtoMapper;
-    private final ChatRoomEntryService chatEntryService;
 
     public ChatRoomFacade(PostService postService, ChatRoomService chatRoomService, ChatRoomInfoService chatRoomInfoService,
-                          MemberService memberService, ChatRoomParamDtoMapper chatRoomParamDtoMapper, ChatRoomEntryService chatEntryService) {
+                          MemberService memberService, ChatRoomParamDtoMapper chatRoomParamDtoMapper) {
         this.postService = postService;
         this.chatRoomService = chatRoomService;
         this.chatRoomInfoService = chatRoomInfoService;
         this.memberService = memberService;
         this.chatRoomParamDtoMapper = chatRoomParamDtoMapper;
-        this.chatEntryService = chatEntryService;
     }
 
     public Long createChatRoom(ChatRoomCreateRequest request){
@@ -49,11 +46,11 @@ public class ChatRoomFacade {
         Long senderId = chatRoomInfoService.findSenderIdByChatRoomInfoAndMyId(chatRoomId, memberId);
         chatRoomService.readAllMessage(chatRoomId, senderId);
 
+        chatRoomService.addMemberToRoom(chatRoomId.toString(),memberId.toString());
+
         Long postId = chatRoomInfoService.findPostIdByChatRoomId(chatRoomId);
         PostFindResponse postFindResponse = postService.findById(postId);
         MemberFindResponse memberFindResponse = memberService.findById(senderId);
-
-        chatEntryService.addMemberToRoom(chatRoomId.toString(),memberId.toString());
 
         return chatRoomParamDtoMapper.toChatRoomCheckInParamResponse(postFindResponse,memberFindResponse);
     }

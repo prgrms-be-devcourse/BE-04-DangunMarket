@@ -3,6 +3,7 @@ package com.daangn.dangunmarket.domain.chat.service;
 import com.daangn.dangunmarket.domain.chat.model.ChatMessage;
 import com.daangn.dangunmarket.domain.chat.model.ChatRoom;
 import com.daangn.dangunmarket.domain.chat.model.ChatRoomInfo;
+import com.daangn.dangunmarket.domain.chat.repository.chatentry.ChatRoomEntryRepository;
 import com.daangn.dangunmarket.domain.chat.repository.chatmessage.ChatMessageRepository;
 import com.daangn.dangunmarket.domain.chat.repository.chatroom.ChatRoomRepository;
 import com.daangn.dangunmarket.domain.chat.repository.chatroominfo.ChatRoomInfoRepository;
@@ -21,12 +22,14 @@ public class ChatRoomService {
     private final ChatRoomRepository chatRoomRepository;
     private final PostRepository postRepository;
     private final ChatMessageRepository chatMessageRepository;
+    private final ChatRoomEntryRepository roomEntryRepository;
 
-    public ChatRoomService(ChatRoomInfoRepository chatRoomInfoRepository, ChatRoomRepository chatRoomRepository, PostRepository postRepository, ChatMessageRepository chatMessageRepository) {
+    public ChatRoomService(ChatRoomInfoRepository chatRoomInfoRepository, ChatRoomRepository chatRoomRepository, PostRepository postRepository, ChatMessageRepository chatMessageRepository, ChatRoomEntryRepository roomEntryRepository) {
         this.chatRoomInfoRepository = chatRoomInfoRepository;
         this.chatRoomRepository = chatRoomRepository;
         this.postRepository = postRepository;
         this.chatMessageRepository = chatMessageRepository;
+        this.roomEntryRepository = roomEntryRepository;
     }
 
     public Long createChatRoom(Long writerId, ChatRoomCreateRequest request) {
@@ -47,6 +50,10 @@ public class ChatRoomService {
         chatMessageRepository.markMessagesAsRead(notReadMessages.stream().map(ChatMessage::getId).toList());
 
         return notReadMessages.size();
+    }
+
+    public void addMemberToRoom(String roomId, String memberId) {
+        roomEntryRepository.addMemberToRoom(roomId, memberId);
     }
 
 }
