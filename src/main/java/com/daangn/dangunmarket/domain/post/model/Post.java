@@ -191,11 +191,19 @@ public class Post extends BaseEntity {
         this.addPostImages(postEditor.postImages());
     }
 
-    public boolean isCreatedBy(Long userId ){
+    public boolean isCreatedBy(Long userId) {
         if (!Objects.equals(this.memberId, userId)) {
             return false;
         }
 
         return true;
     }
+
+    public String extractSingleImage() {
+        if (!postImages.getPostImageList().isEmpty()) {
+            return postImages.getPostImageList().get(0).getUrl();
+        }
+        return "";
+    }
+
 }
