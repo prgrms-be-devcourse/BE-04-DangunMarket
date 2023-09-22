@@ -26,4 +26,9 @@ public class ChatMessageRepositoryImpl implements ChatMessageRepository {
         chatMessageQueryRepository.markMessagesAsRead(messageIds);
     }
 
+    @Override
+    public List<ChatMessage> findByChatRoomIds(List<Long> chatRoomIds) {
+        return chatMessageQueryRepository.findByChatRoomIds(chatRoomIds);
+    }
+
 }

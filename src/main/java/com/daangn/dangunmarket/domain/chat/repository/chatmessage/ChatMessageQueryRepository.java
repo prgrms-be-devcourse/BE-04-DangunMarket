@@ -45,4 +45,15 @@ public class ChatMessageQueryRepository {
         mongoTemplate.updateMulti(query, update, ChatMessage.class);
     }
 
+    public List<ChatMessage> findByChatRoomIds(List<Long> chatRoomIds) {
+        Aggregation aggregation = Aggregation.newAggregation(
+                Aggregation.match(Criteria.where("chat_room_id").in(chatRoomIds)),
+                Aggregation.sort(Sort.Direction.DESC, "created_at"),
+                Aggregation.group("chat_room_id").first("$$ROOT").as("latest_message"),
+                Aggregation.replaceRoot().withValueOf("$latest_message")
+        );
+
+        return mongoTemplate.aggregate(aggregation, "chat_messages", ChatMessage.class).getMappedResults();
+    }
+
 }

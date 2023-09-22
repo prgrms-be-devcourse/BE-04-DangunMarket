@@ -1,5 +1,6 @@
 package com.daangn.dangunmarket.domain.chat.model;
 
+import com.daangn.dangunmarket.global.entity.BaseEntity;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -7,11 +8,13 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.util.Assert;
 
+import java.util.Objects;
+
 @Entity
 @Table(name = "chat_room_infos")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class ChatRoomInfo {
+public class ChatRoomInfo extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -19,14 +22,14 @@ public class ChatRoomInfo {
 
     private boolean isWriter;
 
-    @Column(nullable = false,name = "posts_id")
+    @Column(nullable = false,name = "post_id")
     private Long postId;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "chatrooms_id", referencedColumnName = "id", nullable = false)
+    @JoinColumn(name = "chatroom_id", referencedColumnName = "id", nullable = false)
     private ChatRoom chatRoom;
 
-    @Column(nullable = false, name = "members_id")
+    @Column(nullable = false, name = "member_id")
     private Long memberId;
 
     @Builder
@@ -39,6 +42,14 @@ public class ChatRoomInfo {
         this.postId = postId;
         this.chatRoom = chatRoom;
         this.memberId = memberId;
+    }
+
+    public void deleteChatRoomInfo(){
+        isDeleted = true;
+    }
+
+    public boolean isSameMember(Long memberId){
+        return Objects.equals(this.memberId, memberId);
     }
 
 }

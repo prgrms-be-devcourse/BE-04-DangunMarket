@@ -82,6 +82,16 @@ public final class DataInitializerFactory {
                 .build();
     }
 
+    public static Member member(String nickName, Integer reviewScore) {
+        return Member.builder()
+                .roleType(USER)
+                .memberProvider(GOOGLE)
+                .socialId("member2 socialId")
+                .nickName(new NickName(nickName))
+                .reviewScore(reviewScore)
+                .build();
+    }
+
     public static Category category() {
         return new Category("전자기기", null, 1L, new ArrayList<>());
     }
@@ -120,6 +130,14 @@ public final class DataInitializerFactory {
 
     public static ChatMessage chatMessage2(Long chatRoomId, Long sender) {
         return new ChatMessage(chatRoomId, sender, "물건 깔끔!", "a", 1);
+    }
+
+    public static ChatMessage chatMessage3(Long chatRoomId, Long sender) {
+        return new ChatMessage(chatRoomId, sender, "안녕하세요", "a", 1);
+    }
+
+    public static ChatMessage chatMessage4(Long chatRoomId, Long sender) {
+        return new ChatMessage(chatRoomId, sender, "사용감이 있습니다.", "a", 1);
     }
 
 }
