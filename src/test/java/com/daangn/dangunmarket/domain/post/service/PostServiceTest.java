@@ -60,7 +60,7 @@ class PostServiceTest {
     }
 
     @Test
-    @DisplayName("미리 저장해놓은 post의 status를 변경하고 조회하여 status가 올바르게 변경됐는지 확인한다.")
+    @DisplayName("post의 Status를 변경할 수 있다.")
     void changeStatus_correctRequest_PostId() {
         //given
         Long postId = setupPost1.getId();
@@ -75,7 +75,7 @@ class PostServiceTest {
     }
 
     @Test
-    @DisplayName("refresh 가능한 post의 refreshedAt값을 현재 시간으로 업데이트하고 해당 post의 refreshAt을 확인한다.")
+    @DisplayName("post의 refreshAt의 시간을 현재 시간으로 업데이트 할 수 있다.")
     void refreshTime_refreshablePostId_PostId() {
         //given
         LocalDateTime now = LocalDateTime.now();
@@ -90,7 +90,7 @@ class PostServiceTest {
     }
 
     @Test
-    @DisplayName("refresh가 불가능한 시간으로 refreshTime을 호출하여 TooEarlyToRefreshException의 반환 값들을 확인한다.")
+    @DisplayName("2일 이내에 Post를 refresh할 경우 예외가 발생하며 예외에는 refresh 가능할 때 까지 남은 기간이 담겨있다.")
     void refreshTime_unRefreshablePost_TooEarlyToRefreshException(){
         //given
         LocalDateTime now = LocalDateTime.of(2023, 9, 10, 10, 20);

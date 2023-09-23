@@ -104,7 +104,7 @@ class ChatRoomServiceTest {
     }
 
     @Test
-    @DisplayName("member1의 id로 해당 유저가 속한 채팅방들을 조회 후 응답값을 확인한다.")
+    @DisplayName("memberId를 통해 member가 속한 채팅방들의 메타정보들을 조회할 수 있다.")
     void findChatRoomsByMemberId_memberId_ChatRoomsFindResponses() {
         //when
         ChatRoomsFindResponses responses = chatRoomService.findChatRoomsByMemberId(
@@ -127,7 +127,7 @@ class ChatRoomServiceTest {
     }
 
     @Test
-    @DisplayName("채팅방에서 Member 1명을 제거 후 해당 MemberId로 채팅방이 조회되는지 확인하고, 아직 채팅방에 1명이 참여중이므로 chatRoom이 남아있는지 확인한다.")
+    @DisplayName("chatRoomId와 memberId를 통해 Member와 ChatRoom의 매핑 테이블인 ChatRoomInfo에서 해당 매핑 정보를 삭제할 수 있다.")
     void deleteChatRoomByIdAndMemberId_correctRoomIdAndMemberId_void(){
         //when
         chatRoomService.deleteChatRoomByIdAndMemberId(
@@ -147,7 +147,7 @@ class ChatRoomServiceTest {
     }
 
     @Test
-    @DisplayName("채팅방에서 두명의 유저가 제거 되었을 때 해당 ChatRoom엔티티가 정상적으로 delete되는지 확인한다.")
+    @DisplayName("채팅방에서 두명의 유저가 모두 나갈 경우 해당 채팅방은 삭제된다.")
     void deleteChatRoomByIdAndMemberId_checkDeleteChatRoom(){
         //when
         chatRoomService.deleteChatRoomByIdAndMemberId(

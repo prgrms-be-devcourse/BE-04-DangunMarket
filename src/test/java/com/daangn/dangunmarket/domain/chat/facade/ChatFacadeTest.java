@@ -47,7 +47,7 @@ class ChatFacadeTest {
     }
 
     @Test
-    @DisplayName("미리 저장되어있는 memberId와 sessionId를 통해 SessionInfo생성 후 sessionId로 조회하여 값을 확인한다.")
+    @DisplayName("sessionId, roomId, roomId를 통해 소켓 통신중에 이용할 SessionInfo를 생성할 수 있다.")
     void saveSessionInfo_correctMemberIdAndSessionId_void() {
         //given
         String sessionId = "5rsuwmct";
@@ -68,7 +68,7 @@ class ChatFacadeTest {
     }
 
     @Test
-    @DisplayName("존재하지 않는memberId와 sessionId를 통해 saveSessionInfo메서드를 호출 후 EntityNotFoundException가 발생하는 것을 확인한다.")
+    @DisplayName("존재하지 않는 memberId와 sessionId를 통해 SessionInfo를 생성하려 하면 예외가 발생한다.")
     void saveSessionInfo_incorrectMemberIdAndSessionId_EntityNotFoundException() {
         //given
         String sessionId = "5rsuwmct";
