@@ -1,6 +1,7 @@
 package com.daangn.dangunmarket.domain.chat.service;
 
 import com.daangn.dangunmarket.domain.DataInitializerFactory;
+import com.daangn.dangunmarket.domain.chat.controller.dto.MessageRequest;
 import com.daangn.dangunmarket.domain.chat.model.ChatMessage;
 import com.daangn.dangunmarket.domain.chat.model.ChatRoom;
 import com.daangn.dangunmarket.domain.chat.model.ChatRoomInfo;
@@ -8,6 +9,7 @@ import com.daangn.dangunmarket.domain.chat.model.MessageType;
 import com.daangn.dangunmarket.domain.chat.repository.chatmessage.ChatMessageMongoRepository;
 import com.daangn.dangunmarket.domain.chat.repository.chatroom.ChatRoomJpaRepository;
 import com.daangn.dangunmarket.domain.chat.repository.chatroominfo.ChatRoomInfoJpaRepository;
+import com.daangn.dangunmarket.domain.chat.service.dto.ChatMessageResponse;
 import com.daangn.dangunmarket.domain.chat.service.dto.ChatRoomsFindResponse;
 import com.daangn.dangunmarket.domain.chat.service.dto.ChatRoomsFindResponses;
 import com.daangn.dangunmarket.domain.member.model.Member;
@@ -112,7 +114,7 @@ class ChatServiceTest {
 
     @Test
     @DisplayName("이미지 파일 3개 미만일 경우 정상적으로 저장한다.")
-    void uploadImages_FileList_returnS3Urls() {
+    void uploadImages_FileList_ReturnS3Urls() {
         //when
         List<MultipartFile> multipartFiles = List.of(
                 new MockMultipartFile("file1", "imagefile1.jpeg", "image/jpeg", "<<jpeg data>>".getBytes()),
@@ -131,7 +133,21 @@ class ChatServiceTest {
         assertThat(results.get(0)).isEqualTo(imageInfo1);
         assertThat(results.get(1)).isEqualTo(imageInfo2);
     }
-    
+
+    @Test
+    @DisplayName("채팅 메시지 중 imageUrl이 존재할 경우 MessageType을 IMAGE로 저장한다.")
+    void saveMessage_DtoAndIds_ReturnChatMessageResponse() {
+        //given
+        Long memberId = savedMember1.getId();
+        Long savedRoomId = savedRoom1.getId();
+        MessageRequest request = new MessageRequest("", List.of("사진url1", "사진url2"));
+
+        //when
+        ChatMessageResponse chatMessageResponse = chatService.saveMessage(memberId, savedRoomId, request);
+
+        //then
+        assertThat(chatMessageResponse.type()).isEqualTo(MessageType.IMAGE);
+    }
 
     /**
      * 방     :   해당 방에 참여중인 유저        :  메세지를 보낸 순서
