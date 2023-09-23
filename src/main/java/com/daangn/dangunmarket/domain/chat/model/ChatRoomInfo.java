@@ -30,7 +30,7 @@ public class ChatRoomInfo extends BaseEntity {
 
     private boolean isWriter;
 
-    @Column(nullable = false,name = "post_id")
+    @Column(nullable = false, name = "post_id")
     private Long postId;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -52,11 +52,11 @@ public class ChatRoomInfo extends BaseEntity {
         this.memberId = memberId;
     }
 
-    public void deleteChatRoomInfo(){
+    public void deleteChatRoomInfo() {
         isDeleted = true;
     }
 
-    public boolean isSameMember(Long memberId){
+    public boolean isSameMember(Long memberId) {
         return Objects.equals(this.memberId, memberId);
     }
 

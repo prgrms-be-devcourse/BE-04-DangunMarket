@@ -19,7 +19,7 @@ public class ChatRoom extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    public void deleteChatRoom(){
+    public void deleteChatRoom() {
         isDeleted = true;
     }
 }
