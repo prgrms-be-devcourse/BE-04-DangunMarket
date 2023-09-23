@@ -31,36 +31,36 @@ import static org.assertj.core.api.Assertions.assertThat;
 class ChatRoomFacadeTest {
 
     @Autowired
-    ChatRoomFacade chatRoomFacade;
+    private ChatRoomFacade chatRoomFacade;
 
     @Autowired
-    ChatRoomRepository chatRoomRepository;
+    private ChatRoomRepository chatRoomRepository;
 
     @Autowired
-    PostRepository postRepository;
+    private PostRepository postRepository;
 
     @Autowired
-    CategoryRepository categoryRepository;
+    private CategoryRepository categoryRepository;
 
     @Autowired
-    ChatRoomInfoRepository chatRoomInfoRepository;
+    private ChatRoomInfoRepository chatRoomInfoRepository;
 
     @Autowired
-    MemberRepository memberRepository;
+    private MemberRepository memberRepository;
 
     @Autowired
-    ChatMessageMongoRepository chatMessageRepository;
+    private ChatMessageMongoRepository chatMessageRepository;
 
     @Autowired
-    ChatRoomEntryRedisRepository chatEntryRedisRepository;
+    private ChatRoomEntryRedisRepository chatEntryRedisRepository;
 
-    ChatRoom savedChatRoom;
-    Member existedBuyer;
-    Member existedSeller;
-    Long existedBuyerId;
-    Long existedSellerId;
-    Long existedPostId;
-    Post savedPost;
+    private ChatRoom savedChatRoom;
+    private Member existedBuyer;
+    private Member existedSeller;
+    private Long existedBuyerId;
+    private Long existedSellerId;
+    private Long existedPostId;
+    private Post savedPost;
 
     @BeforeEach
     void setUp() {

@@ -209,20 +209,21 @@ class ChatRoomServiceTest {
         Post savedPost = postRepository.save(DataInitializerFactory.post(existedSeller.getId(), savedeCategory));
         existedPostId = savedPost.getId();
 
-        chatRoomInfoRepository.save(
-                DataInitializerFactory.sellerChatRoomInfo(existedPostId, existedSeller.getId(), savedChatRoom1));
-        chatRoomInfoRepository.save(
-                DataInitializerFactory.buyerChatRoomInfo(existedPostId, existedBuyer1.getId(), savedChatRoom1));
-        chatRoomInfoRepository.save(
-                DataInitializerFactory.sellerChatRoomInfo(existedPostId, existedSeller.getId(), savedChatRoom2));
-        chatRoomInfoRepository.save(
-                DataInitializerFactory.buyerChatRoomInfo(existedPostId, existedBuyer2.getId(), savedChatRoom2));
+        chatRoomInfoRepository.saveAll(
+                List.of(
+                        DataInitializerFactory.sellerChatRoomInfo(existedPostId, existedSeller.getId(), savedChatRoom1),
+                        DataInitializerFactory.buyerChatRoomInfo(existedPostId, existedBuyer1.getId(), savedChatRoom1),
+                        DataInitializerFactory.sellerChatRoomInfo(existedPostId, existedSeller.getId(), savedChatRoom2),
+                        DataInitializerFactory.buyerChatRoomInfo(existedPostId, existedBuyer2.getId(), savedChatRoom2)
+                )
+        );
 
         room1ChatMessage1 = DataInitializerFactory.chatMessage1(savedChatRoom1.getId(), existedSeller.getId());
         room1ChatMessage2 = DataInitializerFactory.chatMessage2(savedChatRoom1.getId(), existedBuyer1.getId());
 
         room2ChatMessage1 = DataInitializerFactory.chatMessage3(savedChatRoom2.getId(), existedBuyer2.getId());
         room2ChatMessage2 = DataInitializerFactory.chatMessage4(savedChatRoom2.getId(), existedSeller.getId());
+
         chatMessageRepository.save(room1ChatMessage1);
         chatMessageRepository.save(room1ChatMessage2);
         chatMessageRepository.save(room2ChatMessage1);

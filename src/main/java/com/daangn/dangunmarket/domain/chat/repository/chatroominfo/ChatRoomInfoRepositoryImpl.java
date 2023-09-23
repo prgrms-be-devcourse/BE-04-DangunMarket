@@ -45,8 +45,14 @@ public class ChatRoomInfoRepositoryImpl implements ChatRoomInfoRepository {
         return chatRoomInfoJpaRepository.findPostIdByChatRoomId(chatRoomId);
     }
 
+    @Override
     public List<ChatRoomInfo> findByChatRoomId(Long chatRoomId) {
         return chatRoomInfoJpaRepository.findChatRoomInfoByChatRoomId(chatRoomId);
+    }
+
+    @Override
+    public List<ChatRoomInfo> saveAll(List<ChatRoomInfo> chatRoomInfos) {
+        return chatRoomInfoJpaRepository.saveAll(chatRoomInfos);
     }
 
 }

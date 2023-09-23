@@ -25,5 +25,6 @@ public interface ChatRoomInfoRepository {
 
     List<ChatRoomInfo> findByChatRoomId(Long chatRoomId);
 
+    List<ChatRoomInfo> saveAll(List<ChatRoomInfo> chatRoomInfos);
 
 }
