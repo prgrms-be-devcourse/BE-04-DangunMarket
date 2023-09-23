@@ -44,7 +44,7 @@ public class ChatRoomController {
     public ResponseEntity<Void> deleteChatRoom(
             @PathVariable Long chatRoomId,
             Authentication authentication
-    ){
+    ) {
         CustomUser customUser = (CustomUser) authentication.getPrincipal();
         chatRoomService.deleteChatRoomByIdAndMemberId(chatRoomId, customUser.memberId());
 

@@ -5,7 +5,7 @@ import com.daangn.dangunmarket.domain.chat.controller.dto.ChatRoomCreateApiReque
 import com.daangn.dangunmarket.domain.chat.controller.dto.ChatRoomCreateApiResponse;
 import com.daangn.dangunmarket.domain.chat.controller.dto.SessionInfoSaveApiRequest;
 import com.daangn.dangunmarket.domain.chat.controller.mapper.ChatDtoApiMapper;
-import com.daangn.dangunmarket.domain.chat.facade.ChatFacade;
+import com.daangn.dangunmarket.domain.chat.facade.ChatRoomFacade;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -24,11 +24,11 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class ChatController {
 
-    private final ChatFacade chatFacade;
+    private final ChatRoomFacade chatRoomFacade;
     private final ChatDtoApiMapper mapper;
 
-    public ChatController(ChatFacade chatFacade, ChatDtoApiMapper mapper) {
-        this.chatFacade = chatFacade;
+    public ChatController(ChatRoomFacade chatRoomFacade, ChatDtoApiMapper mapper) {
+        this.chatRoomFacade = chatRoomFacade;
         this.mapper = mapper;
     }
 
@@ -38,7 +38,7 @@ public class ChatController {
 
         CustomUser customUser = (CustomUser) authentication.getPrincipal();
 
-        Long chatRoomId = chatFacade.createChatRoom(customUser.memberId(), mapper.toChatRoomCreateRequest(request));
+        Long chatRoomId = chatRoomFacade.createChatRoom(customUser.memberId(), mapper.toChatRoomCreateRequest(request));
         ChatRoomCreateApiResponse response = mapper.toChatRoomCreateApiResponse(chatRoomId);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
@@ -51,7 +51,7 @@ public class ChatController {
             Authentication authentication
     ){
         CustomUser customUser = (CustomUser) authentication.getPrincipal();
-        chatFacade.saveSessionInfo(mapper.toSessionInfoSaveFacaRequest(
+        chatRoomFacade.saveSessionInfo(mapper.toSessionInfoSaveFacaRequest(
                 sessionId,
                 request.roomId(),
                 customUser.memberId())

@@ -52,4 +52,8 @@ public class ChatRoomInfo extends BaseEntity {
         return Objects.equals(this.memberId, memberId);
     }
 
+    public Long getChatRoomId(){
+        return chatRoom.getId();
+    }
+
 }

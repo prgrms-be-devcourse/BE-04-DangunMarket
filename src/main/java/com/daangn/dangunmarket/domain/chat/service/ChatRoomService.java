@@ -59,7 +59,7 @@ public class ChatRoomService {
         Slice<JoinedMemberResponse> roomInfoWithMembers = chatRoomInfoRepository.findMembersInSameChatRooms(memberId, pageable);
 
         List<Long> chatRoomIds = roomInfoWithMembers.getContent().stream()
-                .map(e -> e.chatRoomInfo().getChatRoom().getId())
+                .map(e -> e.chatRoomInfo().getChatRoomId())
                 .toList();
 
         List<ChatMessage> chatMessages = chatMessageRepository.findByChatRoomIds(chatRoomIds);

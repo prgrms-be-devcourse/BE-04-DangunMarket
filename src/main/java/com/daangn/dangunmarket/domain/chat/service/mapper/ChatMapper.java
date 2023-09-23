@@ -20,11 +20,11 @@ public interface ChatMapper {
     default ChatRoomsFindResponses toChatRoomsFindResponses(Slice<JoinedMemberResponse> roomInfoWithMembers, List<ChatMessage> chatMessages) {
         Slice<ChatRoomsFindResponse> mappedResponses = roomInfoWithMembers
                 .map((roomInfoWithMember) -> {
-                    Long chatRoomId = roomInfoWithMember.chatRoomInfo().getChatRoom().getId();
+                    Long chatRoomId = roomInfoWithMember.chatRoomInfo().getChatRoomId();
                     Member member = roomInfoWithMember.member();
 
                     ChatMessage chatMessage = chatMessages.stream()
-                            .filter(e -> Objects.equals(e.getChatRoomId(), chatRoomId))
+                            .filter(m -> Objects.equals(m.getChatRoomId(), chatRoomId))
                             .findFirst()
                             .orElseGet(() -> createDefaultMessage(chatRoomId));
 

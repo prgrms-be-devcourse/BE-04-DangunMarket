@@ -15,7 +15,7 @@ import org.springframework.stereotype.Service;
 import static com.daangn.dangunmarket.global.response.ErrorCode.NOT_CREATE_CHAT_ROOM;
 
 @Service
-public class ChatFacade {
+public class ChatRoomFacade {
 
     private final PostService postService;
     private final ChatRoomService chatRoomService;
@@ -24,7 +24,7 @@ public class ChatFacade {
     private final MemberService memberService;
     private final ChatFacadeMapper mapper;
 
-    public ChatFacade(PostService postService, ChatRoomService chatRoomService, ChatRoomInfoService chatRoomInfoService, ChatService chatService, MemberService memberService, ChatFacadeMapper mapper) {
+    public ChatRoomFacade(PostService postService, ChatRoomService chatRoomService, ChatRoomInfoService chatRoomInfoService, ChatService chatService, MemberService memberService, ChatFacadeMapper mapper) {
         this.postService = postService;
         this.chatRoomService = chatRoomService;
         this.chatRoomInfoService = chatRoomInfoService;

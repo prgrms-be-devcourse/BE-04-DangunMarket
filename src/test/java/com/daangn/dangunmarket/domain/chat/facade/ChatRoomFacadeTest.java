@@ -22,10 +22,10 @@ import static org.assertj.core.api.Assertions.catchException;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
 @Transactional
 @ActiveProfiles("test")
-class ChatFacadeTest {
+class ChatRoomFacadeTest {
 
     @Autowired
-    private ChatFacade chatFacade;
+    private ChatRoomFacade chatRoomFacade;
 
     @Autowired
     private SessionInfoRedisRepository sessionInfoRedisRepository;
@@ -55,7 +55,7 @@ class ChatFacadeTest {
         Long savedMemberId = savedMember.getId();
 
         //when
-        chatFacade.saveSessionInfo(new SessionInfoSaveFacaRequest(
+        chatRoomFacade.saveSessionInfo(new SessionInfoSaveFacaRequest(
                 sessionId,
                 roomId,
                 savedMemberId
@@ -76,7 +76,7 @@ class ChatFacadeTest {
         Long savedMemberId = savedMember.getId() + 5;
 
         //when
-        Exception exception = catchException(() -> chatFacade.saveSessionInfo(new SessionInfoSaveFacaRequest(
+        Exception exception = catchException(() -> chatRoomFacade.saveSessionInfo(new SessionInfoSaveFacaRequest(
                 sessionId,
                 roomId,
                 savedMemberId

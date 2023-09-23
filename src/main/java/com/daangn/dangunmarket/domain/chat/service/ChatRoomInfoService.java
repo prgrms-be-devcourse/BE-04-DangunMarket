@@ -16,8 +16,8 @@ public class ChatRoomInfoService {
     }
 
     public boolean isExistedRoom(Long postId, Long memberId) {
-       Optional<ChatRoomInfo> chatRoomInfo = chatRoomInfoRepository.findChatRoomInfoByPostIdAndMemberId(postId,memberId);
-       return chatRoomInfo.isPresent();
+        Optional<ChatRoomInfo> chatRoomInfo = chatRoomInfoRepository.findChatRoomInfoByPostIdAndMemberId(postId, memberId);
+        return chatRoomInfo.isPresent();
     }
 
 }
