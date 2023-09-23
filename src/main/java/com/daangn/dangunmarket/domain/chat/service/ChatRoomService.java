@@ -13,13 +13,14 @@ import com.daangn.dangunmarket.domain.chat.service.dto.ChatRoomsFindResponses;
 import com.daangn.dangunmarket.domain.chat.service.mapper.ChatMapper;
 import com.daangn.dangunmarket.domain.post.repository.post.PostRepository;
 import com.daangn.dangunmarket.global.exception.EntityNotFoundException;
-import com.daangn.dangunmarket.global.response.ErrorCode;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+
+import static com.daangn.dangunmarket.global.response.ErrorCode.NOT_FOUND_ENTITY;
 
 @Transactional
 @Service
@@ -80,20 +81,11 @@ public class ChatRoomService {
         return mapper.toChatRoomsFindResponses(roomInfoWithMembers, chatMessages);
     }
 
-    @Transactional
-    public void deleteChatRoomByIdAndMemberId(Long chatRoomId, Long memberId) {
+    public void deleteChatRoomByIdAndMemberId(Long chatRoomId, Long deleteRequestMemberId) {
+        ChatRoom chatRoom =  chatRoomRepository.findById(chatRoomId).orElseThrow(()-> new EntityNotFoundException(NOT_FOUND_ENTITY));
         List<ChatRoomInfo> findChatRoomInfos = chatRoomInfoRepository.findByChatRoomId(chatRoomId);
 
-        ChatRoomInfo chatRoomInfo = findChatRoomInfos.stream()
-                .filter(e -> e.isSameMember(memberId))
-                .findFirst()
-                .orElseThrow(() -> new EntityNotFoundException(ErrorCode.NOT_FOUND_ENTITY));
-
-        chatRoomInfo.deleteChatRoomInfo();
-
-        if (findChatRoomInfos.size() < 2){
-            chatRoomInfo.getChatRoom().deleteChatRoom();
-        }
+        chatRoom.deleteChatRoom(deleteRequestMemberId,findChatRoomInfos);
     }
 
 }
