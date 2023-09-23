@@ -14,7 +14,8 @@ import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import static com.daangn.dangunmarket.global.response.ErrorCode.*;
+import static com.daangn.dangunmarket.global.response.ErrorCode.NOT_FOUND_POST_ENTITY;
+import static com.daangn.dangunmarket.global.response.ErrorCode.NOT_FOUND_POST_LIKE_ENTITY;
 
 @Service
 @Transactional(readOnly = true)
@@ -35,14 +36,15 @@ public class PostLikeService {
                 .orElseThrow(() -> new EntityNotFoundException(NOT_FOUND_POST_ENTITY));
 
         if (postLikeRepository.existsByMemberIdAndPostId(memberId, postId)) {
-            throw new InvalidPostLikeException(ALREADY_EXISTS_POST_LIKE);
+            throw new InvalidPostLikeException(NOT_FOUND_POST_ENTITY);
         }
 
         post.like();
 
         if (postLikeRepository.existsByMemberIdAndPostId(memberId, postId)) {
-            throw new InvalidPostLikeException(ALREADY_EXISTS_POST_LIKE);
+            throw new InvalidPostLikeException(NOT_FOUND_POST_ENTITY);
         }
+
         PostLike postLike = PostLike.builder()
                 .memberId(memberId)
                 .post(post)
@@ -59,7 +61,6 @@ public class PostLikeService {
                 .orElseThrow(() -> new EntityNotFoundException(NOT_FOUND_POST_ENTITY));
         post.cancelLike();
 
-
         PostLike postLike = postLikeRepository
                 .findByMemberIdAndPostId(memberId, postId)
                 .orElseThrow(() -> new EntityNotFoundException(NOT_FOUND_POST_LIKE_ENTITY));
@@ -70,6 +71,7 @@ public class PostLikeService {
 
     public LikedPostFindResponseList findByMemberId(Long memberId, Pageable pageable) {
         Slice<JoinedPostWithArea> responseList = postLikeRepository.findByMemberId(memberId, pageable);
+
         return LikedPostFindResponseList.from(responseList);
     }
 
