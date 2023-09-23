@@ -4,6 +4,7 @@ import com.daangn.dangunmarket.domain.DataInitializerFactory;
 import com.daangn.dangunmarket.domain.chat.model.ChatMessage;
 import com.daangn.dangunmarket.domain.chat.model.ChatRoom;
 import com.daangn.dangunmarket.domain.chat.model.ChatRoomInfo;
+import com.daangn.dangunmarket.domain.chat.model.MessageType;
 import com.daangn.dangunmarket.domain.chat.repository.chatmessage.ChatMessageMongoRepository;
 import com.daangn.dangunmarket.domain.chat.repository.chatroom.ChatRoomJpaRepository;
 import com.daangn.dangunmarket.domain.chat.repository.chatroominfo.ChatRoomInfoJpaRepository;
@@ -11,19 +12,27 @@ import com.daangn.dangunmarket.domain.chat.service.dto.ChatRoomsFindResponse;
 import com.daangn.dangunmarket.domain.chat.service.dto.ChatRoomsFindResponses;
 import com.daangn.dangunmarket.domain.member.model.Member;
 import com.daangn.dangunmarket.domain.member.repository.MemberJpaRepository;
+import com.daangn.dangunmarket.global.aws.dto.ImageInfo;
+import com.daangn.dangunmarket.global.aws.s3.S3Uploader;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.BDDMockito.given;
 
 @ActiveProfiles("test")
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
@@ -44,6 +53,9 @@ class ChatServiceTest {
 
     @Autowired
     private ChatMessageMongoRepository chatMessageMongoRepository;
+
+    @MockBean
+    private S3Uploader s3Uploader;
 
     private Member savedMember1;
     private ChatRoom savedRoom1;
@@ -81,6 +93,45 @@ class ChatServiceTest {
         assertThat(contents.get(1).otherMemberName()).isEqualTo("mac");
         assertThat(contents.get(1).readOrNot()).isEqualTo(0);
     }
+
+
+    @Test
+    @DisplayName("채팅 중 이미지 파일 4개 이상 첨부시 예외가 발생한다.")
+    void uploadImages_FileList_ThrowIllegalArgumentException() {
+        //when
+        List<MultipartFile> multipartFiles = List.of(
+                new MockMultipartFile("file1", "imagefile1.jpeg", "image/jpeg", "<<jpeg data>>".getBytes()),
+                new MockMultipartFile("file2", "imagefile2.jpeg", "image/jpeg", "<<jpeg data>>".getBytes()),
+                new MockMultipartFile("file3", "imagefile3.jpeg", "image/jpeg", "<<jpeg data>>".getBytes()),
+                new MockMultipartFile("file4", "imagefile4.jpeg", "image/jpeg", "<<jpeg data>>".getBytes()));
+
+        //then
+        assertThatThrownBy(() -> chatService.uploadImages(multipartFiles))
+                .isInstanceOf(IllegalArgumentException.class);
+    }
+
+    @Test
+    @DisplayName("이미지 파일 3개 미만일 경우 정상적으로 저장한다.")
+    void uploadImages_FileList_returnS3Urls() {
+        //when
+        List<MultipartFile> multipartFiles = List.of(
+                new MockMultipartFile("file1", "imagefile1.jpeg", "image/jpeg", "<<jpeg data>>".getBytes()),
+                new MockMultipartFile("file2", "imagefile2.jpeg", "image/jpeg", "<<jpeg data>>".getBytes()));
+        ImageInfo imageInfo1 = new ImageInfo("1url", "imagefile1");
+        ImageInfo imageInfo2 = new ImageInfo("2url", "imagefile2");
+
+        given(s3Uploader.saveImages(any())).willReturn(List.of(
+                imageInfo1,
+                imageInfo2));
+
+        //when
+        List<ImageInfo> results = chatService.uploadImages(multipartFiles);
+
+        //then
+        assertThat(results.get(0)).isEqualTo(imageInfo1);
+        assertThat(results.get(1)).isEqualTo(imageInfo2);
+    }
+    
 
     /**
      * 방     :   해당 방에 참여중인 유저        :  메세지를 보낸 순서
@@ -135,32 +186,36 @@ class ChatServiceTest {
                 savedRoom1.getId(),
                 savedMember1.getId(),
                 "방 1의 첫번째 메세지",
-                "a",
-                1
+                List.of("a"),
+                1,
+                MessageType.TALK
         ));
 
         chatMessageMongoRepository.save(new ChatMessage(
                 savedRoom1.getId(),
                 savedMember2.getId(),
                 "방 1의 두번째 메세지",
-                "b",
-                1
+                List.of("a"),
+                1,
+                MessageType.TALK
         ));
 
         chatMessageMongoRepository.save(new ChatMessage(
                 savedRoom2.getId(),
                 savedMember3.getId(),
                 "방 2의 첫번째 메세지",
-                "a",
-                1
+                List.of("a"),
+                1,
+                MessageType.TALK
         ));
 
         chatMessageMongoRepository.save(new ChatMessage(
                 savedRoom2.getId(),
                 savedMember1.getId(),
-                "방 2의 두번째 메세지",
-                "a",
-                1
+                "방 2의 첫번째 메세지",
+                List.of("a"),
+                1,
+                MessageType.TALK
         ));
     }
 
