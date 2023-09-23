@@ -21,10 +21,6 @@ public class ChatErrorHandler extends StompSubProtocolErrorHandler {
 
     private static final byte[] EMPTY_PAYLOAD = new byte[0];
 
-    public ChatErrorHandler() {
-        super();
-    }
-
     @Override
     public Message<byte[]> handleClientMessageProcessingError(Message<byte[]> clientMessage,
                                                               Throwable ex) {
