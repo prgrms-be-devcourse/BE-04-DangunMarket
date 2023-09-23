@@ -1,5 +1,6 @@
 package com.daangn.dangunmarket.domain.chat.model;
 
+import com.daangn.dangunmarket.global.entity.BaseEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -15,11 +16,13 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.util.Assert;
 
+import java.util.Objects;
+
 @Entity
 @Table(name = "chat_room_infos")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class ChatRoomInfo {
+public class ChatRoomInfo extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -47,6 +50,14 @@ public class ChatRoomInfo {
         this.postId = postId;
         this.chatRoom = chatRoom;
         this.memberId = memberId;
+    }
+
+    public void deleteChatRoomInfo(){
+        isDeleted = true;
+    }
+
+    public boolean isSameMember(Long memberId){
+        return Objects.equals(this.memberId, memberId);
     }
 
 }

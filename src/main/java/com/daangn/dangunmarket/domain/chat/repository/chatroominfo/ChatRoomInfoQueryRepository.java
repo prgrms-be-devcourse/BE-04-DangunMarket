@@ -33,6 +33,7 @@ public class ChatRoomInfoQueryRepository {
                 .join(member).on(otherChatRoomInfo.memberId.eq(member.id))
                 .where(
                         chatRoomInfo.chatRoom.eq(otherChatRoomInfo.chatRoom),
+                        chatRoomInfo.isDeleted.eq(false),
                         chatRoomInfo.memberId.eq(memberId),
                         otherChatRoomInfo.memberId.ne(memberId))
                 .offset(pageable.getOffset())
@@ -47,4 +48,5 @@ public class ChatRoomInfoQueryRepository {
 
         return new SliceImpl<>(contents, pageable, hasNext);
     }
+
 }
