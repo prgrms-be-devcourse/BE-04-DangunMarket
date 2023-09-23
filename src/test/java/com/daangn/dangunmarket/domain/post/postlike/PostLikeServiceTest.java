@@ -75,7 +75,7 @@ public class PostLikeServiceTest {
     }
 
     @AfterEach
-    void tearDown(){
+    void tearDown() {
         postLikeJpaRepository.deleteAll();
         postJpaRepository.deleteAll();
     }
