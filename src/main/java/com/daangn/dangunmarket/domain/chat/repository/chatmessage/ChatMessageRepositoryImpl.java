@@ -20,4 +20,8 @@ public class ChatMessageRepositoryImpl implements ChatMessageRepository {
         return chatMessageQueryRepository.findByChatRoomIds(chatRoomIds);
     }
 
+    public ChatMessage save(ChatMessage chatMessage) {
+        return chatMessageMongoRepository.save(chatMessage);
+    }
+
 }
