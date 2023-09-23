@@ -1,21 +1,29 @@
 package com.daangn.dangunmarket.domain.chat.service;
 
 import com.daangn.dangunmarket.domain.chat.model.SessionInfo;
-import com.daangn.dangunmarket.domain.chat.repository.SessionInfoRedisRepository;
+import com.daangn.dangunmarket.domain.chat.repository.sessioninfo.SessionInfoRepository;
+import com.daangn.dangunmarket.domain.chat.service.dto.SessionInfoSaveRequest;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class ChatService {
 
-    private final SessionInfoRedisRepository sessionInfoRedisRepository;
+    private final SessionInfoRepository sessionInfoRepository;
 
-    public ChatService(SessionInfoRedisRepository sessionInfoRedisRepository) {
-        this.sessionInfoRedisRepository = sessionInfoRedisRepository;
+    public ChatService(SessionInfoRepository sessionInfoRepository) {
+        this.sessionInfoRepository = sessionInfoRepository;
     }
 
-    public void saveSessionInfo(String sessionId, Long memberId) {
-        SessionInfo sessionInfo = new SessionInfo(sessionId, memberId);
-        sessionInfoRedisRepository.save(sessionInfo);
+    @Transactional
+    public void saveSessionInfo(SessionInfoSaveRequest request) {
+        SessionInfo sessionInfo = SessionInfo.builder()
+                .sessionId(request.sessionId())
+                .memberId(request.memberId())
+                .roomId(request.roomId())
+                .build();
+
+        sessionInfoRepository.save(sessionInfo);
     }
 
 }

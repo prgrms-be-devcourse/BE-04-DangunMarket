@@ -4,6 +4,7 @@ import com.daangn.dangunmarket.domain.auth.jwt.CustomUser;
 import com.daangn.dangunmarket.domain.chat.controller.dto.ChatRoomsFindApiResponses;
 import com.daangn.dangunmarket.domain.chat.service.ChatRoomService;
 import com.daangn.dangunmarket.domain.chat.service.dto.ChatRoomsFindResponses;
+import org.springframework.context.event.EventListener;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.socket.messaging.SessionDisconnectEvent;
 
 @RestController
 @RequestMapping(value = "/chats",
@@ -47,5 +49,10 @@ public class ChatRoomController {
         chatRoomService.deleteChatRoomByIdAndMemberId(chatRoomId, customUser.memberId());
 
         return ResponseEntity.noContent().build();
+    }
+
+    @EventListener
+    public void onDisconnectEvent(SessionDisconnectEvent event) {
+        chatRoomService.deleteChatRoomEntryInMemberId(event.getSessionId());
     }
 }

@@ -4,9 +4,12 @@ import com.daangn.dangunmarket.domain.DataInitializerFactory;
 import com.daangn.dangunmarket.domain.chat.model.ChatMessage;
 import com.daangn.dangunmarket.domain.chat.model.ChatRoom;
 import com.daangn.dangunmarket.domain.chat.model.ChatRoomInfo;
+import com.daangn.dangunmarket.domain.chat.model.SessionInfo;
+import com.daangn.dangunmarket.domain.chat.repository.chatentry.ChatRoomEntryRedisRepository;
 import com.daangn.dangunmarket.domain.chat.repository.chatmessage.ChatMessageMongoRepository;
 import com.daangn.dangunmarket.domain.chat.repository.chatroom.ChatRoomRepository;
 import com.daangn.dangunmarket.domain.chat.repository.chatroominfo.ChatRoomInfoRepository;
+import com.daangn.dangunmarket.domain.chat.repository.sessioninfo.SessionInfoRedisRepository;
 import com.daangn.dangunmarket.domain.chat.service.dto.ChatRoomCreateRequest;
 import com.daangn.dangunmarket.domain.chat.service.dto.ChatRoomsFindResponse;
 import com.daangn.dangunmarket.domain.chat.service.dto.ChatRoomsFindResponses;
@@ -29,6 +32,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -59,6 +63,12 @@ class ChatRoomServiceTest {
     @Autowired
     private PostRepository postRepository;
 
+    @Autowired
+    private SessionInfoRedisRepository sessionInfoRedisRepository;
+
+    @Autowired
+    private ChatRoomEntryRedisRepository chatRoomEntryRedisRepository;
+
     private Member existedSeller;
     private Long existedPostId;
     private Member existedBuyer;
@@ -74,6 +84,8 @@ class ChatRoomServiceTest {
     @AfterEach
     void tearDown() {
         chatMessageMongoRepository.deleteAll();
+        sessionInfoRedisRepository.deleteAll();;
+        chatRoomEntryRedisRepository.deleteAllWithPrefix();
     }
 
     @Test
@@ -151,6 +163,69 @@ class ChatRoomServiceTest {
                 chatRoomRepository.findById(savedChatRoom1.getId())
                         .orElseThrow(RuntimeException::new))
                 .isInstanceOf(RuntimeException.class);
+    }
+
+    @Test
+    @DisplayName("레디스의 ChatRoomEntry의 value인 memberId를 sessionId를 통해 삭제한다.")
+    void deleteChatRoomEntryInMemberId_sessionId_void(){
+        //given
+        String sellerSessionId = "5rsuwmct";
+        Long sellerId = existedSeller.getId();
+        Long chatRoomId = savedChatRoom1.getId();
+
+        String buyerSessionId = "7rshwmct";
+        Long buyerId = existedBuyer.getId();
+
+        setUpDeleteChatRoomEntryInMemberIdData(sellerSessionId, sellerId, chatRoomId, buyerSessionId, buyerId);
+
+        //when
+        chatRoomService.deleteChatRoomEntryInMemberId(buyerSessionId);
+
+        //then
+        Set<String> membersInRoom = chatRoomEntryRedisRepository.getMembersInRoom(Long.toString(chatRoomId));
+        assertThat(membersInRoom.size()).isEqualTo(1);
+    }
+
+    @Test
+    @DisplayName("레디스의 ChatRoomEntry에서 두명의 memberId가 삭제될 시 ChatRoomEntry가 삭제된다.")
+    void deleteChatRoomEntryInMemberId_testDeleteEntry(){
+        //given
+        String sellerSessionId = "5rsuwmct";
+        Long sellerId = existedSeller.getId();
+        Long chatRoomId = savedChatRoom1.getId();
+
+        String buyerSessionId = "7rshwmct";
+        Long buyerId = existedBuyer.getId();
+
+        setUpDeleteChatRoomEntryInMemberIdData(sellerSessionId, sellerId, chatRoomId, buyerSessionId, buyerId);
+
+        //when
+        chatRoomService.deleteChatRoomEntryInMemberId(buyerSessionId);
+        chatRoomService.deleteChatRoomEntryInMemberId(sellerSessionId);
+
+        //then
+        Set<String> membersInRoom = chatRoomEntryRedisRepository.getMembersInRoom(Long.toString(chatRoomId));
+        assertThat(membersInRoom.size()).isEqualTo(0);
+    }
+
+    /**
+     *  deleteChatRoomEntryInMemberId() 메서드 테스트를 위한 데이터 셋업
+     */
+    private void setUpDeleteChatRoomEntryInMemberIdData(String sellerSessionId, Long sellerId, Long chatRoomId, String buyerSessionId, Long buyerId) {
+        sessionInfoRedisRepository.save(new SessionInfo(
+                sellerSessionId,
+                sellerId,
+                chatRoomId
+        ));
+
+        sessionInfoRedisRepository.save(new SessionInfo(
+                buyerSessionId,
+                buyerId,
+                chatRoomId
+        ));
+
+        chatRoomEntryRedisRepository.addMemberToRoom(Long.toString(chatRoomId), Long.toString(sellerId));
+        chatRoomEntryRedisRepository.addMemberToRoom(Long.toString(chatRoomId), Long.toString(buyerId));
     }
 
     /**

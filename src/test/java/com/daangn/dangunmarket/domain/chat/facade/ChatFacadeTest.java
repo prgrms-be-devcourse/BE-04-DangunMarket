@@ -1,8 +1,9 @@
 package com.daangn.dangunmarket.domain.chat.facade;
 
 import com.daangn.dangunmarket.domain.DataInitializerFactory;
+import com.daangn.dangunmarket.domain.chat.facade.dto.SessionInfoSaveFacaRequest;
 import com.daangn.dangunmarket.domain.chat.model.SessionInfo;
-import com.daangn.dangunmarket.domain.chat.repository.SessionInfoRedisRepository;
+import com.daangn.dangunmarket.domain.chat.repository.sessioninfo.SessionInfoRedisRepository;
 import com.daangn.dangunmarket.domain.member.model.Member;
 import com.daangn.dangunmarket.domain.member.repository.MemberJpaRepository;
 import com.daangn.dangunmarket.global.exception.EntityNotFoundException;
@@ -50,14 +51,20 @@ class ChatFacadeTest {
     void saveSessionInfo_correctMemberIdAndSessionId_void() {
         //given
         String sessionId = "5rsuwmct";
+        Long roomId = 1L;
         Long savedMemberId = savedMember.getId();
 
         //when
-        chatFacade.saveSessionInfo(sessionId, savedMemberId);
+        chatFacade.saveSessionInfo(new SessionInfoSaveFacaRequest(
+                sessionId,
+                roomId,
+                savedMemberId
+        ));
 
         //then
         SessionInfo sessionInfo = sessionInfoRedisRepository.findById(sessionId).get();
         assertThat(sessionInfo.getMemberId()).isEqualTo(savedMemberId);
+        assertThat(sessionInfo.getRoomId()).isEqualTo(1L);
     }
 
     @Test
@@ -65,10 +72,15 @@ class ChatFacadeTest {
     void saveSessionInfo_incorrectMemberIdAndSessionId_EntityNotFoundException() {
         //given
         String sessionId = "5rsuwmct";
+        Long roomId = 1L;
         Long savedMemberId = savedMember.getId() + 5;
 
         //when
-        Exception exception = catchException(() -> chatFacade.saveSessionInfo(sessionId, savedMemberId));
+        Exception exception = catchException(() -> chatFacade.saveSessionInfo(new SessionInfoSaveFacaRequest(
+                sessionId,
+                roomId,
+                savedMemberId
+        )));
 
         //then
         assertThat(exception).isInstanceOf(EntityNotFoundException.class);

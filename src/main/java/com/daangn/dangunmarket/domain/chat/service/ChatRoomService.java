@@ -3,10 +3,13 @@ package com.daangn.dangunmarket.domain.chat.service;
 import com.daangn.dangunmarket.domain.chat.model.ChatMessage;
 import com.daangn.dangunmarket.domain.chat.model.ChatRoom;
 import com.daangn.dangunmarket.domain.chat.model.ChatRoomInfo;
+import com.daangn.dangunmarket.domain.chat.model.SessionInfo;
+import com.daangn.dangunmarket.domain.chat.repository.chatentry.ChatRoomEntryRepository;
 import com.daangn.dangunmarket.domain.chat.repository.chatmessage.ChatMessageRepository;
 import com.daangn.dangunmarket.domain.chat.repository.chatroom.ChatRoomRepository;
 import com.daangn.dangunmarket.domain.chat.repository.chatroominfo.ChatRoomInfoRepository;
 import com.daangn.dangunmarket.domain.chat.repository.chatroominfo.dto.JoinedMemberResponse;
+import com.daangn.dangunmarket.domain.chat.repository.sessioninfo.SessionInfoRepository;
 import com.daangn.dangunmarket.domain.chat.service.dto.ChatRoomCreateRequest;
 import com.daangn.dangunmarket.domain.chat.service.dto.ChatRoomsFindResponses;
 import com.daangn.dangunmarket.domain.chat.service.mapper.ChatMapper;
@@ -25,12 +28,16 @@ public class ChatRoomService {
     private final ChatRoomInfoRepository chatRoomInfoRepository;
     private final ChatRoomRepository chatRoomRepository;
     private final ChatMessageRepository chatMessageRepository;
+    private final SessionInfoRepository sessionInfoRepository;
+    private final ChatRoomEntryRepository chatRoomEntryRepository;
     private final ChatMapper mapper;
 
-    public ChatRoomService(ChatRoomInfoRepository chatRoomInfoRepository, ChatRoomRepository chatRoomRepository, ChatMessageRepository chatMessageRepository, ChatMapper mapper) {
+    public ChatRoomService(ChatRoomInfoRepository chatRoomInfoRepository, ChatRoomRepository chatRoomRepository, ChatMessageRepository chatMessageRepository, SessionInfoRepository sessionInfoRepository, ChatRoomEntryRepository chatRoomEntryRepository, ChatMapper mapper) {
         this.chatRoomInfoRepository = chatRoomInfoRepository;
         this.chatRoomRepository = chatRoomRepository;
         this.chatMessageRepository = chatMessageRepository;
+        this.sessionInfoRepository = sessionInfoRepository;
+        this.chatRoomEntryRepository = chatRoomEntryRepository;
         this.mapper = mapper;
     }
 
@@ -71,9 +78,27 @@ public class ChatRoomService {
 
         chatRoomInfo.deleteChatRoomInfo();
 
-        if (findChatRoomInfos.size() < 2){
+        if (findChatRoomInfos.size() <= 1){
             chatRoomInfo.getChatRoom().deleteChatRoom();
         }
+    }
+
+    @Transactional
+    public void deleteChatRoomEntryInMemberId(String sessionId) {
+        SessionInfo sessionInfo = sessionInfoRepository.getById(sessionId);
+
+        String roomId = Long.toString(sessionInfo.getRoomId());
+        String memberId = Long.toString(sessionInfo.getMemberId());
+
+        if (chatRoomEntryRepository.isMemberInRoom(roomId, memberId)){
+            chatRoomEntryRepository.removeMemberFromRoom(roomId, memberId);
+        }
+
+        if (chatRoomEntryRepository.getMembersInRoom(roomId).size() == 0){
+            chatRoomEntryRepository.deleteChatRoomEntryByRoomId(roomId);
+        }
+
+        sessionInfoRepository.delete(sessionInfo);
     }
 
 }

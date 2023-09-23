@@ -1,6 +1,8 @@
 package com.daangn.dangunmarket.domain.chat.facade;
 
 import com.daangn.dangunmarket.domain.chat.exception.RoomNotCreateException;
+import com.daangn.dangunmarket.domain.chat.facade.dto.SessionInfoSaveFacaRequest;
+import com.daangn.dangunmarket.domain.chat.facade.mapper.ChatFacadeMapper;
 import com.daangn.dangunmarket.domain.chat.service.ChatRoomInfoService;
 import com.daangn.dangunmarket.domain.chat.service.ChatService;
 import com.daangn.dangunmarket.domain.chat.service.dto.ChatRoomCreateRequest;
@@ -20,13 +22,15 @@ public class ChatFacade {
     private final ChatRoomInfoService chatRoomInfoService;
     private final ChatService chatService;
     private final MemberService memberService;
+    private final ChatFacadeMapper mapper;
 
-    public ChatFacade(PostService postService, ChatRoomService chatRoomService, ChatRoomInfoService chatRoomInfoService, ChatService chatService, MemberService memberService) {
+    public ChatFacade(PostService postService, ChatRoomService chatRoomService, ChatRoomInfoService chatRoomInfoService, ChatService chatService, MemberService memberService, ChatFacadeMapper mapper) {
         this.postService = postService;
         this.chatRoomService = chatRoomService;
         this.chatRoomInfoService = chatRoomInfoService;
         this.chatService = chatService;
         this.memberService = memberService;
+        this.mapper = mapper;
     }
 
     public Long createChatRoom(Long memberId, ChatRoomCreateRequest request){
@@ -39,10 +43,10 @@ public class ChatFacade {
         return chatRoomService.createChatRoom(memberId,postFindResponse.memberId(),request);
     }
 
-    public void saveSessionInfo(String sessionId, Long memberId){
-        memberService.findById(memberId);
+    public void saveSessionInfo(SessionInfoSaveFacaRequest request){
+        memberService.findById(request.memberId());
 
-        chatService.saveSessionInfo(sessionId, memberId);
+        chatService.saveSessionInfo(mapper.toSessionInfoSaveRequest(request));
     }
 
 }

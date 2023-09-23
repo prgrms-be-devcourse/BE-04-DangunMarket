@@ -3,8 +3,10 @@ package com.daangn.dangunmarket.domain.chat.controller;
 import com.daangn.dangunmarket.domain.auth.jwt.CustomUser;
 import com.daangn.dangunmarket.domain.chat.controller.dto.ChatRoomCreateApiRequest;
 import com.daangn.dangunmarket.domain.chat.controller.dto.ChatRoomCreateApiResponse;
+import com.daangn.dangunmarket.domain.chat.controller.dto.SessionInfoSaveApiRequest;
 import com.daangn.dangunmarket.domain.chat.controller.mapper.ChatDtoApiMapper;
 import com.daangn.dangunmarket.domain.chat.facade.ChatFacade;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -23,11 +25,11 @@ import org.springframework.web.bind.annotation.RestController;
 public class ChatController {
 
     private final ChatFacade chatFacade;
-    private final ChatDtoApiMapper chatDtoApiMapper;
+    private final ChatDtoApiMapper mapper;
 
-    public ChatController(ChatFacade chatFacade, ChatDtoApiMapper chatDtoApiMapper) {
+    public ChatController(ChatFacade chatFacade, ChatDtoApiMapper mapper) {
         this.chatFacade = chatFacade;
-        this.chatDtoApiMapper = chatDtoApiMapper;
+        this.mapper = mapper;
     }
 
     @PostMapping(
@@ -36,19 +38,24 @@ public class ChatController {
 
         CustomUser customUser = (CustomUser) authentication.getPrincipal();
 
-        Long chatRoomId = chatFacade.createChatRoom(customUser.memberId(), chatDtoApiMapper.toChatRoomCreateRequest(request));
-        ChatRoomCreateApiResponse response = chatDtoApiMapper.toChatRoomCreateApiResponse(chatRoomId);
+        Long chatRoomId = chatFacade.createChatRoom(customUser.memberId(), mapper.toChatRoomCreateRequest(request));
+        ChatRoomCreateApiResponse response = mapper.toChatRoomCreateApiResponse(chatRoomId);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
     @PutMapping("/session-info/{sessionId}")
-    public ResponseEntity<Void> saveSessionIdWithMemberId(
+    public ResponseEntity<Void> saveSessionInfo(
             @PathVariable String sessionId,
+            @RequestBody @Valid SessionInfoSaveApiRequest request,
             Authentication authentication
     ){
         CustomUser customUser = (CustomUser) authentication.getPrincipal();
-        chatFacade.saveSessionInfo(sessionId, customUser.memberId());
+        chatFacade.saveSessionInfo(mapper.toSessionInfoSaveFacaRequest(
+                sessionId,
+                request.roomId(),
+                customUser.memberId())
+        );
 
         return ResponseEntity.ok().build();
     }
