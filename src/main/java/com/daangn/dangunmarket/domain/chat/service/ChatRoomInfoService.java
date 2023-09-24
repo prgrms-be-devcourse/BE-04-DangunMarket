@@ -22,12 +22,4 @@ public class ChatRoomInfoService {
         return chatRoomInfo.isPresent();
     }
 
-    public Long findSenderIdByChatRoomInfoAndMyId(Long chatRoomId, Long memberId) {
-        return chatRoomInfoRepository.findSenderIdByChatRoomInfoAndMyId(chatRoomId, memberId);
-    }
-
-    public Long findPostIdByChatRoomId(Long chatRoomId) {
-        return chatRoomInfoRepository.findPostIdByChatRoomId(chatRoomId);
-    }
-
 }

@@ -1,6 +1,8 @@
 package com.daangn.dangunmarket.domain.chat.repository.chatmessage;
 
 import com.daangn.dangunmarket.domain.chat.model.ChatMessage;
+import com.daangn.dangunmarket.domain.chat.repository.chatmessage.dto.ChatMessagePageDto;
+import org.springframework.data.domain.Slice;
 
 import java.util.List;
 
@@ -11,5 +13,7 @@ public interface ChatMessageRepository {
     void markMessagesAsRead(List<String> messageIds);
 
     List<ChatMessage> findByChatRoomIds(List<Long> chatRoomIds);
+
+    List<ChatMessage> findByChatRoomIdWithPagination(ChatMessagePageDto chatMessagePageDto);
 
 }
