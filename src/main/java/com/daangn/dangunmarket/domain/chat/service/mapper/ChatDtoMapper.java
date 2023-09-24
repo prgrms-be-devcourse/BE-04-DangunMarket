@@ -7,8 +7,6 @@ import com.daangn.dangunmarket.domain.chat.service.dto.ChatMessagePageRequest;
 import com.daangn.dangunmarket.domain.chat.service.dto.ChatMessagePageResponse;
 import com.daangn.dangunmarket.domain.chat.service.dto.ChatWithPostAndMemberResponse;
 import com.daangn.dangunmarket.domain.post.model.PostImage;
-import com.daangn.dangunmarket.domain.post.model.TradeStatus;
-import com.daangn.dangunmarket.domain.post.service.dto.PostFindResponse;
 import org.mapstruct.InjectionStrategy;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
