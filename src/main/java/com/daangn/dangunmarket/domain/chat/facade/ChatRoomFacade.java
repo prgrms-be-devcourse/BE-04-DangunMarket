@@ -6,6 +6,7 @@ import com.daangn.dangunmarket.domain.chat.facade.mapper.ChatRoomParamDtoMapper;
 import com.daangn.dangunmarket.domain.chat.service.ChatRoomInfoService;
 import com.daangn.dangunmarket.domain.chat.service.dto.ChatRoomCreateRequest;
 import com.daangn.dangunmarket.domain.chat.service.ChatRoomService;
+import com.daangn.dangunmarket.domain.chat.service.dto.ChatWithPostAndMemberResponse;
 import com.daangn.dangunmarket.domain.member.service.MemberService;
 import com.daangn.dangunmarket.domain.member.service.dto.MemberFindResponse;
 import com.daangn.dangunmarket.domain.post.service.PostService;
@@ -43,16 +44,10 @@ public class ChatRoomFacade {
     }
 
     public ChatRoomCheckInParamResponse checkInChatRoom(Long chatRoomId, Long memberId) {
-        Long senderId = chatRoomInfoService.findSenderIdByChatRoomInfoAndMyId(chatRoomId, memberId);
-        chatRoomService.readAllMessage(chatRoomId, senderId);
-
         chatRoomService.addMemberToRoom(chatRoomId.toString(),memberId.toString());
+        chatRoomService.readAllMessage(chatRoomId, memberId);
 
-        Long postId = chatRoomInfoService.findPostIdByChatRoomId(chatRoomId);
-        PostFindResponse postFindResponse = postService.findById(postId);
-        MemberFindResponse memberFindResponse = memberService.findById(senderId);
-
-        return chatRoomParamDtoMapper.toChatRoomCheckInParamResponse(postFindResponse,memberFindResponse);
+        return chatRoomParamDtoMapper.toChatRoomCheckInParamResponse(chatRoomService.findPostWithMember(chatRoomId));
     }
 
 }
