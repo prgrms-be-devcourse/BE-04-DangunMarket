@@ -182,7 +182,7 @@ class ChatRoomServiceTest {
         chatRoomService.deleteChatRoomEntryInMemberId(buyerSessionId);
 
         //then
-        Set<String> membersInRoom = chatRoomEntryRedisRepository.getMembersInRoom(Long.toString(chatRoomId));
+        Set<String> membersInRoom = chatRoomEntryRedisRepository.getMembersInRoom(chatRoomId.toString());
         assertThat(membersInRoom.size()).isEqualTo(1);
     }
 
@@ -204,7 +204,7 @@ class ChatRoomServiceTest {
         chatRoomService.deleteChatRoomEntryInMemberId(sellerSessionId);
 
         //then
-        Set<String> membersInRoom = chatRoomEntryRedisRepository.getMembersInRoom(Long.toString(chatRoomId));
+        Set<String> membersInRoom = chatRoomEntryRedisRepository.getMembersInRoom(chatRoomId.toString());
         assertThat(membersInRoom.size()).isEqualTo(0);
     }
 
@@ -224,8 +224,8 @@ class ChatRoomServiceTest {
                 chatRoomId
         ));
 
-        chatRoomEntryRedisRepository.addMemberToRoom(Long.toString(chatRoomId), Long.toString(sellerId));
-        chatRoomEntryRedisRepository.addMemberToRoom(Long.toString(chatRoomId), Long.toString(buyerId));
+        chatRoomEntryRedisRepository.addMemberToRoom(chatRoomId.toString(), sellerId.toString());
+        chatRoomEntryRedisRepository.addMemberToRoom(chatRoomId.toString(), buyerId.toString());
     }
 
     /**

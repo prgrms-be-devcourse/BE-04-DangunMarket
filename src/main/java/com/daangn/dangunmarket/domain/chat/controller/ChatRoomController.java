@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.socket.messaging.SessionDisconnectEvent;
 
 @RestController
-@RequestMapping(value = "/chats",
+@RequestMapping(value = "/chat-rooms",
         produces = MediaType.APPLICATION_JSON_VALUE)
 public class ChatRoomController {
 

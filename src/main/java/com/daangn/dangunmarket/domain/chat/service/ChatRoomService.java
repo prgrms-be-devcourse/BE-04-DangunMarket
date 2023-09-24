@@ -87,8 +87,8 @@ public class ChatRoomService {
     public void deleteChatRoomEntryInMemberId(String sessionId) {
         SessionInfo sessionInfo = sessionInfoRepository.getById(sessionId);
 
-        String roomId = Long.toString(sessionInfo.getRoomId());
-        String memberId = Long.toString(sessionInfo.getMemberId());
+        String roomId = sessionInfo.getRoomId().toString();
+        String memberId = sessionInfo.getMemberId().toString();
 
         if (chatRoomEntryRepository.isMemberInRoom(roomId, memberId)){
             chatRoomEntryRepository.removeMemberFromRoom(roomId, memberId);
