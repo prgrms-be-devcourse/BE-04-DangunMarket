@@ -41,7 +41,7 @@ public class ChatController {
 
         CustomUser customUser = (CustomUser) authentication.getPrincipal();
 
-        Long chatRoomId = chatRoomFacade.createChatRoom(chatDtoApiMapper.toChatRoomCreateRequest(request,customUser.memberId()));
+        Long chatRoomId = chatRoomFacade.createChatRoom(chatDtoApiMapper.toChatRoomCreateRequest(request, customUser.memberId()));
         ChatRoomCreateApiResponse response = chatDtoApiMapper.toChatRoomCreateApiResponse(chatRoomId);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(response);

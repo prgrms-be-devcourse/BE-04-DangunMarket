@@ -26,8 +26,8 @@ public class ChatRoom extends BaseEntity {
         if (chatRoomInfos == null) return;
 
         long removedCnt = chatRoomInfos.stream()
-                    .filter(chatRoomInfo -> chatRoomInfo.deleteChatRoomInfo(deleteRequestMemberId))
-                    .count();
+                .filter(chatRoomInfo -> chatRoomInfo.deleteChatRoomInfo(deleteRequestMemberId))
+                .count();
 
         if (hasParticipation(removedCnt, chatRoomInfos.size())) {
             isDeleted = true;
@@ -36,7 +36,7 @@ public class ChatRoom extends BaseEntity {
     }
 
     private boolean hasParticipation(long removedCnt, long participationSize) {
-        return removedCnt == participationSize ;
+        return removedCnt == participationSize;
     }
 
 }

@@ -32,27 +32,27 @@ public class ChatRoomFacade {
         this.chatRoomParamDtoMapper = chatRoomParamDtoMapper;
     }
 
-    public Long createChatRoom(ChatRoomCreateRequest request){
+    public Long createChatRoom(ChatRoomCreateRequest request) {
 
-        if(chatRoomInfoService.isExistedRoom(request.postId(),request.memberId())) {
+        if (chatRoomInfoService.isExistedRoom(request.postId(), request.memberId())) {
             throw new RoomNotCreateException(NOT_CREATE_CHAT_ROOM);
         }
 
         PostFindResponse postFindResponse = postService.findById(request.postId());
-        return chatRoomService.createChatRoom(postFindResponse.memberId(),request);
+        return chatRoomService.createChatRoom(postFindResponse.memberId(), request);
     }
 
     public ChatRoomCheckInParamResponse checkInChatRoom(Long chatRoomId, Long memberId) {
         Long senderId = chatRoomInfoService.findSenderIdByChatRoomInfoAndMyId(chatRoomId, memberId);
         chatRoomService.readAllMessage(chatRoomId, senderId);
 
-        chatRoomService.addMemberToRoom(chatRoomId.toString(),memberId.toString());
+        chatRoomService.addMemberToRoom(chatRoomId.toString(), memberId.toString());
 
         Long postId = chatRoomInfoService.findPostIdByChatRoomId(chatRoomId);
         PostFindResponse postFindResponse = postService.findById(postId);
         MemberFindResponse memberFindResponse = memberService.findById(senderId);
 
-        return chatRoomParamDtoMapper.toChatRoomCheckInParamResponse(postFindResponse,memberFindResponse);
+        return chatRoomParamDtoMapper.toChatRoomCheckInParamResponse(postFindResponse, memberFindResponse);
     }
 
 }

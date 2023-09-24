@@ -33,16 +33,16 @@ public class ChatRoomEntryRedisRepository {
     }
 
     public void removeMemberFromRoom(String roomId, String memberId) {
-        getSetOperations() .remove(getRoomKey(roomId), memberId);
+        getSetOperations().remove(getRoomKey(roomId), memberId);
     }
 
     public Set<String> getMembersInRoom(String roomId) {
-        return getSetOperations() .members(getRoomKey(roomId));
+        return getSetOperations().members(getRoomKey(roomId));
     }
 
     public boolean isMemberInRoom(String roomId, String memberId) {
 
-        Boolean isMember  = getSetOperations() .isMember(getRoomKey(roomId), memberId);
+        Boolean isMember = getSetOperations().isMember(getRoomKey(roomId), memberId);
 
         return isMember != null && isMember;
     }
