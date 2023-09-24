@@ -1,12 +1,14 @@
 package com.daangn.dangunmarket.domain.chat.controller.mapper;
 
-import com.daangn.dangunmarket.domain.chat.controller.dto.ChatRoomCheckInApiResponse;
-import com.daangn.dangunmarket.domain.chat.controller.dto.ChatRoomCreateApiRequest;
-import com.daangn.dangunmarket.domain.chat.controller.dto.ChatRoomCreateApiResponse;
+import com.daangn.dangunmarket.domain.chat.controller.dto.*;
 import com.daangn.dangunmarket.domain.chat.facade.dto.ChatRoomCheckInParamResponse;
+import com.daangn.dangunmarket.domain.chat.service.dto.ChatMessagePageRequest;
+import com.daangn.dangunmarket.domain.chat.service.dto.ChatMessagePageResponse;
 import com.daangn.dangunmarket.domain.chat.service.dto.ChatRoomCreateRequest;
 import org.mapstruct.InjectionStrategy;
 import org.mapstruct.Mapper;
+
+import java.util.List;
 
 @Mapper(
         componentModel = "spring",
@@ -18,4 +20,8 @@ public interface ChatDtoApiMapper {
     ChatRoomCreateApiResponse toChatRoomCreateApiResponse(Long chatRoomId);
 
     ChatRoomCheckInApiResponse toChatRoomCheckInApiResponse(ChatRoomCheckInParamResponse chatRoomCheckInParamResponse);
+
+    ChatMessagePageRequest toChatMessagePageRequest(ChatMessagePageApiRequest chatMessagePageApiRequest);
+
+    ChatMessagePageApiResponses toChatMessagePageApiResponses(List<ChatMessagePageResponse> chatMessagePageResponses);
 }
