@@ -105,7 +105,7 @@ public class PostFacade {
         Long areaId = memberResponse
                 .activityAreas()
                 .get(0)
-                .getId();
+                .getEmdAreaId();
         String areaName = areaService
                 .findById(areaId)
                 .areaName();
@@ -124,7 +124,7 @@ public class PostFacade {
         Long areaId = memberFindResponse
                 .activityAreas()
                 .get(0)
-                .getId();
+                .getEmdAreaId();
         String areaName = areaService
                 .findById(areaId)
                 .areaName();
