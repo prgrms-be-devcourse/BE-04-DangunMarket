@@ -8,16 +8,31 @@ import java.util.List;
 @Repository
 public class ChatMessageRepositoryImpl implements ChatMessageRepository {
 
-    private final ChatMessageMongoRepository chatMessageMongoRepository;
     private final ChatMessageQueryRepository chatMessageQueryRepository;
+    private final ChatMessageMongoRepository chatMessageMongoRepository;
 
-    public ChatMessageRepositoryImpl(ChatMessageMongoRepository chatMessageMongoRepository, ChatMessageQueryRepository chatMessageQueryRepository) {
-        this.chatMessageMongoRepository = chatMessageMongoRepository;
+    public ChatMessageRepositoryImpl(ChatMessageQueryRepository chatMessageQueryRepository, ChatMessageMongoRepository chatMessageMongoRepository) {
         this.chatMessageQueryRepository = chatMessageQueryRepository;
+        this.chatMessageMongoRepository = chatMessageMongoRepository;
     }
 
+    @Override
+    public List<ChatMessage> findNotReadMessageByChatRoomIdAndSenderId(Long chatRoomId, Long senderId) {
+        return chatMessageQueryRepository.findNotReadMessageByChatRoomIdAndSenderId(chatRoomId, senderId);
+    }
+
+    @Override
+    public void markMessagesAsRead(List<String> messageIds) {
+        chatMessageQueryRepository.markMessagesAsRead(messageIds);
+    }
+
+    @Override
     public List<ChatMessage> findByChatRoomIds(List<Long> chatRoomIds) {
         return chatMessageQueryRepository.findByChatRoomIds(chatRoomIds);
+    }
+
+    public ChatMessage save(ChatMessage chatMessage) {
+        return chatMessageMongoRepository.save(chatMessage);
     }
 
 }

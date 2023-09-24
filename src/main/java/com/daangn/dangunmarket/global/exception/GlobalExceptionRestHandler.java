@@ -11,7 +11,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindException;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.HttpMediaTypeNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
@@ -26,8 +25,8 @@ import static com.daangn.dangunmarket.global.response.ErrorCode.*;
 @Slf4j
 public class GlobalExceptionRestHandler {
     /**
-    * [Exception] 객체 혹은 파라미터의 데이터 값이 유효하지 않은 경우
-    */
+     * [Exception] 객체 혹은 파라미터의 데이터 값이 유효하지 않은 경우
+     */
     @ExceptionHandler(MethodArgumentNotValidException.class)
     protected ResponseEntity<ErrorResponse> handleMethodArgumentNotValidException(MethodArgumentNotValidException e) {
         log.warn("Handle MethodArgumentNotValidException", e.getMessage());
@@ -123,7 +122,7 @@ public class GlobalExceptionRestHandler {
         log.warn("Handle EntityNotFoundException :", e);
         final ErrorResponse response = ErrorResponse.of(e.getErrorCode(), e.getMessage());
         return ResponseEntity
-                .status(HttpStatus.OK)
+                .status(HttpStatus.NOT_FOUND)
                 .body(response);
     }
 
@@ -162,7 +161,7 @@ public class GlobalExceptionRestHandler {
 
     /**
      * [Exception] 서버에 정의되지 않은 모든 예외
-      */
+     */
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponse> handleAllException(Exception e) {
         log.error("Handle Exception :", e);

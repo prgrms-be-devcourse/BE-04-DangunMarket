@@ -5,7 +5,6 @@ import com.daangn.dangunmarket.domain.chat.model.ChatRoom;
 import com.daangn.dangunmarket.domain.chat.model.ChatRoomInfo;
 import com.daangn.dangunmarket.domain.chat.repository.chatroom.ChatRoomRepository;
 import com.daangn.dangunmarket.domain.chat.repository.chatroominfo.ChatRoomInfoRepository;
-import com.daangn.dangunmarket.domain.chat.service.dto.ChatRoomCreateRequest;
 import com.daangn.dangunmarket.domain.post.model.Category;
 import com.daangn.dangunmarket.domain.post.model.Post;
 import com.daangn.dangunmarket.domain.post.repository.category.CategoryRepository;
@@ -55,9 +54,9 @@ class ChatRoomInfoServiceTest {
     @DisplayName("방 정보가 존재하면 true, 존재하지 않으면 false를 반환한다.")
     void isExistedRoom_existedIdOrNot_returnTrueOrFalse() {
         //when_then
-        assertThat(chatRoomInfoService.isExistedRoom(existedPostId,existedBuyerId)).isEqualTo(true);
-        assertThat(chatRoomInfoService.isExistedRoom(existedPostId,existedSellerId)).isEqualTo(true);
-        assertThat(chatRoomInfoService.isExistedRoom(existedPostId+1,existedBuyerId)).isEqualTo(false);
+        assertThat(chatRoomInfoService.isExistedRoom(existedPostId, existedBuyerId)).isEqualTo(true);
+        assertThat(chatRoomInfoService.isExistedRoom(existedPostId, existedSellerId)).isEqualTo(true);
+        assertThat(chatRoomInfoService.isExistedRoom(existedPostId + 1, existedBuyerId)).isEqualTo(false);
     }
 
     void dateSetUp() {

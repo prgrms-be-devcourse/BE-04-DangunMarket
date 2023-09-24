@@ -1,6 +1,7 @@
 package com.daangn.dangunmarket.domain.post.model;
 
 import com.daangn.dangunmarket.domain.post.exception.TooEarlyToRefreshException;
+import com.daangn.dangunmarket.domain.post.exception.UnauthorizedAccessException;
 import com.daangn.dangunmarket.domain.post.model.vo.PostEditor;
 import com.daangn.dangunmarket.domain.post.model.vo.PostImages;
 import com.daangn.dangunmarket.domain.post.model.vo.Price;
@@ -28,6 +29,8 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
+
+import static com.daangn.dangunmarket.global.response.ErrorCode.POST_NOT_CREATED_BY_USER;
 
 @Entity
 @Table(name = "posts")
@@ -169,14 +172,20 @@ public class Post extends BaseEntity {
         }
     }
 
-    public void deletePost() {
+    public void deleteByMemberId(Long memberId) {
+        if(isNotOwner(memberId)) {
+            throw new UnauthorizedAccessException(POST_NOT_CREATED_BY_USER);
+        }
+
         postImages.getPostImageList()
                 .stream()
-                .forEach(PostImage::deletePostImage); //이미지 상태 변경
+                .forEach(PostImage::deletePostImage);
+
         if (locationPreference != null) {
-            locationPreference.deleteLocationPreference(); //선호 장소 상태 변경
+            locationPreference.deleteLocationPreference();
         }
-        isDeleted = true; //post 상태 변경
+
+        isDeleted = true;
     }
 
     public void edit(PostEditor postEditor) {
@@ -191,11 +200,19 @@ public class Post extends BaseEntity {
         this.addPostImages(postEditor.postImages());
     }
 
-    public boolean isCreatedBy(Long userId ){
+    public boolean isCreatedBy(Long userId) {
         if (!Objects.equals(this.memberId, userId)) {
             return false;
         }
 
         return true;
     }
+
+    public String extractSingleImage() {
+        if (!postImages.getPostImageList().isEmpty()) {
+            return postImages.getPostImageList().get(0).getUrl();
+        }
+        return "";
+    }
+
 }

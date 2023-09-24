@@ -18,9 +18,11 @@ import com.daangn.dangunmarket.domain.post.model.LocationPreference;
 import com.daangn.dangunmarket.domain.post.model.PostImage;
 import com.daangn.dangunmarket.domain.post.service.CategoryService;
 import com.daangn.dangunmarket.domain.post.service.PostImageService;
+import com.daangn.dangunmarket.domain.post.service.PostLikeService;
 import com.daangn.dangunmarket.domain.post.service.PostService;
 import com.daangn.dangunmarket.domain.post.service.dto.PostFindResponse;
 import com.daangn.dangunmarket.domain.post.service.dto.PostGetResponses;
+import com.daangn.dangunmarket.domain.post.service.dto.PostLikeResponse;
 import com.daangn.dangunmarket.domain.post.service.dto.PostSearchConditionRequest;
 import com.daangn.dangunmarket.domain.post.service.dto.PostSearchResponses;
 import com.daangn.dangunmarket.global.GeometryTypeFactory;
@@ -47,8 +49,9 @@ public class PostFacade {
     private final PostParamDtoMapper postParamDtoMapper;
     private final PostImageService postImageService;
     private final ApplicationEventPublisher applicationEventPublisher;
+    private final PostLikeService postLikeService;
 
-    public PostFacade(PostService postService, MemberService memberService, AreaService areaService, CategoryService categoryService, S3Uploader s3Uploader, PostParamMapper postParamMapper, PostParamDtoMapper postParamDtoMapper, PostImageService postImageService, ApplicationEventPublisher applicationEventPublisher) {
+    public PostFacade(PostService postService, MemberService memberService, AreaService areaService, CategoryService categoryService, S3Uploader s3Uploader, PostParamMapper postParamMapper, PostParamDtoMapper postParamDtoMapper, PostImageService postImageService, ApplicationEventPublisher applicationEventPublisher, PostLikeService postLikeService) {
         this.postService = postService;
         this.memberService = memberService;
         this.areaService = areaService;
@@ -58,6 +61,7 @@ public class PostFacade {
         this.postParamDtoMapper = postParamDtoMapper;
         this.postImageService = postImageService;
         this.applicationEventPublisher = applicationEventPublisher;
+        this.postLikeService = postLikeService;
     }
 
     @Transactional
@@ -101,7 +105,7 @@ public class PostFacade {
         Long areaId = memberResponse
                 .activityAreas()
                 .get(0)
-                .getId();
+                .getEmdAreaId();
         String areaName = areaService
                 .findById(areaId)
                 .areaName();
@@ -120,7 +124,7 @@ public class PostFacade {
         Long areaId = memberFindResponse
                 .activityAreas()
                 .get(0)
-                .getId();
+                .getEmdAreaId();
         String areaName = areaService
                 .findById(areaId)
                 .areaName();
@@ -165,6 +169,16 @@ public class PostFacade {
                 postImages,
                 findCategory,
                 areaId));
+    }
+
+    @Transactional
+    public PostLikeResponse cancelLikePost(Long memberId, Long postId) {
+        return postLikeService.cancelLikePost(memberId, postId);
+    }
+
+    @Transactional
+    public PostLikeResponse likePost(Long memberId, Long postId) {
+        return postLikeService.likePost(memberId, postId);
     }
 
     private boolean isMemberActivityAreaValid(List<ActivityArea> activityAreas) {

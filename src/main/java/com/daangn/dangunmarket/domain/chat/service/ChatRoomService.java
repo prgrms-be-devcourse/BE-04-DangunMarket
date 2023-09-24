@@ -13,8 +13,8 @@ import com.daangn.dangunmarket.domain.chat.repository.sessioninfo.SessionInfoRep
 import com.daangn.dangunmarket.domain.chat.service.dto.ChatRoomCreateRequest;
 import com.daangn.dangunmarket.domain.chat.service.dto.ChatRoomsFindResponses;
 import com.daangn.dangunmarket.domain.chat.service.mapper.ChatMapper;
+import com.daangn.dangunmarket.domain.post.repository.post.PostRepository;
 import com.daangn.dangunmarket.global.exception.EntityNotFoundException;
-import com.daangn.dangunmarket.global.response.ErrorCode;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
@@ -22,37 +22,53 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
+import static com.daangn.dangunmarket.global.response.ErrorCode.NOT_FOUND_ENTITY;
+
+@Transactional
 @Service
 public class ChatRoomService {
 
     private final ChatRoomInfoRepository chatRoomInfoRepository;
     private final ChatRoomRepository chatRoomRepository;
+    private final PostRepository postRepository;
     private final ChatMessageRepository chatMessageRepository;
+    private final ChatRoomEntryRepository roomEntryRepository;
     private final SessionInfoRepository sessionInfoRepository;
-    private final ChatRoomEntryRepository chatRoomEntryRepository;
     private final ChatMapper mapper;
 
-    public ChatRoomService(ChatRoomInfoRepository chatRoomInfoRepository, ChatRoomRepository chatRoomRepository, ChatMessageRepository chatMessageRepository, SessionInfoRepository sessionInfoRepository, ChatRoomEntryRepository chatRoomEntryRepository, ChatMapper mapper) {
+    public ChatRoomService(ChatRoomInfoRepository chatRoomInfoRepository, ChatRoomRepository chatRoomRepository, PostRepository postRepository, ChatMessageRepository chatMessageRepository, ChatRoomEntryRepository roomEntryRepository, SessionInfoRepository sessionInfoRepository, ChatMapper mapper) {
         this.chatRoomInfoRepository = chatRoomInfoRepository;
         this.chatRoomRepository = chatRoomRepository;
+        this.postRepository = postRepository;
         this.chatMessageRepository = chatMessageRepository;
+        this.roomEntryRepository = roomEntryRepository;
         this.sessionInfoRepository = sessionInfoRepository;
-        this.chatRoomEntryRepository = chatRoomEntryRepository;
         this.mapper = mapper;
     }
 
-    @Transactional
-    public Long createChatRoom(Long memberId, Long writerId, ChatRoomCreateRequest request) {
+    public Long createChatRoom(Long writerId, ChatRoomCreateRequest request) {
 
         ChatRoom chatRoom = new ChatRoom();
         ChatRoom savedChatRoom = chatRoomRepository.save(chatRoom);
 
         ChatRoomInfo sellerChatRoomInfo = new ChatRoomInfo(true, request.postId(), savedChatRoom, writerId);
         chatRoomInfoRepository.save(sellerChatRoomInfo);
-        ChatRoomInfo buyerChatRoomInfo = new ChatRoomInfo(false, request.postId(), savedChatRoom, memberId);
+        ChatRoomInfo buyerChatRoomInfo = new ChatRoomInfo(false, request.postId(), savedChatRoom, request.memberId());
         chatRoomInfoRepository.save(buyerChatRoomInfo);
 
         return chatRoom.getId();
+    }
+
+
+    public int readAllMessage(Long chatRoomId, Long senderId) {
+        List<ChatMessage> notReadMessages = chatMessageRepository.findNotReadMessageByChatRoomIdAndSenderId(chatRoomId, senderId);
+        chatMessageRepository.markMessagesAsRead(notReadMessages.stream().map(ChatMessage::getId).toList());
+
+        return notReadMessages.size();
+    }
+
+    public void addMemberToRoom(String roomId, String memberId) {
+        roomEntryRepository.addMemberToRoom(roomId, memberId);
     }
 
     public ChatRoomsFindResponses findChatRoomsByMemberId(Long memberId, Pageable pageable) {
@@ -68,19 +84,11 @@ public class ChatRoomService {
     }
 
     @Transactional
-    public void deleteChatRoomByIdAndMemberId(Long chatRoomId, Long memberId) {
+    public void deleteChatRoomByIdAndMemberId(Long chatRoomId, Long deleteRequestMemberId) {
+        ChatRoom chatRoom =  chatRoomRepository.findById(chatRoomId).orElseThrow(()-> new EntityNotFoundException(NOT_FOUND_ENTITY));
         List<ChatRoomInfo> findChatRoomInfos = chatRoomInfoRepository.findByChatRoomId(chatRoomId);
 
-        ChatRoomInfo chatRoomInfo = findChatRoomInfos.stream()
-                .filter(e -> e.isSameMember(memberId))
-                .findFirst()
-                .orElseThrow(() -> new EntityNotFoundException(ErrorCode.NOT_FOUND_ENTITY));
-
-        chatRoomInfo.deleteChatRoomInfo();
-
-        if (findChatRoomInfos.size() <= 1){
-            chatRoomInfo.getChatRoom().deleteChatRoom();
-        }
+        chatRoom.deleteChatRoom(deleteRequestMemberId,findChatRoomInfos);
     }
 
     @Transactional
@@ -90,12 +98,12 @@ public class ChatRoomService {
         String roomId = sessionInfo.getRoomId().toString();
         String memberId = sessionInfo.getMemberId().toString();
 
-        if (chatRoomEntryRepository.isMemberInRoom(roomId, memberId)){
-            chatRoomEntryRepository.removeMemberFromRoom(roomId, memberId);
+        if (roomEntryRepository.isMemberInRoom(roomId, memberId)){
+            roomEntryRepository.removeMemberFromRoom(roomId, memberId);
         }
 
-        if (chatRoomEntryRepository.getMembersInRoom(roomId).size() == 0){
-            chatRoomEntryRepository.deleteChatRoomEntryByRoomId(roomId);
+        if (roomEntryRepository.getMembersInRoom(roomId).size() == 0){
+            roomEntryRepository.deleteChatRoomEntryByRoomId(roomId);
         }
 
         sessionInfoRepository.delete(sessionInfo);

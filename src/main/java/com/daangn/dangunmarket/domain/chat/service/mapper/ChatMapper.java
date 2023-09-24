@@ -1,12 +1,16 @@
 package com.daangn.dangunmarket.domain.chat.service.mapper;
 
+import com.daangn.dangunmarket.domain.chat.controller.dto.MessageRequest;
 import com.daangn.dangunmarket.domain.chat.model.ChatMessage;
+import com.daangn.dangunmarket.domain.chat.model.MessageType;
 import com.daangn.dangunmarket.domain.chat.repository.chatroominfo.dto.JoinedMemberResponse;
+import com.daangn.dangunmarket.domain.chat.service.dto.ChatMessageResponse;
 import com.daangn.dangunmarket.domain.chat.service.dto.ChatRoomsFindResponse;
 import com.daangn.dangunmarket.domain.chat.service.dto.ChatRoomsFindResponses;
 import com.daangn.dangunmarket.domain.member.model.Member;
 import org.mapstruct.InjectionStrategy;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 import org.springframework.data.domain.Slice;
 
 import java.util.List;
@@ -50,7 +54,21 @@ public interface ChatMapper {
                 null,
                 "",
                 null,
-                1);
+                1,
+                MessageType.TALK);
     }
 
+    default ChatMessage toEntity(Long memberId, MessageType type, Integer readOrNot, Long chatRoomId, MessageRequest request) {
+        return ChatMessage.builder()
+                .message(request.message())
+                .type(type)
+                .readOrNot(readOrNot)
+                .imageUrls(request.imageUrls())
+                .chatRoomId(chatRoomId)
+                .memberId(memberId)
+                .build();
+    }
+
+    @Mapping(source = "chatMessage.id", target = "chatMessageId")
+    ChatMessageResponse toChatMessageResponse(ChatMessage chatMessage);
 }

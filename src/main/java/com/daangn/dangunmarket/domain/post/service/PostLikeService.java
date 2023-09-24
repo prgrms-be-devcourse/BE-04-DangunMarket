@@ -40,9 +40,6 @@ public class PostLikeService {
 
         post.like();
 
-        if (postLikeRepository.existsByMemberIdAndPostId(memberId, postId)) {
-            throw new InvalidPostLikeException(ALREADY_EXISTS_POST_LIKE);
-        }
         PostLike postLike = PostLike.builder()
                 .memberId(memberId)
                 .post(post)
@@ -59,7 +56,6 @@ public class PostLikeService {
                 .orElseThrow(() -> new EntityNotFoundException(NOT_FOUND_POST_ENTITY));
         post.cancelLike();
 
-
         PostLike postLike = postLikeRepository
                 .findByMemberIdAndPostId(memberId, postId)
                 .orElseThrow(() -> new EntityNotFoundException(NOT_FOUND_POST_LIKE_ENTITY));
@@ -70,6 +66,7 @@ public class PostLikeService {
 
     public LikedPostFindResponseList findByMemberId(Long memberId, Pageable pageable) {
         Slice<JoinedPostWithArea> responseList = postLikeRepository.findByMemberId(memberId, pageable);
+
         return LikedPostFindResponseList.from(responseList);
     }
 
