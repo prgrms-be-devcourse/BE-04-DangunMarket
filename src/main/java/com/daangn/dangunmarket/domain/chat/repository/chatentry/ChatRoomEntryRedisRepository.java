@@ -1,6 +1,5 @@
 package com.daangn.dangunmarket.domain.chat.repository.chatentry;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.SetOperations;
 import org.springframework.stereotype.Repository;
@@ -14,7 +13,6 @@ public class ChatRoomEntryRedisRepository {
 
     private static final String CHAT_ROOM_KEY_PREFIX = "ChatRoomEntry:";
 
-    @Autowired
     public ChatRoomEntryRedisRepository(RedisTemplate<String, String> redisTemplate) {
         this.redisTemplate = redisTemplate;
     }
