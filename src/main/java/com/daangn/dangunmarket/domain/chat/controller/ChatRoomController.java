@@ -10,6 +10,7 @@ import com.daangn.dangunmarket.domain.chat.service.ChatRoomService;
 import com.daangn.dangunmarket.domain.chat.service.dto.ChatMessagePageRequest;
 import com.daangn.dangunmarket.domain.chat.service.dto.ChatMessagePageResponse;
 import com.daangn.dangunmarket.domain.chat.service.dto.ChatRoomsFindResponses;
+import jakarta.validation.Valid;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -58,9 +59,9 @@ public class ChatRoomController {
         return ResponseEntity.noContent().build();
     }
 
-    @GetMapping("/{chatRoomId}/messages")
+    @GetMapping("/messages")
     public ResponseEntity<ChatMessagePageApiResponses> getChatMessages(
-            @ModelAttribute ChatMessagePageApiRequest chatMessagePageApiRequest,
+            @ModelAttribute @Valid ChatMessagePageApiRequest chatMessagePageApiRequest,
             Authentication authentication
     ) {
         CustomUser customUser = (CustomUser) authentication.getPrincipal();
