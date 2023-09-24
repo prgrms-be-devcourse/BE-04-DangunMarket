@@ -1,5 +1,6 @@
 package com.daangn.dangunmarket.domain.chat.repository.chatroominfo;
 
+import com.daangn.dangunmarket.domain.chat.model.ChatRoom;
 import com.daangn.dangunmarket.domain.chat.model.ChatRoomInfo;
 import com.daangn.dangunmarket.domain.chat.repository.chatroominfo.dto.JoinedMemberResponse;
 import com.daangn.dangunmarket.domain.chat.repository.chatroominfo.dto.JoinedPostWithMemberResponse;
@@ -27,8 +28,8 @@ public class ChatRoomInfoRepositoryImpl implements ChatRoomInfoRepository {
     }
 
     @Override
-    public Optional<ChatRoomInfo> findChatRoomInfoByPostIdAndMemberId(Long postId, Long memberId) {
-        return chatRoomInfoJpaRepository.findChatRoomInfoByPostIdAndMemberId(postId, memberId);
+    public Optional<ChatRoomInfo> findChatRoomInfoByBuyer(Long postId, Long memberId) {
+        return chatRoomInfoJpaRepository.findChatRoomInfoByBuyer(postId, memberId);
     }
 
     @Override

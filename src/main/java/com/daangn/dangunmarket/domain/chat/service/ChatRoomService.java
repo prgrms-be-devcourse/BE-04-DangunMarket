@@ -1,5 +1,6 @@
 package com.daangn.dangunmarket.domain.chat.service;
 
+import com.daangn.dangunmarket.domain.chat.exception.RoomNotCreateException;
 import com.daangn.dangunmarket.domain.chat.model.ChatMessage;
 import com.daangn.dangunmarket.domain.chat.model.ChatRoom;
 import com.daangn.dangunmarket.domain.chat.model.ChatRoomInfo;
@@ -20,7 +21,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
+import static com.daangn.dangunmarket.global.response.ErrorCode.NOT_CREATE_CHAT_ROOM;
 import static com.daangn.dangunmarket.global.response.ErrorCode.NOT_FOUND_ENTITY;
 
 @Transactional
@@ -106,6 +109,15 @@ public class ChatRoomService {
                 .stream()
                 .map(p->chatDtoMapper.toChatMessagePageResponse(p,memberId))
                 .toList();
+    }
+
+    @Transactional(readOnly = true)
+    public void isExistedChatRoomByBuyer(Long postId, Long memberId) {
+        chatRoomInfoRepository.findChatRoomInfoByBuyer(postId, memberId)
+                .ifPresentOrElse(
+                        room -> { throw new RoomNotCreateException(NOT_CREATE_CHAT_ROOM); },
+                        () -> {}
+                );
     }
 
 }
