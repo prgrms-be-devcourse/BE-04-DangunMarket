@@ -40,9 +40,6 @@ public class PostLikeService {
 
         post.like();
 
-        if (postLikeRepository.existsByMemberIdAndPostId(memberId, postId)) {
-            throw new InvalidPostLikeException(ALREADY_EXISTS_POST_LIKE);
-        }
         PostLike postLike = PostLike.builder()
                 .memberId(memberId)
                 .post(post)
