@@ -6,9 +6,8 @@ import com.daangn.dangunmarket.domain.chat.model.ChatRoom;
 import com.daangn.dangunmarket.domain.chat.repository.chatmessage.ChatMessageMongoRepository;
 import com.daangn.dangunmarket.domain.chat.repository.chatroom.ChatRoomRepository;
 import com.daangn.dangunmarket.domain.chat.repository.chatroominfo.ChatRoomInfoRepository;
-import com.daangn.dangunmarket.domain.chat.service.dto.ChatRoomCreateRequest;
-import com.daangn.dangunmarket.domain.chat.service.dto.ChatRoomsFindResponse;
-import com.daangn.dangunmarket.domain.chat.service.dto.ChatRoomsFindResponses;
+import com.daangn.dangunmarket.domain.chat.service.dto.*;
+import com.daangn.dangunmarket.domain.chat.service.mapper.ChatDtoMapper;
 import com.daangn.dangunmarket.domain.member.model.Member;
 import com.daangn.dangunmarket.domain.member.repository.MemberJpaRepository;
 import com.daangn.dangunmarket.domain.post.model.Category;
@@ -27,6 +26,8 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 import java.util.Optional;
@@ -63,6 +64,9 @@ class ChatRoomServiceTest {
 
     @Autowired
     private PostRepository postRepository;
+
+    @Autowired
+    private ChatDtoMapper chatDtoMapper;
 
     private Member existedSeller;
     private Member existedBuyer1;
@@ -191,6 +195,45 @@ class ChatRoomServiceTest {
                 .isInstanceOf(RuntimeException.class);
     }
 
+    @Test
+    @DisplayName("참여한 채팅방 메세지의 내용들을 최신순으로 출력한다.")
+    void findByChatRoomIdWithPagination_sortedAsc_returnMessages( ) {
+        //given
+        ChatMessagePageRequest chatMessageRequest = new ChatMessagePageRequest(savedChatRoom1.getId(), 1, 10);
+
+        //when
+        List<ChatMessagePageResponse> byChatRoomIdWithPagination = chatRoomService.findByChatRoomIdWithPagination(chatMessageRequest, existedSeller.getId());
+        ChatMessagePageResponse chatMessagePageResponse1 = chatDtoMapper.toChatMessagePageResponse(room1ChatMessage1, existedSeller.getId());
+        ChatMessagePageResponse chatMessagePageResponse2 = chatDtoMapper.toChatMessagePageResponse(room1ChatMessage2, existedSeller.getId());
+
+        //then
+        assertThat(byChatRoomIdWithPagination.get(0).chatRoomId()).isEqualTo(chatMessagePageResponse1.chatRoomId());
+        assertThat(byChatRoomIdWithPagination.get(0).imgUrl()).isEqualTo(chatMessagePageResponse1.imgUrl());
+        assertThat(byChatRoomIdWithPagination.get(0).isMine()).isEqualTo(chatMessagePageResponse1.isMine());
+        assertThat(byChatRoomIdWithPagination.get(0).readOrNot()).isEqualTo(chatMessagePageResponse1.readOrNot());
+        assertThat(byChatRoomIdWithPagination.get(0).message()).isEqualTo(chatMessagePageResponse1.message());
+
+        assertThat(byChatRoomIdWithPagination.get(1).chatRoomId()).isEqualTo(chatMessagePageResponse2.chatRoomId());
+        assertThat(byChatRoomIdWithPagination.get(1).imgUrl()).isEqualTo(chatMessagePageResponse2.imgUrl());
+        assertThat(byChatRoomIdWithPagination.get(1).isMine()).isEqualTo(chatMessagePageResponse2.isMine());
+        assertThat(byChatRoomIdWithPagination.get(1).readOrNot()).isEqualTo(chatMessagePageResponse2.readOrNot());
+        assertThat(byChatRoomIdWithPagination.get(1).message()).isEqualTo(chatMessagePageResponse2.message());
+    }
+
+    @Test
+    @DisplayName("참여하는 채팅방의 메세지는 내가 보낸 메세지는 true, 상대가 보낸 메세지는 false로 구분할 수 있다.")
+    void findByChatRoomIdWithPagination_sameMember_isMineTrue() {
+        //given
+        ChatMessagePageRequest chatMessageRequest = new ChatMessagePageRequest(savedChatRoom1.getId(), 1, 10);
+
+        //when
+        List<ChatMessagePageResponse> byChatRoomIdWithPagination = chatRoomService.findByChatRoomIdWithPagination(chatMessageRequest, existedSeller.getId());
+
+        //then
+        assertThat(byChatRoomIdWithPagination.get(0).isMine()).isEqualTo(true);
+        assertThat(byChatRoomIdWithPagination.get(1).isMine()).isEqualTo(false);
+    }
+
     /**
      * 방     :   해당 방에 참여중인 유저        :  메세지를 보낸 순서
      * room1  : existedSeller, existedBuyer1   :   existedSeller, existedBuyer
@@ -218,16 +261,27 @@ class ChatRoomServiceTest {
                 )
         );
 
-        room1ChatMessage1 = DataInitializerFactory.chatMessage1(savedChatRoom1.getId(), existedSeller.getId());
-        room1ChatMessage2 = DataInitializerFactory.chatMessage2(savedChatRoom1.getId(), existedBuyer1.getId());
+        room1ChatMessage1 = chatMessageRepository.save(
+                DataInitializerFactory.chatMessage1(
+                        savedChatRoom1.getId(),
+                        existedSeller.getId())
+        );
+        room1ChatMessage2 = chatMessageRepository.save(
+                DataInitializerFactory.chatMessage2(
+                        savedChatRoom1.getId(),
+                        existedBuyer1.getId())
+        );
 
-        room2ChatMessage1 = DataInitializerFactory.chatMessage3(savedChatRoom2.getId(), existedBuyer2.getId());
-        room2ChatMessage2 = DataInitializerFactory.chatMessage4(savedChatRoom2.getId(), existedSeller.getId());
-
-        chatMessageRepository.save(room1ChatMessage1);
-        chatMessageRepository.save(room1ChatMessage2);
-        chatMessageRepository.save(room2ChatMessage1);
-        chatMessageRepository.save(room2ChatMessage2);
+        room2ChatMessage1 = chatMessageRepository.save(
+                DataInitializerFactory.chatMessage3(
+                        savedChatRoom2.getId(),
+                        existedBuyer2.getId())
+        );
+        room2ChatMessage2 = chatMessageRepository.save(
+                DataInitializerFactory.chatMessage4(
+                        savedChatRoom2.getId(),
+                        existedSeller.getId())
+        );
     }
 
 }
