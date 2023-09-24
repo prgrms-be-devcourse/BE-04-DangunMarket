@@ -1,6 +1,7 @@
 package com.daangn.dangunmarket.domain.chat.service;
 
 import com.daangn.dangunmarket.domain.DataInitializerFactory;
+import com.daangn.dangunmarket.domain.chat.exception.RoomNotCreateException;
 import com.daangn.dangunmarket.domain.chat.model.ChatMessage;
 import com.daangn.dangunmarket.domain.chat.model.ChatRoom;
 import com.daangn.dangunmarket.domain.chat.repository.chatmessage.ChatMessageMongoRepository;
@@ -26,8 +27,6 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 import java.util.Optional;
@@ -232,6 +231,15 @@ class ChatRoomServiceTest {
         //then
         assertThat(byChatRoomIdWithPagination.get(0).isMine()).isEqualTo(true);
         assertThat(byChatRoomIdWithPagination.get(1).isMine()).isEqualTo(false);
+    }
+
+    @Test
+    @DisplayName("구매를 원하는 회원이 채팅방을 생성하려고 할 때 이미 존재하는 채팅방이면 예외를 던진다.")
+    void isExistedRoom_existedIdOrNot_returnTrueOrFalse() {
+
+        //when_then
+        assertThatThrownBy(()->chatRoomService.isExistedChatRoomByBuyer(existedPostId,existedBuyer2.getId())).isInstanceOf(RoomNotCreateException.class);
+
     }
 
     /**
