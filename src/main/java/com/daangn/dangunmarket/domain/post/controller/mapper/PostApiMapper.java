@@ -1,6 +1,5 @@
 package com.daangn.dangunmarket.domain.post.controller.mapper;
 
-import com.daangn.dangunmarket.domain.post.controller.dto.PostDeleteApiResponse;
 import com.daangn.dangunmarket.domain.post.controller.dto.PostUpdateApiRequest;
 import com.daangn.dangunmarket.domain.post.controller.dto.PostUpdateApiResponse;
 import com.daangn.dangunmarket.domain.post.controller.dto.post.PostCreateApiRequest;
@@ -49,10 +48,6 @@ public interface PostApiMapper {
     @Mapping(target = "files", source = "request", qualifiedByName = "mapFiles")
     @Mapping(target = "urls", source = "request", qualifiedByName = "mapUrls")
     PostUpdateRequestParam toPostUpdateRequestParam(PostUpdateApiRequest request);
-
-    PostDeleteApiResponse toPostDeleteApiResponse(Long deletedPostId);
-
-
 
     @Named("mapFiles")
     static List<MultipartFile> mapFiles(PostUpdateApiRequest request) {
