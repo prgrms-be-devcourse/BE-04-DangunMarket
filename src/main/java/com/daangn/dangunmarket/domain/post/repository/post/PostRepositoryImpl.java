@@ -3,7 +3,6 @@ package com.daangn.dangunmarket.domain.post.repository.post;
 import com.daangn.dangunmarket.domain.post.model.Post;
 import com.daangn.dangunmarket.domain.post.repository.dto.PostDto;
 import com.daangn.dangunmarket.domain.post.service.dto.PostSearchConditionRequest;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Repository;
@@ -38,8 +37,8 @@ public class PostRepositoryImpl implements PostRepository {
     }
 
     @Override
-    public Page<PostDto> getPostsByConditions(Long areaId,
-                                              PostSearchConditionRequest conditions) {
+    public Slice<PostDto> getPostsByConditions(Long areaId,
+                                               PostSearchConditionRequest conditions) {
         return postQueryRepository
                 .getPostsByConditions(areaId, conditions);
     }

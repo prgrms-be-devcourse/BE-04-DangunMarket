@@ -7,10 +7,7 @@ import com.daangn.dangunmarket.domain.post.service.dto.PostSearchConditionReques
 import com.querydsl.core.types.Order;
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.dsl.BooleanExpression;
-import com.querydsl.core.types.dsl.Wildcard;
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.data.domain.SliceImpl;
@@ -56,7 +53,7 @@ public class PostQueryRepository {
         return new SliceImpl<>(postDtos, pageable, hasNext);
     }
 
-    public Page<PostDto> getPostsByConditions(Long areaId, PostSearchConditionRequest conditions) {
+    public Slice<PostDto> getPostsByConditions(Long areaId, PostSearchConditionRequest conditions) {
         List<PostDto> postDtos = jpaQueryFactory
                 .select(new QPostDto(
                         post,
@@ -73,16 +70,17 @@ public class PostQueryRepository {
                         eqCategory(conditions.category()))
                 .orderBy(postSort(conditions.pageable()))
                 .offset(conditions.pageable().getOffset())
-                .limit(conditions.pageable().getPageSize())
+                .limit(conditions.pageable().getPageSize() + 1)
                 .fetch();
 
-        Long total = jpaQueryFactory
-                .select(Wildcard.count)
-                .from(post)
-                .join(QArea.area).on(post.areaId.eq(QArea.area.id))
-                .fetchOne();
+        boolean hasNext = false;
 
-        return new PageImpl<>(postDtos, conditions.pageable(), total);
+        if (postDtos.size() > conditions.pageable().getPageSize()) {
+            postDtos.remove(conditions.pageable().getPageSize());
+            hasNext = true;
+        }
+
+        return new SliceImpl<>(postDtos, conditions.pageable(), hasNext);
     }
 
 

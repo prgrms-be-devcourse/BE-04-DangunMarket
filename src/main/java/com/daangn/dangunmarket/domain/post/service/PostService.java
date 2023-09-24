@@ -17,7 +17,6 @@ import com.daangn.dangunmarket.domain.post.service.mapper.PostDtoMapper;
 import com.daangn.dangunmarket.domain.post.service.mapper.PostMapper;
 import com.daangn.dangunmarket.global.TimeGenerator;
 import com.daangn.dangunmarket.global.exception.EntityNotFoundException;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
@@ -106,7 +105,7 @@ public class PostService {
     }
 
     public PostSearchResponses searchPosts(Long areaId, PostSearchConditionRequest searchCondition) {
-        Page<PostDto> postDtoPages = postRepository.getPostsByConditions(areaId, searchCondition);
+        Slice<PostDto> postDtoPages = postRepository.getPostsByConditions(areaId, searchCondition);
 
         return PostSearchResponses.from(postDtoPages);
     }
