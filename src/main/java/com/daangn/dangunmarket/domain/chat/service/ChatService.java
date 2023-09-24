@@ -69,7 +69,8 @@ public class ChatService {
 
         //접속 여부 확인
         int readOrNot = 1;
-        if (chatRoomEntryRedisRepository.isMemberInRoom(chatRoomId.toString(), memberId.toString())) {
+        Long theOtherMemberId = chatRoomInfoRepository.findSenderIdByChatRoomInfoAndMyId(chatRoomId, memberId);
+        if (chatRoomEntryRedisRepository.isMemberInRoom(chatRoomId.toString(), theOtherMemberId.toString())) {
             readOrNot = 0;
         }
 
