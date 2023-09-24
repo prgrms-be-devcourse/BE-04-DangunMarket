@@ -55,10 +55,5 @@ public class ChatRoomInfo extends BaseEntity {
     public boolean isSameMember(Long memberId){
         return Objects.equals(this.memberId, memberId);
     }
-
-    public void addChatRoom(ChatRoom chatRoom) {
-        this.chatRoom =chatRoom;
-    }
-
-
+    
 }

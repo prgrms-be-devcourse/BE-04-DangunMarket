@@ -58,7 +58,7 @@ public class ChatRoomService {
         return chatRoom.getId();
     }
 
-
+    @Transactional(readOnly = true)
     public int readAllMessage(Long chatRoomId, Long memberId) {
         Long senderId = chatRoomInfoRepository.findSenderId(chatRoomId, memberId);
 
@@ -77,6 +77,7 @@ public class ChatRoomService {
         return chatDtoMapper.toChatWithPostAndMemberResponse(postWithMember);
     }
 
+    @Transactional(readOnly = true)
     public ChatRoomsFindResponses findChatRoomsByMemberId(Long memberId, Pageable pageable) {
         Slice<JoinedMemberResponse> roomInfoWithMembers = chatRoomInfoRepository.findMembersInSameChatRooms(memberId, pageable);
 
@@ -96,6 +97,7 @@ public class ChatRoomService {
         chatRoom.deleteChatRoom(deleteRequestMemberId, findChatRoomInfos);
     }
 
+    @Transactional(readOnly = true)
     public List<ChatMessagePageResponse> findByChatRoomIdWithPagination(ChatMessagePageRequest chatMessageRequest, Long memberId) {
         ChatMessagePageDto chatMessagePageDto = chatDtoMapper.toChatMessagePageDto(chatMessageRequest);
 
@@ -105,4 +107,5 @@ public class ChatRoomService {
                 .map(p->chatDtoMapper.toChatMessagePageResponse(p,memberId))
                 .toList();
     }
+
 }
