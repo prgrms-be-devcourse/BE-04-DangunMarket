@@ -47,17 +47,15 @@ public class PostService {
         return savePost.getId();
     }
 
-    public PostFindResponse findById(Long productId) {
-        Post post = postRepository.findById(productId)
-                .orElseThrow(() -> new EntityNotFoundException(NOT_FOUND_POST_ENTITY));
+    public PostFindResponse findById(Long postId) {
+        Post post = postRepository.getById(postId);
 
         return PostFindResponse.from(post);
     }
 
     @Transactional
     public Long changeStatus(PostUpdateStatusRequest request) {
-        Post post = postRepository.findById(request.postId())
-                .orElseThrow(() -> new EntityNotFoundException(NOT_FOUND_POST_ENTITY));
+        Post post = postRepository.getById(request.postId());
 
         post.changeTradeStatus(request.tradeStatus());
 
@@ -66,20 +64,19 @@ public class PostService {
 
     @Transactional
     public Long refreshTime(Long postId, Long memberId) {
-        Post post = postRepository.findById(postId)
-                .orElseThrow(() -> new EntityNotFoundException(NOT_FOUND_POST_ENTITY));
+        Post post = postRepository.getById(postId);
 
         if (post.isNotOwner(memberId)) {
             throw new IllegalStateException("해당 유저는 게시글의 주인이 아닙니다.");
         }
 
         post.changeRefreshedAt(timeGenerator.getCurrentTime());
+
         return post.getId();
     }
 
     public PostToUpdateResponse getPostInfoToUpdate(Long memberId, Long postId) {
-        Post post = postRepository.findById(postId)
-                .orElseThrow(() -> new EntityNotFoundException(NOT_FOUND_POST_ENTITY));
+        Post post = postRepository.getById(postId);
 
         if (!post.isCreatedBy(memberId)) {
             throw new UnauthorizedAccessException(POST_NOT_CREATED_BY_USER);
@@ -96,8 +93,7 @@ public class PostService {
 
     @Transactional
     public Long updatePost(PostUpdateRequest request) {
-        Post postForUpdate = postRepository.findById(request.postId())
-                .orElseThrow(() -> new NotFoundException("해당 게시글이 존재하지 않습니다."));
+        Post postForUpdate = postRepository.getById(request.postId());
 
         postForUpdate.edit(request.toPostEditor());
 
@@ -112,14 +108,9 @@ public class PostService {
 
     @Transactional
     public void deletePost(Long memberId, Long postId) {
-        Post post = postRepository.findById(postId)
-                .orElseThrow(() -> new EntityNotFoundException(NOT_FOUND_POST_ENTITY));
+        Post post = postRepository.getById(postId);
 
-        if (post.isNotOwner(memberId)) {
-            throw new UnauthorizedAccessException(POST_NOT_CREATED_BY_USER);
-        }
-
-        post.deletePost();
+        post.deleteByMemberId(memberId);
     }
 
 }

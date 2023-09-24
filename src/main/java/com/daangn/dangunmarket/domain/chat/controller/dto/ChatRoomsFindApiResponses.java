@@ -6,7 +6,7 @@ import org.springframework.data.domain.Slice;
 public record ChatRoomsFindApiResponses(Slice<ChatRoomsFindApiResponse> chatRoomsFindApiResponses) {
 
     public static ChatRoomsFindApiResponses from(ChatRoomsFindResponses responses) {
-        Slice<ChatRoomsFindApiResponse> mapResponses = responses.resposes()
+        Slice<ChatRoomsFindApiResponse> mapResponses = responses.responses()
                 .map(e -> new ChatRoomsFindApiResponse(
                         e.chatRoomId(),
                         e.otherMemberName(),

@@ -5,7 +5,6 @@ import com.daangn.dangunmarket.domain.chat.model.ChatRoom;
 import com.daangn.dangunmarket.domain.chat.model.ChatRoomInfo;
 import com.daangn.dangunmarket.domain.chat.repository.chatroom.ChatRoomRepository;
 import com.daangn.dangunmarket.domain.chat.repository.chatroominfo.ChatRoomInfoRepository;
-import com.daangn.dangunmarket.domain.chat.service.dto.ChatRoomCreateRequest;
 import com.daangn.dangunmarket.domain.post.model.Category;
 import com.daangn.dangunmarket.domain.post.model.Post;
 import com.daangn.dangunmarket.domain.post.repository.category.CategoryRepository;
