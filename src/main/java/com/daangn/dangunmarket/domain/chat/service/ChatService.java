@@ -91,13 +91,9 @@ public class ChatService {
 
     @Transactional
     public void saveSessionInfo(SessionInfoSaveRequest request) {
-        SessionInfo sessionInfo = SessionInfo.builder()
-                .sessionId(request.sessionId())
-                .memberId(request.memberId())
-                .roomId(request.roomId())
-                .build();
-
-        sessionInfoRepository.save(sessionInfo);
+        sessionInfoRepository.save(
+                mapper.toSessionInfo(request)
+        );
     }
 
 }

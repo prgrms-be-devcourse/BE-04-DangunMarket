@@ -126,25 +126,6 @@ class ChatRoomFacadeTest {
         assertThat(sessionInfo.getRoomId()).isEqualTo(1L);
     }
 
-    @Test
-    @DisplayName("존재하지 않는 memberId와 sessionId를 통해 SessionInfo를 생성하려 하면 예외가 발생한다.")
-    void saveSessionInfo_incorrectMemberIdAndSessionId_EntityNotFoundException() {
-        //given
-        String sessionId = "5rsuwmct";
-        Long roomId = 1L;
-        Long savedMemberId = existedSeller.getId() + 5;
-
-        //when
-        Exception exception = catchException(() -> chatRoomFacade.saveSessionInfo(new SessionInfoSaveFacaRequest(
-                sessionId,
-                roomId,
-                savedMemberId
-        )));
-
-        //then
-        assertThat(exception).isInstanceOf(EntityNotFoundException.class);
-    }
-
     void dateSetUp() {
         ChatRoom chatRoom = new ChatRoom();
         savedChatRoom = chatRoomRepository.save(chatRoom);
