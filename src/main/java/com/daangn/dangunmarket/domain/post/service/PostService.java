@@ -19,6 +19,7 @@ import com.daangn.dangunmarket.global.TimeGenerator;
 import com.daangn.dangunmarket.global.exception.EntityNotFoundException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -89,7 +90,7 @@ public class PostService {
     }
 
     public PostGetResponses getPosts(Long areaId, Pageable pageable) {
-        Page<PostDto> postDtoPages = postRepository.getPostsSimple(areaId, pageable);
+        Slice<PostDto> postDtoPages = postRepository.getPostsSimple(areaId, pageable);
 
         return PostGetResponses.from(postDtoPages);
     }

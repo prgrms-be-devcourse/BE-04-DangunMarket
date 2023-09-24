@@ -12,6 +12,8 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
+import org.springframework.data.domain.SliceImpl;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Repository;
 
@@ -30,7 +32,7 @@ public class PostQueryRepository {
         this.jpaQueryFactory = jpaQueryFactory;
     }
 
-    public Page<PostDto> getPostsSimple(Long areaId, Pageable pageable) {
+    public Slice<PostDto> getPostsSimple(Long areaId, Pageable pageable) {
         List<PostDto> postDtos = jpaQueryFactory
                 .select(new QPostDto(
                         post,
@@ -42,16 +44,16 @@ public class PostQueryRepository {
                 .where(post.areaId.eq(areaId))
                 .orderBy(post.createdAt.desc())
                 .offset(pageable.getOffset())
-                .limit(pageable.getPageSize())
+                .limit(pageable.getPageSize() + 1)
                 .fetch();
+        boolean hasNext = false;
 
-        Long total = jpaQueryFactory
-                .select(Wildcard.count)
-                .from(post)
-                .join(QArea.area).on(post.areaId.eq(QArea.area.id))
-                .fetchOne();
+        if (postDtos.size() > pageable.getPageSize()) {
+            postDtos.remove(pageable.getPageSize());
+            hasNext = true;
+        }
 
-        return new PageImpl<>(postDtos, pageable, total);
+        return new SliceImpl<>(postDtos, pageable, hasNext);
     }
 
     public Page<PostDto> getPostsByConditions(Long areaId, PostSearchConditionRequest conditions) {
