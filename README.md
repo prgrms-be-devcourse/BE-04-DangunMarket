@@ -38,9 +38,7 @@
 |<img src="https://img.shields.io/badge/Notion-FFFFFF?style=flat-square&logo=Notion&logoColor=black"/></a>|<img src="https://img.shields.io/badge/slack-232F3E?style=flat-square&logo=slack&logoColor=white&style=flat"/></a>|<img src="https://img.shields.io/badge/Jira-0052CC?style=flat-square&logo=Jira%20software&logoColor=white&style=flat"/></a>|<img src="https://img.shields.io/badge/Github-000000?style=flat-square&logo=Github&logoColor=white&style=flat"/></a>|<img src="https://img.shields.io/badge/Erd Cloud-0052CC?style=flat-square&logo=erdcloud%20software&logoColor=white&style=flat"/></a>|<img src="https://img.shields.io/badge/Miro-0052CC?style=flat-square&logo=Miro%20software&logoColor=white&style=flat"/></a>|
 
 ## 📘 ERD
-<p align="center">
-  <img src="https://github.com/KimMinheee/design-pattern-note-java/assets/90172648/9d48cf44-07aa-4876-8511-03afd36a6e3b" width="900" height="400"/>
-</p>
+![image](https://github.com/prgrms-be-devcourse/BE-04-DangunMarket/assets/108210958/8cee38e5-be25-412e-bffb-5c90f77f871e)
 
 ## 👨‍👩‍👦 맡은 역할
 단군마켓팀은 팀원 모두 다양한 기술을 사용해보기 위해 도메인이 아닌 기능을 분배하여 개발을 진행했습니다!
