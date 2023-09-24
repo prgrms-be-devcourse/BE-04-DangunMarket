@@ -8,7 +8,8 @@ public class Constants {
      */
     public static final String[] permitAllArray = new String[]{
             "/",
-            "/auth/**"
+            "/auth/**",
+            "/ws/chat"
     };
 
 }

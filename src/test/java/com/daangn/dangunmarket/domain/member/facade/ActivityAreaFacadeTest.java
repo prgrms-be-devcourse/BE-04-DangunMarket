@@ -1,13 +1,12 @@
 package com.daangn.dangunmarket.domain.member.facade;
 
 import com.amazonaws.services.kms.model.NotFoundException;
-
 import com.daangn.dangunmarket.domain.DataInitializerFactory;
 import com.daangn.dangunmarket.domain.area.model.Area;
 import com.daangn.dangunmarket.domain.area.service.AreaService;
 import com.daangn.dangunmarket.domain.member.facade.dto.ActivityAreaCreateRequestParam;
 import com.daangn.dangunmarket.domain.member.facade.dto.ActivityAreaIsVerifiedRequestParam;
-import com.daangn.dangunmarket.domain.member.model.*;
+import com.daangn.dangunmarket.domain.member.model.Member;
 import com.daangn.dangunmarket.domain.member.service.ActivityAreaService;
 import com.daangn.dangunmarket.domain.member.service.MemberService;
 import com.daangn.dangunmarket.domain.member.service.dto.ActivityAreaFindResponse;

@@ -14,8 +14,7 @@ import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import static com.daangn.dangunmarket.global.response.ErrorCode.NOT_FOUND_POST_ENTITY;
-import static com.daangn.dangunmarket.global.response.ErrorCode.NOT_FOUND_POST_LIKE_ENTITY;
+import static com.daangn.dangunmarket.global.response.ErrorCode.*;
 
 @Service
 @Transactional(readOnly = true)
@@ -36,14 +35,10 @@ public class PostLikeService {
                 .orElseThrow(() -> new EntityNotFoundException(NOT_FOUND_POST_ENTITY));
 
         if (postLikeRepository.existsByMemberIdAndPostId(memberId, postId)) {
-            throw new InvalidPostLikeException(NOT_FOUND_POST_ENTITY);
+            throw new InvalidPostLikeException(ALREADY_EXISTS_POST_LIKE);
         }
 
         post.like();
-
-        if (postLikeRepository.existsByMemberIdAndPostId(memberId, postId)) {
-            throw new InvalidPostLikeException(NOT_FOUND_POST_ENTITY);
-        }
 
         PostLike postLike = PostLike.builder()
                 .memberId(memberId)

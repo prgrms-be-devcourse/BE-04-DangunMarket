@@ -7,7 +7,6 @@ import com.daangn.dangunmarket.domain.post.exception.InvalidPostLikeException;
 import com.daangn.dangunmarket.domain.post.model.Category;
 import com.daangn.dangunmarket.domain.post.model.LocationPreference;
 import com.daangn.dangunmarket.domain.post.model.Post;
-import com.daangn.dangunmarket.domain.post.model.PostImage;
 import com.daangn.dangunmarket.domain.post.model.TradeStatus;
 import com.daangn.dangunmarket.domain.post.model.vo.Price;
 import com.daangn.dangunmarket.domain.post.model.vo.Title;
@@ -76,7 +75,7 @@ public class PostLikeServiceTest {
     }
 
     @AfterEach
-    void tearDown(){
+    void tearDown() {
         postLikeJpaRepository.deleteAll();
         postJpaRepository.deleteAll();
     }
