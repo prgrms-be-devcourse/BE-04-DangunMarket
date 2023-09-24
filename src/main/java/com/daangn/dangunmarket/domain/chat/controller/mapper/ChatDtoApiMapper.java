@@ -23,5 +23,8 @@ public interface ChatDtoApiMapper {
 
     ChatMessagePageRequest toChatMessagePageRequest(ChatMessagePageApiRequest chatMessagePageApiRequest);
 
-    ChatMessagePageApiResponses toChatMessagePageApiResponses(List<ChatMessagePageResponse> chatMessagePageResponses);
+    default ChatMessagePageApiResponses toChatMessagePageApiResponses(List<ChatMessagePageResponse> chatMessagePageResponses){
+        return new ChatMessagePageApiResponses(chatMessagePageResponses);
+    }
+
 }
