@@ -79,7 +79,7 @@ class ChatRoomFacadeTest {
     @DisplayName("채팅방에 입장했을 때 상대방의 별명과 리뷰점수 그리고 채팅과 연관된 게시글 정보의 일부를 확인할 수 있다.")
     void checkInChatRoom_returnPostAndMemberInfo_isEquals() {
         //given
-        Long senderId = chatRoomInfoRepository.findSenderIdByChatRoomInfoAndMyId(savedChatRoom.getId(), existedBuyerId);
+        Long senderId = chatRoomInfoRepository.findSenderId(savedChatRoom.getId(), existedBuyerId);
         Member chatPartner = memberRepository.findById(senderId).get();
 
         //when
@@ -90,8 +90,8 @@ class ChatRoomFacadeTest {
         assertThat(chatRoomCheckInParamResponse.isOfferAllowed()).isEqualTo(savedPost.isOfferAllowed());
         assertThat(chatRoomCheckInParamResponse.price()).isEqualTo(savedPost.getPrice());
         assertThat(chatRoomCheckInParamResponse.title()).isEqualTo(savedPost.getTitle());
-        assertThat(chatRoomCheckInParamResponse.productUrl()).isEqualTo(savedPost.extractSingleImage());
-        assertThat(chatRoomCheckInParamResponse.tradeState()).isEqualTo(savedPost.getTradeStatus().toString());
+        assertThat(chatRoomCheckInParamResponse.productImageUrl()).isEqualTo(savedPost.extractSingleImage());
+        assertThat(chatRoomCheckInParamResponse.tradeStatus()).isEqualTo(savedPost.getTradeStatus().toString());
         assertThat(chatRoomCheckInParamResponse.nickName()).isEqualTo(chatPartner.getNickName());
         assertThat(chatRoomCheckInParamResponse.reviewScore()).isEqualTo(chatPartner.getReviewScore());
     }
