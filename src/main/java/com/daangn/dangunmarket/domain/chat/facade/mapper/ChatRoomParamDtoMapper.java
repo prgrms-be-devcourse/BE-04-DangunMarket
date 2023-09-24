@@ -1,6 +1,7 @@
 package com.daangn.dangunmarket.domain.chat.facade.mapper;
 
 import com.daangn.dangunmarket.domain.chat.facade.dto.ChatRoomCheckInParamResponse;
+import com.daangn.dangunmarket.domain.chat.service.dto.ChatWithPostAndMemberResponse;
 import com.daangn.dangunmarket.domain.member.service.dto.MemberFindResponse;
 import com.daangn.dangunmarket.domain.post.model.PostImage;
 import com.daangn.dangunmarket.domain.post.service.dto.PostFindResponse;
@@ -17,17 +18,7 @@ import java.util.List;
 )
 public interface ChatRoomParamDtoMapper {
 
-    @Mapping(target = "productUrl", source = "postFindResponse", qualifiedByName = "firstPostImage")
-    @Mapping(target = "tradeState", source = "postFindResponse.tradeStatus")
-    ChatRoomCheckInParamResponse toChatRoomCheckInParamResponse(PostFindResponse postFindResponse, MemberFindResponse memberFindResponse);
+    ChatRoomCheckInParamResponse toChatRoomCheckInParamResponse(ChatWithPostAndMemberResponse chatWithPostAndMemberResponse);
 
-    @Named("firstPostImage")
-    default String firstPostImage(PostFindResponse postFindResponse) {
-        List<PostImage> postImages = postFindResponse.postImageList();
-        if (postImages != null && !postImages.isEmpty()) {
-            return postImages.get(0).getUrl();
-        }
-        return "";
-    }
 }
 
