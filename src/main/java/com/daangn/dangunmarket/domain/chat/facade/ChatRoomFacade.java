@@ -2,9 +2,11 @@ package com.daangn.dangunmarket.domain.chat.facade;
 
 import com.daangn.dangunmarket.domain.chat.exception.RoomNotCreateException;
 import com.daangn.dangunmarket.domain.chat.facade.dto.ChatRoomCheckInParamResponse;
+import com.daangn.dangunmarket.domain.chat.facade.dto.SessionInfoSaveParamRequest;
 import com.daangn.dangunmarket.domain.chat.facade.mapper.ChatRoomParamDtoMapper;
 import com.daangn.dangunmarket.domain.chat.service.ChatRoomInfoService;
 import com.daangn.dangunmarket.domain.chat.service.ChatRoomService;
+import com.daangn.dangunmarket.domain.chat.service.ChatService;
 import com.daangn.dangunmarket.domain.chat.service.dto.ChatRoomCreateRequest;
 import com.daangn.dangunmarket.domain.member.service.MemberService;
 import com.daangn.dangunmarket.domain.member.service.dto.MemberFindResponse;
@@ -22,14 +24,15 @@ public class ChatRoomFacade {
     private final ChatRoomInfoService chatRoomInfoService;
     private final MemberService memberService;
     private final ChatRoomParamDtoMapper chatRoomParamDtoMapper;
+    private final ChatService chatService;
 
-    public ChatRoomFacade(PostService postService, ChatRoomService chatRoomService, ChatRoomInfoService chatRoomInfoService,
-                          MemberService memberService, ChatRoomParamDtoMapper chatRoomParamDtoMapper) {
+    public ChatRoomFacade(PostService postService, ChatRoomService chatRoomService, ChatRoomInfoService chatRoomInfoService, MemberService memberService, ChatRoomParamDtoMapper chatRoomParamDtoMapper, ChatService chatService) {
         this.postService = postService;
         this.chatRoomService = chatRoomService;
         this.chatRoomInfoService = chatRoomInfoService;
         this.memberService = memberService;
         this.chatRoomParamDtoMapper = chatRoomParamDtoMapper;
+        this.chatService = chatService;
     }
 
     public Long createChatRoom(ChatRoomCreateRequest request) {
@@ -53,6 +56,10 @@ public class ChatRoomFacade {
         MemberFindResponse memberFindResponse = memberService.findById(senderId);
 
         return chatRoomParamDtoMapper.toChatRoomCheckInParamResponse(postFindResponse, memberFindResponse);
+    }
+
+    public void saveSessionInfo(SessionInfoSaveParamRequest request){
+        chatService.saveSessionInfo(chatRoomParamDtoMapper.toSessionInfoSaveRequest(request));
     }
 
 }

@@ -4,8 +4,10 @@ import com.daangn.dangunmarket.domain.auth.jwt.CustomUser;
 import com.daangn.dangunmarket.domain.chat.controller.dto.ChatRoomCheckInApiResponse;
 import com.daangn.dangunmarket.domain.chat.controller.dto.ChatRoomCreateApiRequest;
 import com.daangn.dangunmarket.domain.chat.controller.dto.ChatRoomCreateApiResponse;
+import com.daangn.dangunmarket.domain.chat.controller.dto.SessionInfoSaveApiRequest;
 import com.daangn.dangunmarket.domain.chat.controller.mapper.ChatDtoApiMapper;
 import com.daangn.dangunmarket.domain.chat.facade.ChatRoomFacade;
+import jakarta.validation.Valid;
 import com.daangn.dangunmarket.domain.chat.facade.dto.ChatRoomCheckInParamResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -14,6 +16,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -67,6 +70,22 @@ public class ChatController {
                 .path("/{id}")
                 .buildAndExpand(postId)
                 .toUri();
+    }
+
+    @PutMapping("/session-info/{sessionId}")
+    public ResponseEntity<Void> saveSessionInfo(
+            @PathVariable String sessionId,
+            @RequestBody @Valid SessionInfoSaveApiRequest request,
+            Authentication authentication
+    ){
+        CustomUser customUser = (CustomUser) authentication.getPrincipal();
+        chatRoomFacade.saveSessionInfo(chatDtoApiMapper.toSessionInfoSaveParamRequest(
+                sessionId,
+                request.roomId(),
+                customUser.memberId())
+        );
+
+        return ResponseEntity.ok().build();
     }
 
 }

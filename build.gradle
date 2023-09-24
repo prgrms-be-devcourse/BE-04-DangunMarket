@@ -2,6 +2,7 @@ plugins {
     id 'java'
     id 'org.springframework.boot' version '3.0.10'
     id 'io.spring.dependency-management' version '1.1.3'
+    id "org.asciidoctor.jvm.convert" version "3.3.2"
 }
 
 group = 'com.daangn'
@@ -15,6 +16,7 @@ configurations {
     compileOnly {
         extendsFrom annotationProcessor
     }
+    asciidoctorExt
 }
 
 repositories {
@@ -32,9 +34,6 @@ dependencies {
     runtimeOnly 'com.mysql:mysql-connector-j'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation "org.mockito:mockito-core:3.+"
-
-    //mongo
-    implementation 'org.springframework.boot:spring-boot-starter-data-mongodb'
 
     //lombok
     annotationProcessor 'org.projectlombok:lombok'
@@ -65,6 +64,12 @@ dependencies {
     annotationProcessor "com.querydsl:querydsl-apt:${dependencyManagement.importedProperties['querydsl.version']}:jakarta"
     annotationProcessor "jakarta.annotation:jakarta.annotation-api"
     annotationProcessor "jakarta.persistence:jakarta.persistence-api"
+
+    //chatting
+    implementation 'org.springframework.boot:spring-boot-starter-websocket'
+    implementation 'org.webjars:sockjs-client:1.1.2'
+    implementation 'org.webjars:stomp-websocket:2.3.3-1'
+    implementation 'com.google.code.gson:gson:2.8.0'
 
     //map struct
     implementation 'org.mapstruct:mapstruct:1.5.5.Final'

@@ -69,4 +69,8 @@ public class ChatRoomInfo extends BaseEntity {
     }
 
 
+    public Long getChatRoomId(){
+        return chatRoom.getId();
+    }
+
 }

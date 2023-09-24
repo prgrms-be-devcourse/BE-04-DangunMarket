@@ -1,6 +1,8 @@
 package com.daangn.dangunmarket.domain.chat.facade.mapper;
 
 import com.daangn.dangunmarket.domain.chat.facade.dto.ChatRoomCheckInParamResponse;
+import com.daangn.dangunmarket.domain.chat.facade.dto.SessionInfoSaveParamRequest;
+import com.daangn.dangunmarket.domain.chat.service.dto.SessionInfoSaveRequest;
 import com.daangn.dangunmarket.domain.member.service.dto.MemberFindResponse;
 import com.daangn.dangunmarket.domain.post.model.PostImage;
 import com.daangn.dangunmarket.domain.post.service.dto.PostFindResponse;
@@ -29,5 +31,7 @@ public interface ChatRoomParamDtoMapper {
         }
         return "";
     }
+
+    SessionInfoSaveRequest toSessionInfoSaveRequest(SessionInfoSaveParamRequest request);
 }
 

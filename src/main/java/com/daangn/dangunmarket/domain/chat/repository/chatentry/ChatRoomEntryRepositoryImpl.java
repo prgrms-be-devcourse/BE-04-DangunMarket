@@ -33,4 +33,9 @@ public class ChatRoomEntryRepositoryImpl implements ChatRoomEntryRepository {
         return chatEntryRedisRepository.isMemberInRoom(roomId, memberId);
     }
 
+    @Override
+    public void deleteChatRoomEntryByRoomId(String roomId) {
+        chatEntryRedisRepository.deleteChatRoomEntryByRoomId(roomId);
+    }
+
 }

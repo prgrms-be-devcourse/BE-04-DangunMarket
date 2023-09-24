@@ -2,12 +2,15 @@ package com.daangn.dangunmarket.domain.chat.facade;
 
 import com.daangn.dangunmarket.domain.DataInitializerFactory;
 import com.daangn.dangunmarket.domain.chat.facade.dto.ChatRoomCheckInParamResponse;
+import com.daangn.dangunmarket.domain.chat.facade.dto.SessionInfoSaveParamRequest;
 import com.daangn.dangunmarket.domain.chat.model.ChatRoom;
 import com.daangn.dangunmarket.domain.chat.model.ChatRoomInfo;
+import com.daangn.dangunmarket.domain.chat.model.SessionInfo;
 import com.daangn.dangunmarket.domain.chat.repository.chatentry.ChatRoomEntryRedisRepository;
 import com.daangn.dangunmarket.domain.chat.repository.chatmessage.ChatMessageMongoRepository;
 import com.daangn.dangunmarket.domain.chat.repository.chatroom.ChatRoomRepository;
 import com.daangn.dangunmarket.domain.chat.repository.chatroominfo.ChatRoomInfoRepository;
+import com.daangn.dangunmarket.domain.chat.repository.sessioninfo.SessionInfoRedisRepository;
 import com.daangn.dangunmarket.domain.member.model.Member;
 import com.daangn.dangunmarket.domain.member.repository.MemberRepository;
 import com.daangn.dangunmarket.domain.post.model.Category;
@@ -53,6 +56,9 @@ class ChatRoomFacadeTest {
 
     @Autowired
     private ChatRoomEntryRedisRepository chatEntryRedisRepository;
+    
+    @Autowired
+    private SessionInfoRedisRepository sessionInfoRedisRepository;
 
     private ChatRoom savedChatRoom;
     private Member existedBuyer;
@@ -73,6 +79,7 @@ class ChatRoomFacadeTest {
     void tearDown() {
         chatEntryRedisRepository.deleteAllWithPrefix();
         chatMessageRepository.deleteAll();
+        sessionInfoRedisRepository.deleteAll();
     }
 
     @Test
@@ -94,6 +101,27 @@ class ChatRoomFacadeTest {
         assertThat(chatRoomCheckInParamResponse.tradeState()).isEqualTo(savedPost.getTradeStatus().toString());
         assertThat(chatRoomCheckInParamResponse.nickName()).isEqualTo(chatPartner.getNickName());
         assertThat(chatRoomCheckInParamResponse.reviewScore()).isEqualTo(chatPartner.getReviewScore());
+    }
+
+    @Test
+    @DisplayName("sessionId, roomId, roomId를 통해 소켓 통신중에 이용할 SessionInfo를 생성할 수 있다.")
+    void saveSessionInfo_correctMemberIdAndSessionId_void() {
+        //given
+        String sessionId = "5rsuwmct";
+        Long roomId = 1L;
+        Long savedMemberId = existedSeller.getId();
+
+        chatRoomFacade.saveSessionInfo(new SessionInfoSaveParamRequest(
+                //when
+                sessionId,
+                roomId,
+                savedMemberId
+                ));
+
+        //then
+        SessionInfo sessionInfo = sessionInfoRedisRepository.findById(sessionId).get();
+        assertThat(sessionInfo.getMemberId()).isEqualTo(savedMemberId);
+        assertThat(sessionInfo.getRoomId()).isEqualTo(1L);
     }
 
     void dateSetUp() {
