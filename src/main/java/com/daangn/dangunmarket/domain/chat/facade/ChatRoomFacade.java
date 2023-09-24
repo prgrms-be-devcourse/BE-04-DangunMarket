@@ -59,8 +59,6 @@ public class ChatRoomFacade {
     }
 
     public void saveSessionInfo(SessionInfoSaveFacaRequest request){
-        memberService.findById(request.memberId());
-
         chatService.saveSessionInfo(chatRoomParamDtoMapper.toSessionInfoSaveRequest(request));
     }
 
