@@ -1,4 +1,4 @@
-package com.daangn.dangunmarket.domain.auth.config;
+package com.daangn.dangunmarket.global.config;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;

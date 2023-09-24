@@ -83,7 +83,7 @@ class ChatServiceTest {
         );
 
         //then
-        List<ChatRoomsFindResponse> contents = responses.resposes().getContent();
+        List<ChatRoomsFindResponse> contents = responses.responses().getContent();
 
         assertThat(contents.get(0).chatRoomId()).isEqualTo(1L);
         assertThat(contents.get(0).latestMessage()).isEqualTo("방 1의 두번째 메세지");

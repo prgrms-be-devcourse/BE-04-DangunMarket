@@ -52,12 +52,21 @@ public class ChatRoomInfo extends BaseEntity {
         this.memberId = memberId;
     }
 
-    public void deleteChatRoomInfo() {
-        isDeleted = true;
+    public boolean deleteChatRoomInfo(Long deleteRequestMemberId){
+        if(isSameMember(deleteRequestMemberId)) {
+            isDeleted = true;
+            return true;
+        }
+        return false;
     }
 
     public boolean isSameMember(Long memberId) {
         return Objects.equals(this.memberId, memberId);
     }
+
+    public void addChatRoom(ChatRoom chatRoom) {
+        this.chatRoom =chatRoom;
+    }
+
 
 }
