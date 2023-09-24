@@ -2,8 +2,8 @@ package com.daangn.dangunmarket.domain.chat.facade;
 
 import com.daangn.dangunmarket.domain.chat.exception.RoomNotCreateException;
 import com.daangn.dangunmarket.domain.chat.facade.dto.ChatRoomCheckInParamResponse;
+import com.daangn.dangunmarket.domain.chat.facade.dto.SessionInfoSaveParamRequest;
 import com.daangn.dangunmarket.domain.chat.facade.mapper.ChatRoomParamDtoMapper;
-import com.daangn.dangunmarket.domain.chat.facade.dto.SessionInfoSaveFacaRequest;
 import com.daangn.dangunmarket.domain.chat.service.ChatRoomInfoService;
 import com.daangn.dangunmarket.domain.chat.service.ChatRoomService;
 import com.daangn.dangunmarket.domain.chat.service.ChatService;
@@ -58,7 +58,7 @@ public class ChatRoomFacade {
         return chatRoomParamDtoMapper.toChatRoomCheckInParamResponse(postFindResponse, memberFindResponse);
     }
 
-    public void saveSessionInfo(SessionInfoSaveFacaRequest request){
+    public void saveSessionInfo(SessionInfoSaveParamRequest request){
         chatService.saveSessionInfo(chatRoomParamDtoMapper.toSessionInfoSaveRequest(request));
     }
 

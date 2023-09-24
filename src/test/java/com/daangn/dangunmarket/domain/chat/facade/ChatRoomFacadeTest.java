@@ -2,7 +2,7 @@ package com.daangn.dangunmarket.domain.chat.facade;
 
 import com.daangn.dangunmarket.domain.DataInitializerFactory;
 import com.daangn.dangunmarket.domain.chat.facade.dto.ChatRoomCheckInParamResponse;
-import com.daangn.dangunmarket.domain.chat.facade.dto.SessionInfoSaveFacaRequest;
+import com.daangn.dangunmarket.domain.chat.facade.dto.SessionInfoSaveParamRequest;
 import com.daangn.dangunmarket.domain.chat.model.ChatRoom;
 import com.daangn.dangunmarket.domain.chat.model.ChatRoomInfo;
 import com.daangn.dangunmarket.domain.chat.model.SessionInfo;
@@ -17,7 +17,6 @@ import com.daangn.dangunmarket.domain.post.model.Category;
 import com.daangn.dangunmarket.domain.post.model.Post;
 import com.daangn.dangunmarket.domain.post.repository.category.CategoryRepository;
 import com.daangn.dangunmarket.domain.post.repository.post.PostRepository;
-import com.daangn.dangunmarket.global.exception.EntityNotFoundException;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -28,7 +27,6 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.catchException;
 
 @ActiveProfiles("test")
 @Transactional
@@ -113,7 +111,7 @@ class ChatRoomFacadeTest {
         Long roomId = 1L;
         Long savedMemberId = existedSeller.getId();
 
-        chatRoomFacade.saveSessionInfo(new SessionInfoSaveFacaRequest(
+        chatRoomFacade.saveSessionInfo(new SessionInfoSaveParamRequest(
                 //when
                 sessionId,
                 roomId,

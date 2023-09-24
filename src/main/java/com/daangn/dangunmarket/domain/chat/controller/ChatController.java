@@ -79,7 +79,7 @@ public class ChatController {
             Authentication authentication
     ){
         CustomUser customUser = (CustomUser) authentication.getPrincipal();
-        chatRoomFacade.saveSessionInfo(chatDtoApiMapper.toSessionInfoSaveFacaRequest(
+        chatRoomFacade.saveSessionInfo(chatDtoApiMapper.toSessionInfoSaveParamRequest(
                 sessionId,
                 request.roomId(),
                 customUser.memberId())
