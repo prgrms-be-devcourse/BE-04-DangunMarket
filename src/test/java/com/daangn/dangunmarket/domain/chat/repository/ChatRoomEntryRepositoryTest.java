@@ -24,7 +24,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @ActiveProfiles("test")
 @SpringBootTest
-class ChatRoomEntryRepositoryTest{
+class ChatRoomEntryRepositoryTest {
 
     @Autowired
     ChatRoomRepository chatRoomRepository;
