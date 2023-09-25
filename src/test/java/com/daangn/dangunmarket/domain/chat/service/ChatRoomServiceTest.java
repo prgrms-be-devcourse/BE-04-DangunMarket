@@ -3,7 +3,6 @@ package com.daangn.dangunmarket.domain.chat.service;
 import com.daangn.dangunmarket.domain.DataInitializerFactory;
 import com.daangn.dangunmarket.domain.chat.model.ChatMessage;
 import com.daangn.dangunmarket.domain.chat.model.ChatRoom;
-import com.daangn.dangunmarket.domain.chat.model.ChatRoomInfo;
 import com.daangn.dangunmarket.domain.chat.model.SessionInfo;
 import com.daangn.dangunmarket.domain.chat.repository.chatentry.ChatRoomEntryRedisRepository;
 import com.daangn.dangunmarket.domain.chat.repository.chatmessage.ChatMessageMongoRepository;

@@ -1,19 +1,18 @@
 package com.daangn.dangunmarket.domain.post.service.dto;
 
 import com.daangn.dangunmarket.domain.post.repository.dto.PostDto;
-import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Slice;
 
 import java.util.List;
 
 public record PostSearchResponses(
         List<PostSearchResponse> contents,
-        int totalPages,
-        long totalElements,
         int size,
-        int page
+        int page,
+        boolean hasNext
 ) {
 
-    public static PostSearchResponses from(Page<PostDto> postDtos) {
+    public static PostSearchResponses from(Slice<PostDto> postDtos) {
         List<PostSearchResponse> posts = postDtos.stream()
                 .map(
                         dto -> new PostSearchResponse(
@@ -32,10 +31,10 @@ public record PostSearchResponses(
                 .toList();
 
         return new PostSearchResponses(posts,
-                postDtos.getTotalPages(),
-                postDtos.getTotalElements(),
                 postDtos.getSize(),
-                postDtos.getNumber());
+                postDtos.getNumber(),
+                postDtos.hasNext()
+        );
     }
 
 }

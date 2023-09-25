@@ -7,8 +7,8 @@ import com.daangn.dangunmarket.domain.chat.controller.dto.ChatRoomCreateApiRespo
 import com.daangn.dangunmarket.domain.chat.controller.dto.SessionInfoSaveApiRequest;
 import com.daangn.dangunmarket.domain.chat.controller.mapper.ChatDtoApiMapper;
 import com.daangn.dangunmarket.domain.chat.facade.ChatRoomFacade;
-import jakarta.validation.Valid;
 import com.daangn.dangunmarket.domain.chat.facade.dto.ChatRoomCheckInParamResponse;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
