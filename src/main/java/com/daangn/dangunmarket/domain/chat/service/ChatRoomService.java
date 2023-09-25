@@ -18,7 +18,6 @@ import com.daangn.dangunmarket.domain.chat.repository.sessioninfo.SessionInfoRep
 import com.daangn.dangunmarket.domain.chat.service.dto.ChatRoomCreateRequest;
 import com.daangn.dangunmarket.domain.chat.service.dto.ChatRoomsFindResponses;
 import com.daangn.dangunmarket.domain.chat.service.mapper.ChatMapper;
-import com.daangn.dangunmarket.domain.post.repository.post.PostRepository;
 import com.daangn.dangunmarket.global.exception.EntityNotFoundException;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
@@ -57,6 +56,8 @@ public class ChatRoomService {
 
         ChatRoom chatRoom = new ChatRoom();
         ChatRoom savedChatRoom = chatRoomRepository.save(chatRoom);
+
+        if(writerId == request.memberId()) throw new RoomNotCreateException(NOT_CREATE_CHAT_ROOM);
 
         ChatRoomInfo sellerChatRoomInfo = new ChatRoomInfo(true, request.postId(), savedChatRoom, writerId);
         chatRoomInfoRepository.save(sellerChatRoomInfo);

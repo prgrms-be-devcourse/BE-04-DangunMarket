@@ -11,5 +11,5 @@ public class NotWriterException extends RuntimeException {
         super(errorCode.getMessage());
         this.errorCode = errorCode;
     }
-    
+
 }

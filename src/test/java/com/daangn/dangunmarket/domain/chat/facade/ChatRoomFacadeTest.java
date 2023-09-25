@@ -29,7 +29,7 @@ import org.springframework.transaction.annotation.Transactional;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @ActiveProfiles("test")
-@Transactional
+//@Transactional
 @SpringBootTest
 class ChatRoomFacadeTest {
 
@@ -90,7 +90,7 @@ class ChatRoomFacadeTest {
         Member chatPartner = memberRepository.findById(senderId).get();
 
         //when
-        ChatRoomCheckInParamResponse chatRoomCheckInParamResponse = chatRoomFacade.checkInChatRoom(savedChatRoom.getId(), existedBuyerId);
+        ChatRoomCheckInParamResponse chatRoomCheckInParamResponse = chatRoomFacade.enterChatRoom(savedChatRoom.getId(), existedBuyerId);
 
         //then
         assertThat(chatRoomCheckInParamResponse.postId()).isEqualTo(savedPost.getId());
