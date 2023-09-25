@@ -12,7 +12,7 @@
 |Product Owner|Scrum Master|                                   Developer                                    |
 |:---:|:---:|:------------------------------------------------------------------------------:|
 |[김별](https://github.com/byeolhaha)|[윤영운](https://github.com/young970)|                       [김민희](https://github.com/KimMinheee)                        |
-|<img src="https://github.com/KimMinheee/design-pattern-note-java/assets/90172648/d979565b-68c0-4c5b-b69a-bd8e9db0e113" width="300" />|<img src="https://github.com/KimMinheee/design-pattern-note-java/assets/90172648/e58c4f5c-58e4-4c98-86fd-5a4546dbc1e3" width="300" />| <img src="https://github.com/KimMinheee/design-pattern-note-java/assets/90172648/89e7c162-9a82-403d-8c2b-52fdf2129f74" width="300" /> |
+|![image](https://github.com/prgrms-be-devcourse/BE-04-DangunMarket/assets/108210958/a08f0d9f-ec97-4ece-a985-095ee05ec33e)| ![image](https://github.com/prgrms-be-devcourse/BE-04-DangunMarket/assets/108210958/6487cd62-19c8-4e1e-88c6-ea49869c41c6)| ![image](https://github.com/prgrms-be-devcourse/BE-04-DangunMarket/assets/108210958/f18e8ac3-7efa-4fdc-af93-87eed486a17c)|
 
 ## 💻 기술스택
 ### 개발 환경
