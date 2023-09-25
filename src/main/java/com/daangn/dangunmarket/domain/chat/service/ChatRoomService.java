@@ -61,7 +61,6 @@ public class ChatRoomService {
         return chatRoom.getId();
     }
 
-    @Transactional(readOnly = true)
     public int readAllMessage(Long chatRoomId, Long memberId) {
         Long senderId = chatRoomInfoRepository.findSenderId(chatRoomId, memberId);
 

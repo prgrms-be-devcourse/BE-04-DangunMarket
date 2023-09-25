@@ -2,7 +2,6 @@ package com.daangn.dangunmarket.domain.chat.repository.chatmessage;
 
 import com.daangn.dangunmarket.domain.chat.model.ChatMessage;
 import com.daangn.dangunmarket.domain.chat.repository.chatmessage.dto.ChatMessagePageDto;
-import org.springframework.data.domain.Slice;
 
 import java.util.List;
 
