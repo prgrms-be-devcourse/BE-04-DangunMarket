@@ -64,11 +64,6 @@ public class ChatRoomInfo extends BaseEntity {
         return Objects.equals(this.memberId, memberId);
     }
 
-    public void addChatRoom(ChatRoom chatRoom) {
-        this.chatRoom =chatRoom;
-    }
-
-
     public Long getChatRoomId(){
         return chatRoom.getId();
     }

@@ -16,9 +16,8 @@ public interface ChatRoomInfoJpaRepository extends JpaRepository<ChatRoomInfo, L
     @Query("SELECT DISTINCT c.postId FROM ChatRoomInfo c WHERE c.chatRoom.id = :chatRoomId")
     Long findPostIdByChatRoomId(@Param("chatRoomId") Long chatRoomId);
 
-
     @Query("SELECT c FROM ChatRoomInfo c WHERE c.memberId=:memberId AND c.postId=:postId AND c.isDeleted = false ")
-    Optional<ChatRoomInfo> findChatRoomInfoByPostIdAndMemberId(@Param("postId") Long postId, @Param("memberId") Long memberId);
+    Optional<ChatRoomInfo> findChatRoomInfoByBuyer(@Param("postId") Long postId, @Param("memberId") Long memberId);
 
     @Query("SELECT c FROM ChatRoomInfo c " +
             "JOIN FETCH c.chatRoom " +

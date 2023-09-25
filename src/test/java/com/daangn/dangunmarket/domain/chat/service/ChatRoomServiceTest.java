@@ -1,6 +1,7 @@
 package com.daangn.dangunmarket.domain.chat.service;
 
 import com.daangn.dangunmarket.domain.DataInitializerFactory;
+import com.daangn.dangunmarket.domain.chat.exception.RoomNotCreateException;
 import com.daangn.dangunmarket.domain.chat.model.ChatMessage;
 import com.daangn.dangunmarket.domain.chat.model.ChatRoom;
 import com.daangn.dangunmarket.domain.chat.model.SessionInfo;
@@ -8,6 +9,8 @@ import com.daangn.dangunmarket.domain.chat.repository.chatentry.ChatRoomEntryRed
 import com.daangn.dangunmarket.domain.chat.repository.chatmessage.ChatMessageMongoRepository;
 import com.daangn.dangunmarket.domain.chat.repository.chatroom.ChatRoomRepository;
 import com.daangn.dangunmarket.domain.chat.repository.chatroominfo.ChatRoomInfoRepository;
+import com.daangn.dangunmarket.domain.chat.service.dto.*;
+import com.daangn.dangunmarket.domain.chat.service.mapper.ChatDtoMapper;
 import com.daangn.dangunmarket.domain.chat.repository.sessioninfo.SessionInfoRedisRepository;
 import com.daangn.dangunmarket.domain.chat.service.dto.ChatRoomCreateRequest;
 import com.daangn.dangunmarket.domain.chat.service.dto.ChatRoomsFindResponse;
@@ -67,6 +70,9 @@ class ChatRoomServiceTest {
     private PostRepository postRepository;
 
     @Autowired
+    private ChatDtoMapper chatDtoMapper;
+
+    @Autowired
     private SessionInfoRedisRepository sessionInfoRedisRepository;
 
     @Autowired
@@ -96,7 +102,8 @@ class ChatRoomServiceTest {
     void tearDown() {
         chatMessageRepository.deleteAll();
         chatMessageMongoRepository.deleteAll();
-        sessionInfoRedisRepository.deleteAll();;
+        sessionInfoRedisRepository.deleteAll();
+        ;
         chatRoomEntryRedisRepository.deleteAllWithPrefix();
     }
 
@@ -202,8 +209,53 @@ class ChatRoomServiceTest {
     }
 
     @Test
+    @DisplayName("참여한 채팅방 메세지의 내용들을 최신순으로 출력한다.")
+    void findByChatRoomIdWithPagination_sortedAsc_returnMessages() {
+        //given
+        ChatMessagePageRequest chatMessageRequest = new ChatMessagePageRequest(savedChatRoom1.getId(), 1, 10);
+
+        //when
+        List<ChatMessagePageResponse> byChatRoomIdWithPagination = chatRoomService.findByChatRoomIdWithPagination(chatMessageRequest, existedSeller.getId());
+        ChatMessagePageResponse chatMessagePageResponse1 = chatDtoMapper.toChatMessagePageResponse(room1ChatMessage1, existedSeller.getId());
+        ChatMessagePageResponse chatMessagePageResponse2 = chatDtoMapper.toChatMessagePageResponse(room1ChatMessage2, existedSeller.getId());
+
+        //then
+        assertThat(byChatRoomIdWithPagination.get(0).chatRoomId()).isEqualTo(chatMessagePageResponse1.chatRoomId());
+        assertThat(byChatRoomIdWithPagination.get(0).imgUrl()).isEqualTo(chatMessagePageResponse1.imgUrl());
+        assertThat(byChatRoomIdWithPagination.get(0).isMine()).isEqualTo(chatMessagePageResponse1.isMine());
+        assertThat(byChatRoomIdWithPagination.get(0).readOrNot()).isEqualTo(chatMessagePageResponse1.readOrNot());
+        assertThat(byChatRoomIdWithPagination.get(0).message()).isEqualTo(chatMessagePageResponse1.message());
+
+        assertThat(byChatRoomIdWithPagination.get(1).chatRoomId()).isEqualTo(chatMessagePageResponse2.chatRoomId());
+        assertThat(byChatRoomIdWithPagination.get(1).imgUrl()).isEqualTo(chatMessagePageResponse2.imgUrl());
+        assertThat(byChatRoomIdWithPagination.get(1).isMine()).isEqualTo(chatMessagePageResponse2.isMine());
+        assertThat(byChatRoomIdWithPagination.get(1).readOrNot()).isEqualTo(chatMessagePageResponse2.readOrNot());
+        assertThat(byChatRoomIdWithPagination.get(1).message()).isEqualTo(chatMessagePageResponse2.message());
+    }
+
+    @Test
+    @DisplayName("참여하는 채팅방의 메세지는 내가 보낸 메세지는 true, 상대가 보낸 메세지는 false로 구분할 수 있다.")
+    void findByChatRoomIdWithPagination_sameMember_isMineTrue() {
+        //given
+        ChatMessagePageRequest chatMessageRequest = new ChatMessagePageRequest(savedChatRoom1.getId(), 1, 10);
+
+        //when
+        List<ChatMessagePageResponse> byChatRoomIdWithPagination = chatRoomService.findByChatRoomIdWithPagination(chatMessageRequest, existedSeller.getId());
+
+        //then
+        assertThat(byChatRoomIdWithPagination.get(0).isMine()).isEqualTo(true);
+        assertThat(byChatRoomIdWithPagination.get(1).isMine()).isEqualTo(false);
+    }
+
+    @Test
+    @DisplayName("구매를 원하는 회원이 채팅방을 생성하려고 할 때 이미 존재하는 채팅방이면 예외를 던진다.")
+    void isExistedRoom_existedIdOrNot_returnTrueOrFalse() {
+        //when_then
+        assertThatThrownBy(() -> chatRoomService.isExistedChatRoomByBuyer(existedPostId, existedBuyer2.getId())).isInstanceOf(RoomNotCreateException.class);
+    }
+
     @DisplayName("레디스의 ChatRoomEntry의 value인 memberId를 sessionId를 통해 삭제한다.")
-    void deleteChatRoomEntryInMemberId_sessionId_void(){
+    void deleteChatRoomEntryInMemberId_sessionId_void() {
         //given
         String sellerSessionId = "5rsuwmct";
         Long sellerId = existedSeller.getId();
@@ -224,7 +276,7 @@ class ChatRoomServiceTest {
 
     @Test
     @DisplayName("레디스의 ChatRoomEntry에서 두명의 memberId가 삭제될 시 ChatRoomEntry가 삭제된다.")
-    void deleteChatRoomEntryInMemberId_testDeleteEntry(){
+    void deleteChatRoomEntryInMemberId_testDeleteEntry() {
         //given
         String sellerSessionId = "5rsuwmct";
         Long sellerId = existedSeller.getId();
@@ -245,7 +297,7 @@ class ChatRoomServiceTest {
     }
 
     /**
-     *  deleteChatRoomEntryInMemberId() 메서드 테스트를 위한 데이터 셋업
+     * deleteChatRoomEntryInMemberId() 메서드 테스트를 위한 데이터 셋업
      */
     private void setUpDeleteChatRoomEntryInMemberIdData(String sellerSessionId, Long sellerId, Long chatRoomId, String buyerSessionId, Long buyerId) {
         sessionInfoRedisRepository.save(new SessionInfo(
@@ -291,16 +343,27 @@ class ChatRoomServiceTest {
                 )
         );
 
-        room1ChatMessage1 = DataInitializerFactory.chatMessage1(savedChatRoom1.getId(), existedSeller.getId());
-        room1ChatMessage2 = DataInitializerFactory.chatMessage2(savedChatRoom1.getId(), existedBuyer1.getId());
+        room1ChatMessage1 = chatMessageRepository.save(
+                DataInitializerFactory.chatMessage1(
+                        savedChatRoom1.getId(),
+                        existedSeller.getId())
+        );
+        room1ChatMessage2 = chatMessageRepository.save(
+                DataInitializerFactory.chatMessage2(
+                        savedChatRoom1.getId(),
+                        existedBuyer1.getId())
+        );
 
-        room2ChatMessage1 = DataInitializerFactory.chatMessage3(savedChatRoom2.getId(), existedBuyer2.getId());
-        room2ChatMessage2 = DataInitializerFactory.chatMessage4(savedChatRoom2.getId(), existedSeller.getId());
-
-        chatMessageRepository.save(room1ChatMessage1);
-        chatMessageRepository.save(room1ChatMessage2);
-        chatMessageRepository.save(room2ChatMessage1);
-        chatMessageRepository.save(room2ChatMessage2);
+        room2ChatMessage1 = chatMessageRepository.save(
+                DataInitializerFactory.chatMessage3(
+                        savedChatRoom2.getId(),
+                        existedBuyer2.getId())
+        );
+        room2ChatMessage2 = chatMessageRepository.save(
+                DataInitializerFactory.chatMessage4(
+                        savedChatRoom2.getId(),
+                        existedSeller.getId())
+        );
     }
 
 }

@@ -1,7 +1,9 @@
 package com.daangn.dangunmarket.domain.chat.repository.chatroominfo;
 
+import com.daangn.dangunmarket.domain.chat.model.ChatRoom;
 import com.daangn.dangunmarket.domain.chat.model.ChatRoomInfo;
 import com.daangn.dangunmarket.domain.chat.repository.chatroominfo.dto.JoinedMemberResponse;
+import com.daangn.dangunmarket.domain.chat.repository.chatroominfo.dto.JoinedPostWithMemberResponse;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Repository;
@@ -26,8 +28,8 @@ public class ChatRoomInfoRepositoryImpl implements ChatRoomInfoRepository {
     }
 
     @Override
-    public Optional<ChatRoomInfo> findChatRoomInfoByPostIdAndMemberId(Long postId, Long memberId) {
-        return chatRoomInfoJpaRepository.findChatRoomInfoByPostIdAndMemberId(postId, memberId);
+    public Optional<ChatRoomInfo> findChatRoomInfoByBuyer(Long postId, Long memberId) {
+        return chatRoomInfoJpaRepository.findChatRoomInfoByBuyer(postId, memberId);
     }
 
     @Override
@@ -36,13 +38,13 @@ public class ChatRoomInfoRepositoryImpl implements ChatRoomInfoRepository {
     }
 
     @Override
-    public Long findSenderIdByChatRoomInfoAndMyId(Long chatRoomId, Long myId) {
+    public Long findSenderId(Long chatRoomId, Long myId) {
         return chatRoomInfoJpaRepository.findSenderIdByChatRoomInfoAndMyId(chatRoomId, myId);
     }
 
     @Override
-    public Long findPostIdByChatRoomId(Long chatRoomId) {
-        return chatRoomInfoJpaRepository.findPostIdByChatRoomId(chatRoomId);
+    public JoinedPostWithMemberResponse findPostWithMember(Long chatRoomId) {
+        return chatRoomInfoQueryRepository.findPostWithMember(chatRoomId).get(0);
     }
 
     @Override

@@ -4,11 +4,11 @@ public record ChatRoomCheckInParamResponse (
         Long postId,
         String nickName,
         Integer reviewScore,
-        String tradeState,
+        String tradeStatus,
         String title,
         long price,
         boolean isOfferAllowed,
-        String productUrl
+        String productImageUrl
 ) {
 }
 

@@ -37,7 +37,8 @@ public enum ErrorCode {
     OAUTH_CLIENT_SERVER_ERROR("L003", "oauth 클라이언트 서버 에러입니다."),
 
     //chat
-    NOT_CREATE_CHAT_ROOM("C001", "이미 존재하는 방입니다.");
+    NOT_CREATE_CHAT_ROOM("C001", "이미 존재하는 방입니다."),
+    NOT_CREATE_CHAT_ROOM_BY_WRITER("C002","작성자는 채팅방을 만들 수 없습니다.");
 
     private final String code;
     private final String message;

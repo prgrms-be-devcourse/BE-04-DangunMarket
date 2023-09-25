@@ -6,7 +6,7 @@ import com.daangn.dangunmarket.domain.area.service.AreaService;
 import com.daangn.dangunmarket.domain.area.service.dto.AreaResponse;
 import com.daangn.dangunmarket.domain.member.model.Member;
 import com.daangn.dangunmarket.domain.member.service.MemberService;
-import com.daangn.dangunmarket.domain.post.exception.UnauthorizedAccessException;
+import com.daangn.dangunmarket.domain.post.exception.NotWriterException;
 import com.daangn.dangunmarket.domain.post.facade.dto.PostCreateRequestParam;
 import com.daangn.dangunmarket.domain.post.facade.dto.PostFindResponseParam;
 import com.daangn.dangunmarket.domain.post.facade.dto.PostToUpdateResponseParam;
@@ -155,7 +155,7 @@ class PostFacadeTest {
         Long productId = postFacade.createPost(postCreateRequestParam);
 
         //when_then
-        assertThrows(UnauthorizedAccessException.class, () -> {
+        assertThrows(NotWriterException.class, () -> {
             postFacade.findPostInfoToUpdateById(setUpMemberId + 1, productId);
         });
     }
@@ -207,7 +207,7 @@ class PostFacadeTest {
         //when
         Long strangeMemberId = 5L;
         Assertions.assertThatThrownBy(() -> postFacade.deletePost(strangeMemberId, postId))
-                .isInstanceOf(UnauthorizedAccessException.class);
+                .isInstanceOf(NotWriterException.class);
     }
 
 
