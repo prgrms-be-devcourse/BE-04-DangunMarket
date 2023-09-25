@@ -78,7 +78,6 @@ class ChatRoomServiceTest {
     @Autowired
     private ChatRoomEntryRedisRepository chatRoomEntryRedisRepository;
 
-
     private Member existedSeller;
     private Member existedBuyer1;
     private Member existedBuyer2;
@@ -103,7 +102,8 @@ class ChatRoomServiceTest {
     void tearDown() {
         chatMessageRepository.deleteAll();
         chatMessageMongoRepository.deleteAll();
-        sessionInfoRedisRepository.deleteAll();;
+        sessionInfoRedisRepository.deleteAll();
+        ;
         chatRoomEntryRedisRepository.deleteAllWithPrefix();
     }
 
@@ -210,7 +210,7 @@ class ChatRoomServiceTest {
 
     @Test
     @DisplayName("참여한 채팅방 메세지의 내용들을 최신순으로 출력한다.")
-    void findByChatRoomIdWithPagination_sortedAsc_returnMessages( ) {
+    void findByChatRoomIdWithPagination_sortedAsc_returnMessages() {
         //given
         ChatMessagePageRequest chatMessageRequest = new ChatMessagePageRequest(savedChatRoom1.getId(), 1, 10);
 
@@ -250,13 +250,12 @@ class ChatRoomServiceTest {
     @Test
     @DisplayName("구매를 원하는 회원이 채팅방을 생성하려고 할 때 이미 존재하는 채팅방이면 예외를 던진다.")
     void isExistedRoom_existedIdOrNot_returnTrueOrFalse() {
-
         //when_then
         assertThatThrownBy(() -> chatRoomService.isExistedChatRoomByBuyer(existedPostId, existedBuyer2.getId())).isInstanceOf(RoomNotCreateException.class);
     }
 
     @DisplayName("레디스의 ChatRoomEntry의 value인 memberId를 sessionId를 통해 삭제한다.")
-    void deleteChatRoomEntryInMemberId_sessionId_void(){
+    void deleteChatRoomEntryInMemberId_sessionId_void() {
         //given
         String sellerSessionId = "5rsuwmct";
         Long sellerId = existedSeller.getId();
@@ -277,7 +276,7 @@ class ChatRoomServiceTest {
 
     @Test
     @DisplayName("레디스의 ChatRoomEntry에서 두명의 memberId가 삭제될 시 ChatRoomEntry가 삭제된다.")
-    void deleteChatRoomEntryInMemberId_testDeleteEntry(){
+    void deleteChatRoomEntryInMemberId_testDeleteEntry() {
         //given
         String sellerSessionId = "5rsuwmct";
         Long sellerId = existedSeller.getId();
@@ -298,7 +297,7 @@ class ChatRoomServiceTest {
     }
 
     /**
-     *  deleteChatRoomEntryInMemberId() 메서드 테스트를 위한 데이터 셋업
+     * deleteChatRoomEntryInMemberId() 메서드 테스트를 위한 데이터 셋업
      */
     private void setUpDeleteChatRoomEntryInMemberIdData(String sellerSessionId, Long sellerId, Long chatRoomId, String buyerSessionId, Long buyerId) {
         sessionInfoRedisRepository.save(new SessionInfo(
