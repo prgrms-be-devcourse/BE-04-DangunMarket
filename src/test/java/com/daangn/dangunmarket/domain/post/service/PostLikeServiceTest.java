@@ -56,7 +56,7 @@ class PostLikeServiceTest {
     }
 
     @Test
-    @DisplayName("MemberId를 통헤 좋아요한 게시물들을 찾은 다음 응답값들을 확인한다.")
+    @DisplayName("MemberId를 통헤 좋아요한 게시물들의 메타정보를 조회할 수 있다.")
     void findByMemberId_correctMemberId_LikedPostFindResponseList() {
         //given
         PageRequest requestPageAble = PageRequest.of(0, 10);

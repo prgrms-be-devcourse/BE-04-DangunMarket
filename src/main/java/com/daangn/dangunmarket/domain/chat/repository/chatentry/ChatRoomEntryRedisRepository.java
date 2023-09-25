@@ -1,8 +1,8 @@
 package com.daangn.dangunmarket.domain.chat.repository.chatentry;
 
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.SetOperations;
 import org.springframework.stereotype.Repository;
 
 import java.util.Set;
@@ -19,20 +19,31 @@ public class ChatRoomEntryRedisRepository {
         this.redisTemplate = redisTemplate;
     }
 
+    private SetOperations<String, String> getSetOperations() {
+        return redisTemplate.opsForSet();
+    }
+
+    private String getRoomKey(String roomId) {
+        return CHAT_ROOM_KEY_PREFIX + roomId;
+    }
+
     public void addMemberToRoom(String roomId, String memberId) {
-        redisTemplate.opsForSet().add(getRoomKey(roomId), memberId);
+        getSetOperations().add(getRoomKey(roomId), memberId);
     }
 
     public void removeMemberFromRoom(String roomId, String memberId) {
-        redisTemplate.opsForSet().remove(getRoomKey(roomId), memberId);
+        getSetOperations().remove(getRoomKey(roomId), memberId);
     }
 
     public Set<String> getMembersInRoom(String roomId) {
-        return redisTemplate.opsForSet().members(getRoomKey(roomId));
+        return getSetOperations().members(getRoomKey(roomId));
     }
 
     public boolean isMemberInRoom(String roomId, String memberId) {
-        return redisTemplate.opsForSet().isMember(getRoomKey(roomId), memberId);
+
+        Boolean isMember = getSetOperations().isMember(getRoomKey(roomId), memberId);
+
+        return isMember != null && isMember;
     }
 
     public void deleteAllWithPrefix() {
@@ -44,10 +55,6 @@ public class ChatRoomEntryRedisRepository {
 
     public void deleteChatRoomEntryByRoomId(String roomId) {
         redisTemplate.delete(getRoomKey(roomId));
-    }
-
-    private String getRoomKey(String roomId) {
-        return CHAT_ROOM_KEY_PREFIX + roomId;
     }
 
 }

@@ -37,7 +37,7 @@ public class ChatMessageController {
     /**
      * 채팅 이미지 저장 API
      */
-    @PostMapping(path = "/chat/images", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
+    @PostMapping(path = "/chats/images", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
     public ResponseEntity<ChatImageUploadApiResponse> uploadChatImages(
             @RequestPart List<MultipartFile> files,
             Authentication authentication
@@ -53,7 +53,7 @@ public class ChatMessageController {
     /**
      * 채팅 발송
      */
-    @MessageMapping("/chat/message/{roomId}")
+    @MessageMapping("/chats/{roomId}/messages")
     public void saveMessage(@DestinationVariable("roomId") Long roomId,
                             Authentication authentication,
                             @Payload @Valid MessageRequest messageRequest) {

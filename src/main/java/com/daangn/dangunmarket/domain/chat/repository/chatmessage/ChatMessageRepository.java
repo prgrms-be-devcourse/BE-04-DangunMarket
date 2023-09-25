@@ -6,6 +6,10 @@ import java.util.List;
 
 public interface ChatMessageRepository {
 
+    List<ChatMessage> findNotReadMessageByChatRoomIdAndSenderId(Long chatRoomId, Long senderId);
+
+    void markMessagesAsRead(List<String> messageIds);
+
     List<ChatMessage> findByChatRoomIds(List<Long> chatRoomIds);
 
     ChatMessage save(ChatMessage chatMessage);

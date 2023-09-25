@@ -32,15 +32,18 @@ public class ActivityAreaController {
     private final ActivityAreaFacade activityAreaFacade;
     private final ActivityAreaApiMapper activityAreaApiMapper;
 
-    public ActivityAreaController(ActivityAreaFacade activityAreaFacade, ActivityAreaApiMapper activityAreaApiMapper) {
+    public ActivityAreaController(
+            ActivityAreaFacade activityAreaFacade,
+            ActivityAreaApiMapper activityAreaApiMapper) {
         this.activityAreaFacade = activityAreaFacade;
         this.activityAreaApiMapper = activityAreaApiMapper;
     }
 
     @PostMapping(
             consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<ActivityAreaCreateApiResponse> createActivityArea(@RequestBody @Valid ActivityAreaCreateApiRequest activityAreaCreateApiRequest
-            , Authentication authentication) {
+    public ResponseEntity<ActivityAreaCreateApiResponse> createActivityArea(
+            @RequestBody @Valid ActivityAreaCreateApiRequest activityAreaCreateApiRequest,
+            Authentication authentication) {
         ActivityAreaCreateRequestParam activityAreaCreateRequestParam = activityAreaApiMapper.toActivityAreaCreateRequestParam(activityAreaCreateApiRequest);
 
         CustomUser customUser = (CustomUser) authentication.getPrincipal();
@@ -57,7 +60,9 @@ public class ActivityAreaController {
     }
 
     @GetMapping
-    public ResponseEntity<ActivityAreaIsVerifiedApiResponse> isVerifiedActivityArea(@ModelAttribute ActivityAreaIsVerifiedApiRequest request, Authentication authentication) {
+    public ResponseEntity<ActivityAreaIsVerifiedApiResponse> isVerifiedActivityArea(
+            @ModelAttribute ActivityAreaIsVerifiedApiRequest request,
+            Authentication authentication) {
         CustomUser customUser = (CustomUser) authentication.getPrincipal();
 
         ActivityAreaIsVerifiedRequestParam requestParam = activityAreaApiMapper.toActivityAreaIsVerifiedRequestParam(request);
