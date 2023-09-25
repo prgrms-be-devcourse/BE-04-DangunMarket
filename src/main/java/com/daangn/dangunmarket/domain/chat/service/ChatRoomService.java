@@ -26,8 +26,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-import static com.daangn.dangunmarket.global.response.ErrorCode.NOT_CREATE_CHAT_ROOM;
-import static com.daangn.dangunmarket.global.response.ErrorCode.NOT_FOUND_ENTITY;
+import static com.daangn.dangunmarket.global.response.ErrorCode.*;
 
 @Transactional
 @Service
@@ -57,7 +56,7 @@ public class ChatRoomService {
         ChatRoom chatRoom = new ChatRoom();
         ChatRoom savedChatRoom = chatRoomRepository.save(chatRoom);
 
-        if(writerId == request.memberId()) throw new RoomNotCreateException(NOT_CREATE_CHAT_ROOM);
+        if(writerId == request.memberId()) throw new RoomNotCreateException(NOT_CREATE_CHAT_ROOM_BY_WRITER);
 
         ChatRoomInfo sellerChatRoomInfo = new ChatRoomInfo(true, request.postId(), savedChatRoom, writerId);
         chatRoomInfoRepository.save(sellerChatRoomInfo);
