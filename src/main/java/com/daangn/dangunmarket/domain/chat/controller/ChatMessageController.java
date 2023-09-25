@@ -74,14 +74,15 @@ public class ChatMessageController {
     /**
      * 채팅 메세지 목록 생성
      */
-    @GetMapping("/messages")
+    @GetMapping("/chats/{roomId}/messages")
     public ResponseEntity<ChatMessagePageApiResponses> getChatMessages(
+            @PathVariable Long roomId,
             @ModelAttribute @Valid ChatMessagePageApiRequest chatMessagePageApiRequest,
             Authentication authentication
     ) {
         CustomUser customUser = (CustomUser) authentication.getPrincipal();
 
-        ChatMessagePageRequest chatMessagePageRequest = chatDtoApiMapper.toChatMessagePageRequest(chatMessagePageApiRequest);
+        ChatMessagePageRequest chatMessagePageRequest = chatDtoApiMapper.toChatMessagePageRequest(chatMessagePageApiRequest,roomId);
         List<ChatMessagePageResponse> chatRoomIdWithPagination = chatRoomService.findByChatRoomIdWithPagination(chatMessagePageRequest, customUser.memberId());
 
         return ResponseEntity.status(HttpStatus.OK)

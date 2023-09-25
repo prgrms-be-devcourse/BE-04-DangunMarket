@@ -22,7 +22,7 @@ public interface ChatDtoApiMapper {
 
     ChatRoomCheckInApiResponse toChatRoomCheckInApiResponse(ChatRoomCheckInParamResponse chatRoomCheckInParamResponse);
 
-    ChatMessagePageRequest toChatMessagePageRequest(ChatMessagePageApiRequest chatMessagePageApiRequest);
+    ChatMessagePageRequest toChatMessagePageRequest(ChatMessagePageApiRequest chatMessagePageApiRequest, Long chatRoomId);
 
     default ChatMessagePageApiResponses toChatMessagePageApiResponses(List<ChatMessagePageResponse> chatMessagePageResponses){
         return new ChatMessagePageApiResponses(chatMessagePageResponses);
