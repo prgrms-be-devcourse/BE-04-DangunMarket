@@ -11,4 +11,5 @@ public class EntityNotFoundException extends RuntimeException {
         super(errorCode.getMessage());
         this.errorCode = errorCode;
     }
+
 }

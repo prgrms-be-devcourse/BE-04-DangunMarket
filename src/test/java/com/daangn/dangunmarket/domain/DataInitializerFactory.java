@@ -4,6 +4,7 @@ import com.daangn.dangunmarket.domain.area.model.Area;
 import com.daangn.dangunmarket.domain.chat.model.ChatMessage;
 import com.daangn.dangunmarket.domain.chat.model.ChatRoom;
 import com.daangn.dangunmarket.domain.chat.model.ChatRoomInfo;
+import com.daangn.dangunmarket.domain.chat.model.MessageType;
 import com.daangn.dangunmarket.domain.member.model.Member;
 import com.daangn.dangunmarket.domain.member.model.NickName;
 import com.daangn.dangunmarket.domain.post.facade.dto.PostCreateRequestParam;
@@ -125,19 +126,19 @@ public final class DataInitializerFactory {
     }
 
     public static ChatMessage chatMessage1(Long chatRoomId, Long sender) {
-        return new ChatMessage(chatRoomId, sender, "반가워요!", "a", 1);
+        return new ChatMessage(chatRoomId, sender, "반가워요!", new ArrayList<>(), 1, MessageType.TALK);
     }
 
     public static ChatMessage chatMessage2(Long chatRoomId, Long sender) {
-        return new ChatMessage(chatRoomId, sender, "물건 깔끔!", "a", 1);
+        return new ChatMessage(chatRoomId, sender, "물건 깔끔!", new ArrayList<>(), 1, MessageType.TALK);
     }
 
     public static ChatMessage chatMessage3(Long chatRoomId, Long sender) {
-        return new ChatMessage(chatRoomId, sender, "안녕하세요", "a", 1);
+        return new ChatMessage(chatRoomId, sender, "안녕하세요", new ArrayList<>(), 1, MessageType.TALK);
     }
 
     public static ChatMessage chatMessage4(Long chatRoomId, Long sender) {
-        return new ChatMessage(chatRoomId, sender, "사용감이 있습니다.", "a", 1);
+        return new ChatMessage(chatRoomId, sender, "사용감이 있습니다.", new ArrayList<>(), 1, MessageType.TALK);
     }
 
 }

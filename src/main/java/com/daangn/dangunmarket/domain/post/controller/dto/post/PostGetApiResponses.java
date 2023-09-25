@@ -7,9 +7,8 @@ import java.util.List;
 public record PostGetApiResponses(
         List<PostGetResponse> contents,
         String userAreaName,
-        int totalPages,
-        int totalElements,
         int size,
-        int page
+        int page,
+        boolean hasNext
 ) {
 }

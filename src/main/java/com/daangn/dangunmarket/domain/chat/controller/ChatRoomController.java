@@ -11,27 +11,32 @@ import com.daangn.dangunmarket.domain.chat.service.dto.ChatMessagePageRequest;
 import com.daangn.dangunmarket.domain.chat.service.dto.ChatMessagePageResponse;
 import com.daangn.dangunmarket.domain.chat.service.dto.ChatRoomsFindResponses;
 import jakarta.validation.Valid;
+import org.springframework.context.event.EventListener;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.socket.messaging.SessionDisconnectEvent;
 
 import java.util.List;
 
 @RestController
-@RequestMapping(value = "/chats",
+@RequestMapping(value = "/chat-rooms",
         produces = MediaType.APPLICATION_JSON_VALUE)
 public class ChatRoomController {
 
     private final ChatRoomService chatRoomService;
-    private final ChatDtoApiMapper chatDtoApiMapper;
     private final ChatRoomFacade chatRoomFacade;
 
-    public ChatRoomController(ChatRoomService chatRoomService, ChatDtoApiMapper chatDtoApiMapper, ChatRoomFacade chatRoomFacade) {
+    public ChatRoomController(ChatRoomService chatRoomService, ChatRoomFacade chatRoomFacade) {
         this.chatRoomService = chatRoomService;
-        this.chatDtoApiMapper = chatDtoApiMapper;
         this.chatRoomFacade = chatRoomFacade;
     }
 
@@ -59,17 +64,8 @@ public class ChatRoomController {
         return ResponseEntity.noContent().build();
     }
 
-    @GetMapping("/messages")
-    public ResponseEntity<ChatMessagePageApiResponses> getChatMessages(
-            @ModelAttribute @Valid ChatMessagePageApiRequest chatMessagePageApiRequest,
-            Authentication authentication
-    ) {
-        CustomUser customUser = (CustomUser) authentication.getPrincipal();
-
-        ChatMessagePageRequest chatMessagePageRequest = chatDtoApiMapper.toChatMessagePageRequest(chatMessagePageApiRequest);
-        List<ChatMessagePageResponse> chatRoomIdWithPagination = chatRoomService.findByChatRoomIdWithPagination(chatMessagePageRequest, customUser.memberId());
-
-        return ResponseEntity.status(HttpStatus.OK)
-                .body(chatDtoApiMapper.toChatMessagePageApiResponses(chatRoomIdWithPagination));
+    @EventListener
+    public void onDisconnectEvent(SessionDisconnectEvent event) {
+        chatRoomService.deleteChatRoomEntryInMemberId(event.getSessionId());
     }
 }

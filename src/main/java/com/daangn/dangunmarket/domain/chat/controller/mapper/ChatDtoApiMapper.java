@@ -4,6 +4,7 @@ import com.daangn.dangunmarket.domain.chat.controller.dto.*;
 import com.daangn.dangunmarket.domain.chat.facade.dto.ChatRoomCheckInParamResponse;
 import com.daangn.dangunmarket.domain.chat.service.dto.ChatMessagePageRequest;
 import com.daangn.dangunmarket.domain.chat.service.dto.ChatMessagePageResponse;
+import com.daangn.dangunmarket.domain.chat.facade.dto.SessionInfoSaveParamRequest;
 import com.daangn.dangunmarket.domain.chat.service.dto.ChatRoomCreateRequest;
 import org.mapstruct.InjectionStrategy;
 import org.mapstruct.Mapper;
@@ -26,5 +27,7 @@ public interface ChatDtoApiMapper {
     default ChatMessagePageApiResponses toChatMessagePageApiResponses(List<ChatMessagePageResponse> chatMessagePageResponses){
         return new ChatMessagePageApiResponses(chatMessagePageResponses);
     }
+
+    SessionInfoSaveParamRequest toSessionInfoSaveParamRequest(String sessionId, Long roomId, Long memberId);
 
 }

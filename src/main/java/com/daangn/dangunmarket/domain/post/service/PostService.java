@@ -15,8 +15,8 @@ import com.daangn.dangunmarket.domain.post.service.dto.PostUpdateStatusRequest;
 import com.daangn.dangunmarket.domain.post.service.mapper.PostDtoMapper;
 import com.daangn.dangunmarket.domain.post.service.mapper.PostMapper;
 import com.daangn.dangunmarket.global.TimeGenerator;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -83,7 +83,7 @@ public class PostService {
     }
 
     public PostGetResponses getPosts(Long areaId, Pageable pageable) {
-        Page<PostDto> postDtoPages = postRepository.getPostsSimple(areaId, pageable);
+        Slice<PostDto> postDtoPages = postRepository.getPostsSimple(areaId, pageable);
 
         return PostGetResponses.from(postDtoPages);
     }
@@ -98,7 +98,7 @@ public class PostService {
     }
 
     public PostSearchResponses searchPosts(Long areaId, PostSearchConditionRequest searchCondition) {
-        Page<PostDto> postDtoPages = postRepository.getPostsByConditions(areaId, searchCondition);
+        Slice<PostDto> postDtoPages = postRepository.getPostsByConditions(areaId, searchCondition);
 
         return PostSearchResponses.from(postDtoPages);
     }

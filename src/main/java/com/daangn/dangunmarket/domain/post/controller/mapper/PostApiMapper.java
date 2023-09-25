@@ -1,5 +1,6 @@
 package com.daangn.dangunmarket.domain.post.controller.mapper;
 
+import com.daangn.dangunmarket.domain.post.controller.dto.PostDeleteApiResponse;
 import com.daangn.dangunmarket.domain.post.controller.dto.PostUpdateApiRequest;
 import com.daangn.dangunmarket.domain.post.controller.dto.PostUpdateApiResponse;
 import com.daangn.dangunmarket.domain.post.controller.dto.post.PostCreateApiRequest;
@@ -23,6 +24,7 @@ import org.mapstruct.Mapping;
 import org.mapstruct.Named;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.multipart.MultipartFile;
+
 import java.util.Collections;
 import java.util.List;
 
@@ -49,6 +51,8 @@ public interface PostApiMapper {
     @Mapping(target = "urls", source = "request", qualifiedByName = "mapUrls")
     PostUpdateRequestParam toPostUpdateRequestParam(PostUpdateApiRequest request);
 
+    PostDeleteApiResponse toPostDeleteApiResponse(Long deletedPostId);
+
     @Named("mapFiles")
     static List<MultipartFile> mapFiles(PostUpdateApiRequest request) {
         if (request != null && request.getFiles() != null) {
@@ -66,6 +70,7 @@ public interface PostApiMapper {
             return Collections.emptyList();
         }
     }
+
     PostUpdateApiResponse toPostUpdateApiResponse(Long postId);
 
 }

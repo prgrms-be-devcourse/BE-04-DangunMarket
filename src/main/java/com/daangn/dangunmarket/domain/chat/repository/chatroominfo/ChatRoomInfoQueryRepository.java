@@ -2,11 +2,9 @@ package com.daangn.dangunmarket.domain.chat.repository.chatroominfo;
 
 import com.daangn.dangunmarket.domain.chat.model.QChatRoomInfo;
 import com.daangn.dangunmarket.domain.chat.repository.chatroominfo.dto.JoinedMemberResponse;
-
 import com.daangn.dangunmarket.domain.chat.repository.chatroominfo.dto.JoinedPostWithMemberResponse;
 import com.daangn.dangunmarket.domain.chat.repository.chatroominfo.dto.QJoinedMemberResponse;
 import com.daangn.dangunmarket.domain.chat.repository.chatroominfo.dto.QJoinedPostWithMemberResponse;
-import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;

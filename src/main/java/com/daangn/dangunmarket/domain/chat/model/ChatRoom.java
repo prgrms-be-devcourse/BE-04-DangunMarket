@@ -1,7 +1,11 @@
 package com.daangn.dangunmarket.domain.chat.model;
 
 import com.daangn.dangunmarket.global.entity.BaseEntity;
-import jakarta.persistence.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -22,8 +26,8 @@ public class ChatRoom extends BaseEntity {
         if (chatRoomInfos == null) return;
 
         long removedCnt = chatRoomInfos.stream()
-                    .filter(chatRoomInfo -> chatRoomInfo.deleteChatRoomInfo(deleteRequestMemberId))
-                    .count();
+                .filter(chatRoomInfo -> chatRoomInfo.deleteChatRoomInfo(deleteRequestMemberId))
+                .count();
 
         if (hasParticipation(removedCnt, chatRoomInfos.size())) {
             isDeleted = true;
@@ -32,7 +36,7 @@ public class ChatRoom extends BaseEntity {
     }
 
     private boolean hasParticipation(long removedCnt, long participationSize) {
-        return removedCnt == participationSize ;
+        return removedCnt == participationSize;
     }
 
 }

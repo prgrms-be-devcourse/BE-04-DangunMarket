@@ -13,6 +13,9 @@ public interface ChatMessageRepository {
 
     List<ChatMessage> findByChatRoomIds(List<Long> chatRoomIds);
 
+
     List<ChatMessage> findByChatRoomIdWithPagination(ChatMessagePageDto chatMessagePageDto);
+
+    ChatMessage save(ChatMessage chatMessage);
 
 }

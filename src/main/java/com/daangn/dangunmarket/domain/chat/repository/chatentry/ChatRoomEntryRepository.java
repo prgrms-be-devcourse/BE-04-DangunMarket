@@ -12,4 +12,5 @@ public interface ChatRoomEntryRepository {
 
     boolean isMemberInRoom(String roomId, String memberId);
 
+    void deleteChatRoomEntryByRoomId(String roomId);
 }

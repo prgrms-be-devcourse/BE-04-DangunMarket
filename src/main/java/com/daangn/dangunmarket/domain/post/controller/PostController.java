@@ -13,6 +13,7 @@ import com.daangn.dangunmarket.domain.post.controller.dto.post.PostSearchApiResp
 import com.daangn.dangunmarket.domain.post.controller.dto.post.PostToUpdateApiResponse;
 import com.daangn.dangunmarket.domain.post.controller.dto.post.PostUpdateStatusApiRequest;
 import com.daangn.dangunmarket.domain.post.controller.dto.post.PostUpdateStatusApiResponse;
+import com.daangn.dangunmarket.domain.post.controller.dto.postlike.PostLikeApiResponse;
 import com.daangn.dangunmarket.domain.post.controller.mapper.PostApiMapper;
 import com.daangn.dangunmarket.domain.post.exception.TooEarlyToRefreshException;
 import com.daangn.dangunmarket.domain.post.exception.TooEarlyToRefreshResponse;
@@ -23,6 +24,7 @@ import com.daangn.dangunmarket.domain.post.facade.dto.PostSearchResponseParams;
 import com.daangn.dangunmarket.domain.post.facade.dto.PostToUpdateResponseParam;
 import com.daangn.dangunmarket.domain.post.facade.dto.PostUpdateRequestParam;
 import com.daangn.dangunmarket.domain.post.service.PostService;
+import com.daangn.dangunmarket.domain.post.service.dto.PostLikeResponse;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -208,6 +210,41 @@ public class PostController {
 
         postFacade.deletePost(customUser.memberId(), postId);
         return ResponseEntity.noContent().build();
+    }
+
+    /**
+     * 게시물 좋아요 API
+     */
+    @PostMapping(path = "/{postId}/like")
+    public ResponseEntity<PostLikeApiResponse> addLikePost(
+            @PathVariable Long postId,
+            Authentication authentication
+    ) {
+        CustomUser customUser = (CustomUser) authentication.getPrincipal();
+
+        PostLikeResponse response = postFacade.likePost(customUser.memberId(), postId);
+        PostLikeApiResponse apiResponse = mapper.toPostLikeApiResponse(response);
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .body(apiResponse);
+    }
+
+    /**
+     * 게시물 좋아요 취소 API
+     */
+    @DeleteMapping(path = "/{postId}/like")
+    public ResponseEntity<PostLikeApiResponse> cancelLikePost(
+            @PathVariable Long postId,
+            Authentication authentication
+    ) {
+        CustomUser customUser = (CustomUser) authentication.getPrincipal();
+
+        PostLikeResponse response = postFacade.cancelLikePost(customUser.memberId(), postId);
+        PostLikeApiResponse apiResponse = mapper.toPostLikeApiResponse(response);
+
+        return ResponseEntity
+                .status((HttpStatus.OK))
+                .body(apiResponse);
     }
 
     private static URI createURI(Long productId) {

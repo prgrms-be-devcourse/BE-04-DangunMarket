@@ -10,12 +10,10 @@ import com.daangn.dangunmarket.domain.member.model.Member;
 import com.daangn.dangunmarket.domain.member.repository.MemberRepository;
 import com.daangn.dangunmarket.domain.post.repository.category.CategoryRepository;
 import com.daangn.dangunmarket.domain.post.repository.post.PostRepository;
-
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
@@ -26,7 +24,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @ActiveProfiles("test")
 @SpringBootTest
-class ChatRoomEntryRepositoryTest{
+class ChatRoomEntryRepositoryTest {
 
     @Autowired
     ChatRoomRepository chatRoomRepository;

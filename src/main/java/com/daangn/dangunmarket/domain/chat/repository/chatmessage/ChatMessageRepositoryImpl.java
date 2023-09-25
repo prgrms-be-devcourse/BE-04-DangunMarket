@@ -2,7 +2,6 @@ package com.daangn.dangunmarket.domain.chat.repository.chatmessage;
 
 import com.daangn.dangunmarket.domain.chat.model.ChatMessage;
 import com.daangn.dangunmarket.domain.chat.repository.chatmessage.dto.ChatMessagePageDto;
-import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -33,9 +32,14 @@ public class ChatMessageRepositoryImpl implements ChatMessageRepository {
         return chatMessageQueryRepository.findByChatRoomIds(chatRoomIds);
     }
 
+
     @Override
     public List<ChatMessage> findByChatRoomIdWithPagination(ChatMessagePageDto chatMessagePageDto) {
         return chatMessageQueryRepository.findByChatRoomIdWithPagination(chatMessagePageDto);
+    }
+
+    public ChatMessage save(ChatMessage chatMessage) {
+        return chatMessageMongoRepository.save(chatMessage);
     }
 
 }
