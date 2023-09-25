@@ -3,7 +3,9 @@ package com.daangn.dangunmarket.global.exception;
 import com.amazonaws.services.kms.model.NotFoundException;
 import com.daangn.dangunmarket.domain.auth.exception.TokenExpiredException;
 import com.daangn.dangunmarket.domain.auth.exception.TokenValidFailedException;
+import com.daangn.dangunmarket.domain.chat.exception.RoomNotCreateException;
 import com.daangn.dangunmarket.domain.post.exception.InvalidPostLikeException;
+import com.daangn.dangunmarket.domain.post.exception.NotWriterException;
 import com.daangn.dangunmarket.global.response.ErrorResponse;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.RequiredArgsConstructor;
@@ -31,10 +33,9 @@ public class GlobalExceptionRestHandler {
     protected ResponseEntity<ErrorResponse> handleMethodArgumentNotValidException(MethodArgumentNotValidException e) {
         log.warn("Handle MethodArgumentNotValidException", e.getMessage());
         final ErrorResponse response = ErrorResponse.of(INVALID_METHOD_ERROR, e.getBindingResult());
+
         return ResponseEntity
-
                 .status(HttpStatus.BAD_REQUEST)
-
                 .body(response);
     }
 
@@ -46,6 +47,7 @@ public class GlobalExceptionRestHandler {
             MissingServletRequestParameterException ex) {
         log.warn("Handle MissingServletRequestParameterException", ex);
         final ErrorResponse response = ErrorResponse.of(REQUEST_PARAM_MISSING_ERROR, ex.getMessage());
+
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
                 .body(response);
@@ -61,6 +63,7 @@ public class GlobalExceptionRestHandler {
     protected ResponseEntity<ErrorResponse> handleMethodArgumentTypeMismatchException(MethodArgumentTypeMismatchException e) {
         log.warn("Handle MethodArgumentTypeMismatchException", e);
         final ErrorResponse response = ErrorResponse.of(INVALID_INPUT_VALUE_ERROR, e.getMessage());
+
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
                 .body(response);
@@ -73,6 +76,7 @@ public class GlobalExceptionRestHandler {
     protected ResponseEntity<ErrorResponse> handleJsonProcessingException(JsonProcessingException ex) {
         log.warn("handleJsonProcessingException", ex);
         final ErrorResponse response = ErrorResponse.of(REQUEST_BODY_MISSING_ERROR, ex.getMessage());
+
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
                 .body(response);
@@ -85,6 +89,7 @@ public class GlobalExceptionRestHandler {
     protected ResponseEntity<ErrorResponse> handleBindException(BindException e) {
         log.warn("Handle BindException : ", e);
         final ErrorResponse response = ErrorResponse.of(INVALID_INPUT_VALUE_ERROR, e.getBindingResult());
+
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
                 .body(response);
@@ -97,6 +102,7 @@ public class GlobalExceptionRestHandler {
     protected ResponseEntity<ErrorResponse> handleHttpMediaTypeException(HttpMediaTypeNotSupportedException e) {
         log.warn("Handle HttpMediaTypeNotSupportedException : ", e);
         final ErrorResponse response = ErrorResponse.of(INVALID_INPUT_VALUE_ERROR, e.getMessage());
+
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
                 .body(response);
@@ -109,6 +115,7 @@ public class GlobalExceptionRestHandler {
     protected ResponseEntity<ErrorResponse> handleNotFoundException(NotFoundException e) {
         log.warn("Handle NotFoundException : ", e);
         final ErrorResponse response = ErrorResponse.of(NOT_FOUND_ENTITY, e.getMessage());
+
         return ResponseEntity
                 .status(HttpStatus.NOT_FOUND)
                 .body(response);
@@ -121,6 +128,7 @@ public class GlobalExceptionRestHandler {
     public ResponseEntity<ErrorResponse> handleEntityNotFoundException(EntityNotFoundException e) {
         log.warn("Handle EntityNotFoundException :", e);
         final ErrorResponse response = ErrorResponse.of(e.getErrorCode(), e.getMessage());
+
         return ResponseEntity
                 .status(HttpStatus.NOT_FOUND)
                 .body(response);
@@ -133,6 +141,7 @@ public class GlobalExceptionRestHandler {
     public ResponseEntity<ErrorResponse> handleImageUploadException(ImageUploadException e) {
         log.warn("Handle ImageUploadException :", e);
         final ErrorResponse response = ErrorResponse.of(e.getErrorCode(), e.getMessage());
+
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(response);
@@ -145,17 +154,30 @@ public class GlobalExceptionRestHandler {
     public ResponseEntity<ErrorResponse> handlePermissionDeniedException(InvalidPostLikeException e) {
         log.warn("Handle InvalidPostLikeException :", e);
         final ErrorResponse response = ErrorResponse.of(e.getErrorCode(), e.getMessage());
+
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(response);
     }
 
-    @ExceptionHandler({TokenExpiredException.class, TokenValidFailedException.class})
-    public ResponseEntity<ErrorResponse> handlePermissionDeniedException(TokenExpiredException e) {
-        log.warn("Handle InvalidPostLikeException :", e);
+
+    @ExceptionHandler(RoomNotCreateException.class)
+    public ResponseEntity<ErrorResponse> handleRoomNotCreateException(RoomNotCreateException e) {
+        log.warn("Handle RoomNotCreateException :", e);
         final ErrorResponse response = ErrorResponse.of(e.getErrorCode(), e.getMessage());
+
         return ResponseEntity
-                .status(HttpStatus.UNAUTHORIZED)
+                .status(HttpStatus.BAD_REQUEST)
+                .body(response);
+    }
+
+    @ExceptionHandler(NotWriterException.class)
+    public ResponseEntity<ErrorResponse> handleNotWriterException(NotWriterException e) {
+        log.warn("handle NotWriterException :", e);
+        final ErrorResponse response = ErrorResponse.of(e.getErrorCode(), e.getMessage());
+
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
                 .body(response);
     }
 

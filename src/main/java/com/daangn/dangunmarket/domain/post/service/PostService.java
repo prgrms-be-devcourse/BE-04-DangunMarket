@@ -1,6 +1,6 @@
 package com.daangn.dangunmarket.domain.post.service;
 
-import com.daangn.dangunmarket.domain.post.exception.UnauthorizedAccessException;
+import com.daangn.dangunmarket.domain.post.exception.NotWriterException;
 import com.daangn.dangunmarket.domain.post.model.Post;
 import com.daangn.dangunmarket.domain.post.repository.dto.PostDto;
 import com.daangn.dangunmarket.domain.post.repository.post.PostRepository;
@@ -76,7 +76,7 @@ public class PostService {
         Post post = postRepository.getById(postId);
 
         if (!post.isCreatedBy(memberId)) {
-            throw new UnauthorizedAccessException(POST_NOT_CREATED_BY_USER);
+            throw new NotWriterException(POST_NOT_CREATED_BY_USER);
         }
 
         return postDtoMapper.toPostToUpdateResponse(post);

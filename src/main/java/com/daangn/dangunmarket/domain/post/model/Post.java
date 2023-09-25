@@ -1,7 +1,7 @@
 package com.daangn.dangunmarket.domain.post.model;
 
 import com.daangn.dangunmarket.domain.post.exception.TooEarlyToRefreshException;
-import com.daangn.dangunmarket.domain.post.exception.UnauthorizedAccessException;
+import com.daangn.dangunmarket.domain.post.exception.NotWriterException;
 import com.daangn.dangunmarket.domain.post.model.vo.PostEditor;
 import com.daangn.dangunmarket.domain.post.model.vo.PostImages;
 import com.daangn.dangunmarket.domain.post.model.vo.Price;
@@ -113,7 +113,6 @@ public class Post extends BaseEntity {
         postImage.changePost(this);
     }
 
-    //이름 , 주석 // update 용으로 하나 만들고 중복같지만 목적이 다른
     public void addPostImages(List<PostImage> postImages) {
         for (PostImage postImage : postImages) {
             this.addPostImage(postImage);
@@ -174,7 +173,7 @@ public class Post extends BaseEntity {
 
     public void deleteByMemberId(Long memberId) {
         if(isNotOwner(memberId)) {
-            throw new UnauthorizedAccessException(POST_NOT_CREATED_BY_USER);
+            throw new NotWriterException(POST_NOT_CREATED_BY_USER);
         }
 
         postImages.getPostImageList()
