@@ -29,7 +29,7 @@ import org.springframework.transaction.annotation.Transactional;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @ActiveProfiles("test")
-//@Transactional
+@Transactional
 @SpringBootTest
 class ChatRoomFacadeTest {
 
