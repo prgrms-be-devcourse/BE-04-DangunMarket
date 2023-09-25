@@ -56,9 +56,7 @@ public class ChatController {
     /**
      * 채팅방 입장하면 읽지 않은 모든 메세지를 읽음 처리 한다.
      */
-    @GetMapping(
-            value = "/{roomId}",
-            consumes = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "/{roomId}")
     public ResponseEntity<ChatRoomCheckInApiResponse> enterChatRoom(@PathVariable Long roomId, Authentication authentication) {
 
         CustomUser customUser = (CustomUser) authentication.getPrincipal();
