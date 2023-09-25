@@ -39,6 +39,9 @@ public class ActivityAreaController {
         this.activityAreaApiMapper = activityAreaApiMapper;
     }
 
+    /**
+     * 활동 지역 생성
+     */
     @PostMapping(
             consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ActivityAreaCreateApiResponse> createActivityArea(
@@ -59,6 +62,9 @@ public class ActivityAreaController {
         return ResponseEntity.created(uri).body(activityAreaCreateApiResponse);
     }
 
+    /**
+     * 활동 지역 인증
+     */
     @GetMapping
     public ResponseEntity<ActivityAreaIsVerifiedApiResponse> isVerifiedActivityArea(
             @ModelAttribute ActivityAreaIsVerifiedApiRequest request,

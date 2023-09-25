@@ -38,6 +38,9 @@ public class ChatController {
         this.chatDtoApiMapper = chatDtoApiMapper;
     }
 
+    /**
+     * 채팅방 생성
+     */
     @PostMapping(
             consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ChatRoomCreateApiResponse> createChatRoom(@RequestBody ChatRoomCreateApiRequest request, Authentication authentication) {
@@ -50,13 +53,16 @@ public class ChatController {
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
+    /**
+     * 채팅방 입장하면 읽지 않은 모든 메세지를 읽음 처리 한다.
+     */
     @GetMapping(
             value = "/{roomId}",
             consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<ChatRoomCheckInApiResponse> checkInChatRoom(@PathVariable Long roomId, Authentication authentication) {
+    public ResponseEntity<ChatRoomCheckInApiResponse> enterChatRoom(@PathVariable Long roomId, Authentication authentication) {
 
         CustomUser customUser = (CustomUser) authentication.getPrincipal();
-        ChatRoomCheckInParamResponse chatRoomCheckInParamResponse = chatRoomFacade.checkInChatRoom(roomId, customUser.memberId());
+        ChatRoomCheckInParamResponse chatRoomCheckInParamResponse = chatRoomFacade.enterChatRoom(roomId, customUser.memberId());
         ChatRoomCheckInApiResponse chatRoomCheckInApiResponse = chatDtoApiMapper.toChatRoomCheckInApiResponse(chatRoomCheckInParamResponse);
 
         URI uri = createURI(chatRoomCheckInApiResponse.postId());
@@ -64,14 +70,9 @@ public class ChatController {
         return ResponseEntity.ok().header("Content-Location", uri.toString()).body(chatRoomCheckInApiResponse);
     }
 
-    private static URI createURI(Long postId) {
-        return ServletUriComponentsBuilder
-                .fromCurrentRequest()
-                .path("/{id}")
-                .buildAndExpand(postId)
-                .toUri();
-    }
-
+    /**
+     * 세션 정보를 수정한다.
+     */
     @PutMapping("/session-info/{sessionId}")
     public ResponseEntity<Void> saveSessionInfo(
             @PathVariable String sessionId,
@@ -86,6 +87,14 @@ public class ChatController {
         );
 
         return ResponseEntity.ok().build();
+    }
+
+    private URI createURI(Long postId) {
+        return ServletUriComponentsBuilder
+                .fromCurrentRequest()
+                .path("/{id}")
+                .buildAndExpand(postId)
+                .toUri();
     }
 
 }

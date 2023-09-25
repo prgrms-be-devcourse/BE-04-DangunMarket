@@ -37,7 +37,7 @@ public class ChatRoomFacade {
         return chatRoomService.createChatRoom(postFindResponse.memberId(), request);
     }
 
-    public ChatRoomCheckInParamResponse checkInChatRoom(Long chatRoomId, Long memberId) {
+    public ChatRoomCheckInParamResponse enterChatRoom(Long chatRoomId, Long memberId) {
         chatRoomService.addMemberToRoom(chatRoomId.toString(),memberId.toString());
         chatRoomService.readAllMessage(chatRoomId, memberId);
 

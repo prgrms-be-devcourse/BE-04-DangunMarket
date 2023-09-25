@@ -27,6 +27,9 @@ public class PostLikeController {
         this.mapper = mapper;
     }
 
+    /**
+     * 좋아요한 게시글 목록
+     */
     @GetMapping("/me")
     public ResponseEntity<LikedPostFindApiResponseList> findLikedPosts(
             Authentication authentication,

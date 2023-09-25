@@ -71,7 +71,9 @@ public class ChatMessageController {
         sendingOperations.convertAndSend(DESTINATION_URL + roomId, response);
     }
 
-
+    /**
+     * 채팅 메세지 목록 생성
+     */
     @GetMapping("/messages")
     public ResponseEntity<ChatMessagePageApiResponses> getChatMessages(
             @ModelAttribute @Valid ChatMessagePageApiRequest chatMessagePageApiRequest,

@@ -40,6 +40,9 @@ public class ChatRoomController {
         this.chatRoomFacade = chatRoomFacade;
     }
 
+    /**
+     * 채팅방 목록 생성
+     */
     @GetMapping("/me")
     public ResponseEntity<ChatRoomsFindApiResponses> findChatRooms(
             Pageable pageable,
@@ -53,6 +56,9 @@ public class ChatRoomController {
         return ResponseEntity.ok(apiResponses);
     }
 
+    /**
+     * 채팅방 삭제
+     */
     @DeleteMapping("/{chatRoomId}")
     public ResponseEntity<Void> deleteChatRoom(
             @PathVariable Long chatRoomId,
@@ -64,6 +70,9 @@ public class ChatRoomController {
         return ResponseEntity.noContent().build();
     }
 
+    /**
+     * 채팅방 나가기
+     */
     @EventListener
     public void onDisconnectEvent(SessionDisconnectEvent event) {
         chatRoomService.deleteChatRoomEntryInMemberId(event.getSessionId());

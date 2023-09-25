@@ -93,6 +93,9 @@ public class PostController {
         return ResponseEntity.ok(response);
     }
 
+    /**
+     * 게시글 거래 상태 변경
+     */
     @PatchMapping("/{postId}/trade-status")
     public ResponseEntity<PostUpdateStatusApiResponse> changeStatus(
             @PathVariable Long postId,
@@ -104,6 +107,9 @@ public class PostController {
         return ResponseEntity.ok(apiResponse);
     }
 
+    /**
+     * 게시글 끌올 시간 변경
+     */
     @PatchMapping("/{postId}/refreshed-at")
     public ResponseEntity<PostRefreshApiResponse> refreshPostTime(
             @PathVariable Long postId,
@@ -162,6 +168,9 @@ public class PostController {
                 .body(responses);
     }
 
+    /**
+     * 게시글 수정
+     */
     @PutMapping
     public ResponseEntity<PostUpdateApiResponse> updatePost(@RequestBody @Valid PostUpdateApiRequest postUpdateApiRequest) {
         PostUpdateRequestParam postUpdateRequestParam = mapper.toPostUpdateRequestParam(postUpdateApiRequest);
@@ -198,7 +207,7 @@ public class PostController {
                 .body(responses);
     }
 
-    /*
+    /**
      * 게시글 삭제
      */
     @DeleteMapping("/{postId}")
@@ -247,7 +256,7 @@ public class PostController {
                 .body(apiResponse);
     }
 
-    private static URI createURI(Long productId) {
+    private  URI createURI(Long productId) {
         return ServletUriComponentsBuilder
                 .fromCurrentRequest()
                 .path("/{id}")
