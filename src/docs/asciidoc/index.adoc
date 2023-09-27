@@ -1,0 +1,15 @@
+:hardbreaks:
+ifndef::snippets[]
+:snippets: ../../../build/generated-snippets
+endif::[]
+
+== 게시글
+
+=== 게시글 상세 조회
+
+.Request
+include::{snippets}/post/findById/http-request.adoc[]
+
+.Response
+
+include::{snippets}/post/findById/http-response.adoc[]

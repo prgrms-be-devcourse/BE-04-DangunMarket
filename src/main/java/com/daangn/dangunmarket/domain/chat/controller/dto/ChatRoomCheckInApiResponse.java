@@ -4,7 +4,7 @@ public record ChatRoomCheckInApiResponse(
         Long postId,
         String nickName,
         Integer reviewScore,
-        String tradeState,
+        String tradeStatus,
         String title,
         long price,
         boolean isOfferAllowed,
