@@ -74,12 +74,7 @@ dependencies {
     //map struct
     implementation 'org.mapstruct:mapstruct:1.5.5.Final'
     annotationProcessor 'org.mapstruct:mapstruct-processor:1.5.5.Final'
-
-    //chatting
-    implementation 'org.springframework.boot:spring-boot-starter-websocket'
-    implementation 'org.webjars:sockjs-client:1.1.2'
-    implementation 'org.webjars:stomp-websocket:2.3.3-1'
-    implementation 'com.google.code.gson:gson:2.8.0'
+    annotationProcessor 'org.projectlombok:lombok-mapstruct-binding:0.2.0'
 
     //mongodb
     implementation 'org.springframework.boot:spring-boot-starter-data-mongodb'

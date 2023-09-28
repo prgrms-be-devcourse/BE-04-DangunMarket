@@ -221,13 +221,13 @@ class ChatRoomServiceTest {
 
         //then
         assertThat(byChatRoomIdWithPagination.get(0).chatRoomId()).isEqualTo(chatMessagePageResponse1.chatRoomId());
-        assertThat(byChatRoomIdWithPagination.get(0).imgUrl()).isEqualTo(chatMessagePageResponse1.imgUrl());
+        assertThat(byChatRoomIdWithPagination.get(0).imageUrls()).containsExactlyInAnyOrderElementsOf(chatMessagePageResponse1.imageUrls());
         assertThat(byChatRoomIdWithPagination.get(0).isMine()).isEqualTo(chatMessagePageResponse1.isMine());
         assertThat(byChatRoomIdWithPagination.get(0).readOrNot()).isEqualTo(chatMessagePageResponse1.readOrNot());
         assertThat(byChatRoomIdWithPagination.get(0).message()).isEqualTo(chatMessagePageResponse1.message());
 
         assertThat(byChatRoomIdWithPagination.get(1).chatRoomId()).isEqualTo(chatMessagePageResponse2.chatRoomId());
-        assertThat(byChatRoomIdWithPagination.get(1).imgUrl()).isEqualTo(chatMessagePageResponse2.imgUrl());
+        assertThat(byChatRoomIdWithPagination.get(1).imageUrls()).containsExactlyInAnyOrderElementsOf(chatMessagePageResponse2.imageUrls());
         assertThat(byChatRoomIdWithPagination.get(1).isMine()).isEqualTo(chatMessagePageResponse2.isMine());
         assertThat(byChatRoomIdWithPagination.get(1).readOrNot()).isEqualTo(chatMessagePageResponse2.readOrNot());
         assertThat(byChatRoomIdWithPagination.get(1).message()).isEqualTo(chatMessagePageResponse2.message());

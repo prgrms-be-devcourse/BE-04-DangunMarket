@@ -5,16 +5,26 @@ import com.daangn.dangunmarket.domain.post.service.dto.PostToUpdateResponse;
 import org.mapstruct.InjectionStrategy;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import org.mapstruct.Named;
 
 @Mapper(
         componentModel = "spring",
         injectionStrategy = InjectionStrategy.CONSTRUCTOR
 )
 public interface PostDtoMapper {
-
-    @Mapping(source = "post.id", target = "postId")
-    PostToUpdateResponse toPostToUpdateResponse(Post post);
-
+    default PostToUpdateResponse toPostToUpdateResponse(Post post) {
+        return new PostToUpdateResponse(
+                post.getId(),
+                post.getLocationPreference(),
+                post.getPostImages(),
+                post.getCategory(),
+                post.getTradeStatus(),
+                post.getTitle(),
+                post.getContent(),
+                post.getPrice(),
+                post.isOfferAllowed()
+        );
+    }
 }
 
 
