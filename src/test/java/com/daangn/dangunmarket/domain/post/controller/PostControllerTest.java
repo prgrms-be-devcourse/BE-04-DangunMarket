@@ -1,6 +1,5 @@
 package com.daangn.dangunmarket.domain.post.controller;
 
-import com.daangn.dangunmarket.domain.AbstractRestDocsTests;
 import com.daangn.dangunmarket.domain.auth.jwt.CustomUser;
 import com.daangn.dangunmarket.domain.post.controller.dto.post.PostCreateApiRequest;
 import com.daangn.dangunmarket.domain.post.controller.mapper.PostApiMapper;
@@ -20,15 +19,9 @@ import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders;
 import org.springframework.restdocs.payload.JsonFieldType;
 import org.springframework.security.authentication.TestingAuthenticationToken;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContext;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.test.context.support.WithMockUser;
-import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.RequestPostProcessor;
-import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -39,9 +32,9 @@ import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.docu
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.multipart;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.*;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
-import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
-import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
-import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
+
+import static org.springframework.restdocs.request.RequestDocumentation.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @AutoConfigureRestDocs
@@ -65,38 +58,47 @@ class PostControllerTest {
     void createProduct() throws Exception {
         //given
         given(postFacade.createPost(any())).willReturn(1L);
-        PostCreateApiRequest request = new PostCreateApiRequest(
-                1L,
-                37.5665,
-                126.9780,
-                "alias",
-                1L,
-                "Test Title",
-                "Test Description",
-                10000,
-                true,
-                LocalDateTime.now());
 
-        MockMultipartFile file = new MockMultipartFile(
+        MockMultipartFile requestFile = new MockMultipartFile(
                 "files",
                 "test.jpg",
                 MediaType.IMAGE_JPEG_VALUE,
                 "test image content".getBytes());
 
-        MockMultipartFile json = new MockMultipartFile("request", "", MediaType.APPLICATION_JSON_VALUE,
+        MockMultipartFile requestJson = new MockMultipartFile("request", "", MediaType.APPLICATION_JSON_VALUE,
                 "{\"areaId\": 1, \"latitude\": 37.5665, \"longitude\": 126.978, \"alias\": \"alias\", \"categoryId\": 1, \"title\": \"Test Title\", \"content\": \"Test Description\", \"price\": 10000, \"isOfferAllowed\": true}".getBytes());
 
         //when //then
         mockMvc.perform(multipart("/posts")
-                        .file(file)
-                        .file(json)
+                        .file(requestFile)
+                        .file(requestJson)
                         .with(userToken())
                         .contentType(MediaType.MULTIPART_FORM_DATA))
-                .andDo(MockMvcResultHandlers.print())
-                .andDo(document("post/create",
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.postId").value(1L))
+                .andDo(document("post/createProduct",
                         preprocessRequest(prettyPrint()),
-                        preprocessResponse(prettyPrint())))
-                .andExpect(status().isCreated());
+                        preprocessResponse(prettyPrint()),
+                        requestParts(
+                                partWithName("files").description("게시글에 첨부할 이미지 파일"),
+                                partWithName("request").description("게시글 생성 요청 정보")
+                        ),
+                        requestPartFields(
+                                "request",
+                                fieldWithPath("areaId").type(JsonFieldType.NUMBER).description("지역 id"),
+                                fieldWithPath("latitude").type(JsonFieldType.NUMBER).description("위도"),
+                                fieldWithPath("longitude").type(JsonFieldType.NUMBER).description("경도"),
+                                fieldWithPath("alias").type(JsonFieldType.STRING).description("거래 희망 장소의 이름"),
+                                fieldWithPath("categoryId").type(JsonFieldType.NUMBER).description("category의 id"),
+                                fieldWithPath("title").type(JsonFieldType.STRING).description("게시글의 제목"),
+                                fieldWithPath("content").type(JsonFieldType.STRING).description("게시글의 내용"),
+                                fieldWithPath("price").type(JsonFieldType.NUMBER).description("가격"),
+                                fieldWithPath("isOfferAllowed").type(JsonFieldType.BOOLEAN).description("가격 제안 가능 여부")
+                        ),
+                        responseFields(
+                                fieldWithPath("postId").type(JsonFieldType.NUMBER).description("생성된 post의 id")
+                        )
+                ));
     }
 
     @Test
@@ -128,6 +130,8 @@ class PostControllerTest {
         mockMvc.perform(RestDocumentationRequestBuilders.get("/posts/{postId}", postId))
                 .andExpect(status().isOk())
                 .andDo(document("post/findById",
+                        preprocessRequest(prettyPrint()),
+                        preprocessResponse(prettyPrint()),
                         pathParameters(
                                 parameterWithName("postId").description("게시글 id")
                         ),
@@ -197,4 +201,5 @@ class PostControllerTest {
             return request;
         };
     }
+
 }

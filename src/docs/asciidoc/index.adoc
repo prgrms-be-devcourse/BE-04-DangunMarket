@@ -15,3 +15,15 @@ include::{snippets}/post/findById/path-parameters.adoc[]
 
 include::{snippets}/post/findById/http-response.adoc[]
 include::{snippets}/post/findById/response-fields.adoc[]
+
+
+=== 게시글 생성
+
+.Request
+include::{snippets}/post/createProduct/http-request.adoc[]
+include::{snippets}/post/createProduct/request-parts.adoc[]
+include::{snippets}/post/createProduct/request-part-request-fields.adoc[]
+
+.Response
+include::{snippets}/post/createProduct/http-response.adoc[]
+include::{snippets}/post/createProduct/response-fields.adoc[]
