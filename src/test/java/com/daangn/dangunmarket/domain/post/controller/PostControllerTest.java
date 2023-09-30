@@ -1,7 +1,6 @@
 package com.daangn.dangunmarket.domain.post.controller;
 
 import com.daangn.dangunmarket.domain.auth.jwt.CustomUser;
-import com.daangn.dangunmarket.domain.post.controller.dto.post.PostCreateApiRequest;
 import com.daangn.dangunmarket.domain.post.controller.mapper.PostApiMapper;
 import com.daangn.dangunmarket.domain.post.facade.PostFacade;
 import com.daangn.dangunmarket.domain.post.facade.dto.PostFindResponseParam;
@@ -20,8 +19,8 @@ import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders;
 import org.springframework.restdocs.payload.JsonFieldType;
 import org.springframework.security.authentication.TestingAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.request.RequestPostProcessor;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -58,6 +57,7 @@ class PostControllerTest {
     void createProduct() throws Exception {
         //given
         given(postFacade.createPost(any())).willReturn(1L);
+        setMockCustomUser();
 
         MockMultipartFile requestFile = new MockMultipartFile(
                 "files",
@@ -72,7 +72,6 @@ class PostControllerTest {
         mockMvc.perform(multipart("/posts")
                         .file(requestFile)
                         .file(requestJson)
-                        .with(userToken())
                         .contentType(MediaType.MULTIPART_FORM_DATA))
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.postId").value(1L))
@@ -192,14 +191,11 @@ class PostControllerTest {
     void cancelLikePost() {
     }
 
-    private RequestPostProcessor userToken() {
+    private void setMockCustomUser() {
         CustomUser customUser = new CustomUser(1L, "asdfasfsag", null);
         Authentication authentication = new TestingAuthenticationToken(customUser, null);
 
-        return request -> {
-            request.setUserPrincipal(authentication);
-            return request;
-        };
+        SecurityContextHolder.getContext().setAuthentication(authentication);
     }
 
 }

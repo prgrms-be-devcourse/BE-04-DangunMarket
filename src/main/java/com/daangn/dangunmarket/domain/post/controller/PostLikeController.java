@@ -5,10 +5,10 @@ import com.daangn.dangunmarket.domain.post.controller.dto.postlike.LikedPostFind
 import com.daangn.dangunmarket.domain.post.controller.mapper.PostApiMapper;
 import com.daangn.dangunmarket.domain.post.service.PostLikeService;
 import com.daangn.dangunmarket.domain.post.service.dto.LikedPostFindResponseList;
+import com.daangn.dangunmarket.global.MemberInfo;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -32,9 +32,8 @@ public class PostLikeController {
      */
     @GetMapping("/me")
     public ResponseEntity<LikedPostFindApiResponseList> findLikedPosts(
-            Authentication authentication,
+            @MemberInfo CustomUser customUser,
             Pageable pageable) {
-        CustomUser customUser = (CustomUser) authentication.getPrincipal();
 
         LikedPostFindResponseList response = postLikeService.findByMemberId(customUser.memberId(), pageable);
         LikedPostFindApiResponseList responses = LikedPostFindApiResponseList.from(response);

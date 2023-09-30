@@ -8,6 +8,7 @@ import com.daangn.dangunmarket.domain.chat.controller.dto.SessionInfoSaveApiRequ
 import com.daangn.dangunmarket.domain.chat.controller.mapper.ChatDtoApiMapper;
 import com.daangn.dangunmarket.domain.chat.facade.ChatRoomFacade;
 import com.daangn.dangunmarket.domain.chat.facade.dto.ChatRoomCheckInParamResponse;
+import com.daangn.dangunmarket.global.MemberInfo;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -43,9 +44,7 @@ public class ChatController {
      */
     @PostMapping(
             consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<ChatRoomCreateApiResponse> createChatRoom(@RequestBody ChatRoomCreateApiRequest request, Authentication authentication) {
-
-        CustomUser customUser = (CustomUser) authentication.getPrincipal();
+    public ResponseEntity<ChatRoomCreateApiResponse> createChatRoom(@RequestBody ChatRoomCreateApiRequest request, @MemberInfo CustomUser customUser) {
 
         Long chatRoomId = chatRoomFacade.createChatRoom(chatDtoApiMapper.toChatRoomCreateRequest(request, customUser.memberId()));
         ChatRoomCreateApiResponse response = chatDtoApiMapper.toChatRoomCreateApiResponse(chatRoomId);
@@ -57,9 +56,8 @@ public class ChatController {
      * 채팅방 입장하면 읽지 않은 모든 메세지를 읽음 처리 한다.
      */
     @GetMapping(value = "/{roomId}")
-    public ResponseEntity<ChatRoomCheckInApiResponse> enterChatRoom(@PathVariable Long roomId, Authentication authentication) {
+    public ResponseEntity<ChatRoomCheckInApiResponse> enterChatRoom(@PathVariable Long roomId, @MemberInfo CustomUser customUser) {
 
-        CustomUser customUser = (CustomUser) authentication.getPrincipal();
         ChatRoomCheckInParamResponse chatRoomCheckInParamResponse = chatRoomFacade.enterChatRoom(roomId, customUser.memberId());
         ChatRoomCheckInApiResponse chatRoomCheckInApiResponse = chatDtoApiMapper.toChatRoomCheckInApiResponse(chatRoomCheckInParamResponse);
 
@@ -75,9 +73,8 @@ public class ChatController {
     public ResponseEntity<Void> saveSessionInfo(
             @PathVariable String sessionId,
             @RequestBody @Valid SessionInfoSaveApiRequest request,
-            Authentication authentication
+            @MemberInfo CustomUser customUser
     ){
-        CustomUser customUser = (CustomUser) authentication.getPrincipal();
         chatRoomFacade.saveSessionInfo(chatDtoApiMapper.toSessionInfoSaveParamRequest(
                 sessionId,
                 request.roomId(),
