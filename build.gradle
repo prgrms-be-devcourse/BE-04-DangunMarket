@@ -52,6 +52,7 @@ dependencies {
     // Spring Security 추가
     implementation 'org.springframework.boot:spring-boot-starter-security'
     implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
+    testImplementation 'org.springframework.security:spring-security-test'
 
     //webflux
     implementation 'org.springframework.boot:spring-boot-starter-webflux'
@@ -87,6 +88,8 @@ dependencies {
     //restDocs
     asciidoctorExt 'org.springframework.restdocs:spring-restdocs-asciidoctor'
     testImplementation 'org.springframework.restdocs:spring-restdocs-mockmvc'
+
+    implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310'
 }
 
 ext {

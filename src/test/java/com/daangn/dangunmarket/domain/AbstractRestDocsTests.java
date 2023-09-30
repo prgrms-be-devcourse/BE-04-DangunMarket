@@ -2,6 +2,7 @@ package com.daangn.dangunmarket.domain;
 
 import com.daangn.dangunmarket.global.exception.GlobalExceptionRestHandler;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.restdocs.RestDocumentationContextProvider;
@@ -17,7 +18,7 @@ import static org.springframework.restdocs.operation.preprocess.Preprocessors.pr
 public abstract class AbstractRestDocsTests {
 
     protected MockMvc mockMvc;
-    protected ObjectMapper objectMapper = new ObjectMapper();
+    protected ObjectMapper objectMapper;
 
     @BeforeEach
     void setup(RestDocumentationContextProvider provider){
@@ -29,6 +30,9 @@ public abstract class AbstractRestDocsTests {
                         .withRequestDefaults(prettyPrint())
                         .withResponseDefaults(prettyPrint()))
                 .build();
+
+        objectMapper = new ObjectMapper();
+        objectMapper.registerModule(new JavaTimeModule());
     }
 
     protected abstract Object initController();

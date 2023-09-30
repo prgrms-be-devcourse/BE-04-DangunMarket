@@ -69,9 +69,9 @@ public class PostController {
      */
     @PostMapping(consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
     public ResponseEntity<PostCreateApiResponse> createProduct(
+            Authentication authentication,
             @RequestPart List<MultipartFile> files,
-            @RequestPart @Valid PostCreateApiRequest request,
-            Authentication authentication
+            @RequestPart @Valid PostCreateApiRequest request
     ) {
         CustomUser customUser = (CustomUser) authentication.getPrincipal();
         Long postId = postFacade.createPost(mapper.toPostCreateRequestParam(request, files, customUser.memberId()));
