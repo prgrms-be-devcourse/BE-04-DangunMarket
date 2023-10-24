@@ -20,15 +20,6 @@ public interface ChatRoomParamDtoMapper {
 
     ChatRoomCheckInParamResponse toChatRoomCheckInParamResponse(ChatWithPostAndMemberResponse chatWithPostAndMemberResponse);
 
-    @Named("firstPostImage")
-    default String firstPostImage(PostFindResponse postFindResponse) {
-        List<PostImage> postImages = postFindResponse.postImageList();
-        if (postImages != null && !postImages.isEmpty()) {
-            return postImages.get(0).getUrl();
-        }
-        return "";
-    }
-
     SessionInfoSaveRequest toSessionInfoSaveRequest(SessionInfoSaveParamRequest request);
 
 }
