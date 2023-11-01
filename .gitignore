@@ -1,6 +1,9 @@
 ## yml 파일
 application.yml
+application-test.yml
+*.yml
 
+src/main/generated
 HELP.md
 .gradle
 build/
