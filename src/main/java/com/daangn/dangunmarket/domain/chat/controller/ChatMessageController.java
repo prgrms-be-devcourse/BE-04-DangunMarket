@@ -11,6 +11,7 @@ import com.daangn.dangunmarket.domain.chat.service.ChatService;
 import com.daangn.dangunmarket.domain.chat.service.dto.ChatMessagePageRequest;
 import com.daangn.dangunmarket.domain.chat.service.dto.ChatMessagePageResponse;
 import com.daangn.dangunmarket.domain.chat.service.dto.ChatMessageResponse;
+import com.daangn.dangunmarket.global.MemberInfo;
 import com.daangn.dangunmarket.global.aws.dto.ImageInfo;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -20,7 +21,6 @@ import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
-import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -47,8 +47,7 @@ public class ChatMessageController {
      */
     @PostMapping(path = "/chats/images", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
     public ResponseEntity<ChatImageUploadApiResponse> uploadChatImages(
-            @RequestPart List<MultipartFile> files,
-            Authentication authentication
+            @RequestPart List<MultipartFile> files
     ) {
         List<ImageInfo> imageInfos = chatService.uploadImages(files);
         ChatImageUploadApiResponse response = ChatImageUploadApiResponse.from(imageInfos);
@@ -63,10 +62,9 @@ public class ChatMessageController {
      */
     @MessageMapping("/chats/{roomId}/messages")
     public void saveMessage(@DestinationVariable("roomId") Long roomId,
-                            Authentication authentication,
+                            @MemberInfo CustomUser customUser,
                             @Payload @Valid MessageRequest messageRequest) {
 
-        CustomUser customUser = (CustomUser) authentication.getPrincipal();
         ChatMessageResponse response = chatService.saveMessage(customUser.memberId(), roomId, messageRequest);
         sendingOperations.convertAndSend(DESTINATION_URL + roomId, response);
     }
@@ -78,10 +76,8 @@ public class ChatMessageController {
     public ResponseEntity<ChatMessagePageApiResponses> getChatMessages(
             @PathVariable Long roomId,
             @ModelAttribute @Valid ChatMessagePageApiRequest chatMessagePageApiRequest,
-            Authentication authentication
+            @MemberInfo CustomUser customUser
     ) {
-        CustomUser customUser = (CustomUser) authentication.getPrincipal();
-
         ChatMessagePageRequest chatMessagePageRequest = chatDtoApiMapper.toChatMessagePageRequest(chatMessagePageApiRequest,roomId);
         List<ChatMessagePageResponse> chatRoomIdWithPagination = chatRoomService.findByChatRoomIdWithPagination(chatMessagePageRequest, customUser.memberId());
 

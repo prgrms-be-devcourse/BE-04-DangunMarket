@@ -2,6 +2,7 @@ package com.daangn.dangunmarket.domain.post.controller.dto.post;
 
 import com.daangn.dangunmarket.domain.post.facade.dto.PostFindResponseParam;
 import com.daangn.dangunmarket.domain.post.model.TradeStatus;
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -12,7 +13,7 @@ public record PostFindApiResponse(
         String areaName,
         double latitude,
         double longitude,
-        String LocationPreferenceAlias,
+        String locationPreferenceAlias,
         List<String> urls,
         Long categoryId,
         String categoryName,
@@ -21,6 +22,7 @@ public record PostFindApiResponse(
         String content,
         long price,
         boolean isOfferAllowed,
+        @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss", timezone = "Asia/Seoul")
         LocalDateTime refreshedAt,
         Integer likeCount
 ) {

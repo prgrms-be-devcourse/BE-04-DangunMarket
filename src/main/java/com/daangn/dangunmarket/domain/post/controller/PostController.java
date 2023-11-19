@@ -25,12 +25,12 @@ import com.daangn.dangunmarket.domain.post.facade.dto.PostToUpdateResponseParam;
 import com.daangn.dangunmarket.domain.post.facade.dto.PostUpdateRequestParam;
 import com.daangn.dangunmarket.domain.post.service.PostService;
 import com.daangn.dangunmarket.domain.post.service.dto.PostLikeResponse;
+import com.daangn.dangunmarket.global.MemberInfo;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -71,9 +71,8 @@ public class PostController {
     public ResponseEntity<PostCreateApiResponse> createProduct(
             @RequestPart List<MultipartFile> files,
             @RequestPart @Valid PostCreateApiRequest request,
-            Authentication authentication
+            @MemberInfo CustomUser customUser
     ) {
-        CustomUser customUser = (CustomUser) authentication.getPrincipal();
         Long postId = postFacade.createPost(mapper.toPostCreateRequestParam(request, files, customUser.memberId()));
         PostCreateApiResponse response = PostCreateApiResponse.from(postId);
 
@@ -113,10 +112,8 @@ public class PostController {
     @PatchMapping("/{postId}/refreshed-at")
     public ResponseEntity<PostRefreshApiResponse> refreshPostTime(
             @PathVariable Long postId,
-            Authentication authentication
+            @MemberInfo CustomUser customUser
     ) {
-
-        CustomUser customUser = (CustomUser) authentication.getPrincipal();
         PostRefreshApiResponse apiResponse = PostRefreshApiResponse.from(
                 postService.refreshTime(postId, customUser.memberId())
         );
@@ -142,9 +139,7 @@ public class PostController {
      * 게시글 수정을 위한 조회
      */
     @GetMapping("/{postId}/edit")
-    public ResponseEntity<PostToUpdateApiResponse> findPostInfoToUpdate(@PathVariable Long postId, Authentication authentication) {
-
-        CustomUser customUser = (CustomUser) authentication.getPrincipal();
+    public ResponseEntity<PostToUpdateApiResponse> findPostInfoToUpdate(@PathVariable Long postId, @MemberInfo CustomUser customUser) {
         PostToUpdateResponseParam postInfoToUpdate = postFacade.findPostInfoToUpdateById(customUser.memberId(), postId);
 
         return ResponseEntity.ok(mapper.toPostToUpdateApiResponse(postInfoToUpdate));
@@ -156,10 +151,8 @@ public class PostController {
     @GetMapping
     public ResponseEntity<PostGetApiResponses> getPosts(
             Pageable pageable,
-            Authentication authentication
+            @MemberInfo CustomUser customUser
     ) {
-        CustomUser customUser = (CustomUser) authentication.getPrincipal();
-
         PostGetResponseParams responseparam = postFacade.getPosts(customUser.memberId(), pageable);
         PostGetApiResponses responses = mapper.toPostGetApiResponses(responseparam);
 
@@ -192,10 +185,8 @@ public class PostController {
     public ResponseEntity<PostSearchApiResponses> getPostsByConditions(
             @ModelAttribute PostSearchApiRequest postSearchApiRequest,
             Pageable pageable,
-            Authentication authentiction
+            @MemberInfo CustomUser customUser
     ) {
-        CustomUser customUser = (CustomUser) authentiction.getPrincipal();
-
         PostSearchResponseParams responseParams = postFacade.getPostsByConditions(
                 mapper.toPostSearchRequestParam(postSearchApiRequest, pageable),
                 customUser.memberId()
@@ -213,10 +204,8 @@ public class PostController {
     @DeleteMapping("/{postId}")
     public ResponseEntity<Void> deletePost(
             @PathVariable Long postId,
-            Authentication authentication
+            @MemberInfo CustomUser customUser
     ) {
-        CustomUser customUser = (CustomUser) authentication.getPrincipal();
-
         postFacade.deletePost(customUser.memberId(), postId);
         return ResponseEntity.noContent().build();
     }
@@ -227,10 +216,8 @@ public class PostController {
     @PostMapping(path = "/{postId}/like")
     public ResponseEntity<PostLikeApiResponse> addLikePost(
             @PathVariable Long postId,
-            Authentication authentication
+            @MemberInfo CustomUser customUser
     ) {
-        CustomUser customUser = (CustomUser) authentication.getPrincipal();
-
         PostLikeResponse response = postFacade.likePost(customUser.memberId(), postId);
         PostLikeApiResponse apiResponse = mapper.toPostLikeApiResponse(response);
         return ResponseEntity
@@ -244,10 +231,8 @@ public class PostController {
     @DeleteMapping(path = "/{postId}/like")
     public ResponseEntity<PostLikeApiResponse> cancelLikePost(
             @PathVariable Long postId,
-            Authentication authentication
+            @MemberInfo CustomUser customUser
     ) {
-        CustomUser customUser = (CustomUser) authentication.getPrincipal();
-
         PostLikeResponse response = postFacade.cancelLikePost(customUser.memberId(), postId);
         PostLikeApiResponse apiResponse = mapper.toPostLikeApiResponse(response);
 

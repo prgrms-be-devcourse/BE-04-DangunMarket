@@ -195,7 +195,6 @@ class PostFacadeTest {
 
     }
 
-
     @Test
     @DisplayName("게시글을 삭제 권한이 없는 유저가 게시글 삭제 요청시 예외가 발생한다. ")
     void deletePost_MemberIdAndPostID_Throw() {
@@ -209,7 +208,6 @@ class PostFacadeTest {
         Assertions.assertThatThrownBy(() -> postFacade.deletePost(strangeMemberId, postId))
                 .isInstanceOf(NotWriterException.class);
     }
-
 
     /**
      * Member, Category, Product을 미리 setup함.

@@ -10,6 +10,7 @@ import com.daangn.dangunmarket.domain.chat.service.ChatRoomService;
 import com.daangn.dangunmarket.domain.chat.service.dto.ChatMessagePageRequest;
 import com.daangn.dangunmarket.domain.chat.service.dto.ChatMessagePageResponse;
 import com.daangn.dangunmarket.domain.chat.service.dto.ChatRoomsFindResponses;
+import com.daangn.dangunmarket.global.MemberInfo;
 import jakarta.validation.Valid;
 import org.springframework.context.event.EventListener;
 import org.springframework.data.domain.Pageable;
@@ -46,9 +47,8 @@ public class ChatRoomController {
     @GetMapping("/me")
     public ResponseEntity<ChatRoomsFindApiResponses> findChatRooms(
             Pageable pageable,
-            Authentication authentication
+            @MemberInfo CustomUser customUser
     ) {
-        CustomUser customUser = (CustomUser) authentication.getPrincipal();
         ChatRoomsFindResponses responses = chatRoomService.findChatRoomsByMemberId(customUser.memberId(), pageable);
 
         ChatRoomsFindApiResponses apiResponses = ChatRoomsFindApiResponses.from(responses);
@@ -62,9 +62,8 @@ public class ChatRoomController {
     @DeleteMapping("/{chatRoomId}")
     public ResponseEntity<Void> deleteChatRoom(
             @PathVariable Long chatRoomId,
-            Authentication authentication
+            @MemberInfo CustomUser customUser
     ) {
-        CustomUser customUser = (CustomUser) authentication.getPrincipal();
         chatRoomService.deleteChatRoomByIdAndMemberId(chatRoomId, customUser.memberId());
 
         return ResponseEntity.noContent().build();
